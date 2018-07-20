@@ -1,0 +1,14 @@
+body, html, #app {
+  width: 100vw;
+  min-height: 100vh;
+  background-color: #eee;
+}
+#app>div {
+  min-height: 100vh;
+}
+.pushable, .pushable > .pusher {
+  min-height: calc(100vh - 71px);
+}
+.ui.menu .ui.dropdown .menu > .item {
+  padding: 0 !important;
+}
