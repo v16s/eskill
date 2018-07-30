@@ -23,13 +23,13 @@ body, html, #app {
   font-family: 'Titillium Web';
 }
 .ui.segment.login-wrapper {
-  border: 1px solid #ddd;
+  border: 1px solid #e3eafa;
   letter-spacing: 2px !important;
   background-color: #ffffff;
   border-radius: 4px;
 }
 .ui.segment.login-wrapper .ui.form .fields .field .ui.input input, .ui.form .field .ui.input input {
-  background-color: #d7def0 !important;
+  background-color: #e3eafa !important;
   border: none !important;
   color: #333;
 }
@@ -38,4 +38,10 @@ body, html, #app {
 }
 .ui.ui.segment.login-wrapper .ui.fluid.large.positive.submit.button {
   background-color: #1456ff;
+  text-transform: uppercase;
+}
+.ui.message {
+  border: 1px solid #e3eafa !important;
+  box-shadow: none !important;
+  background-color: #e3eafa;
 }

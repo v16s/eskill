@@ -32,7 +32,9 @@ class Dashboard extends React.Component {
     this.emit = this.emit.bind(this);
     this.handleClick = this.handleClick.bind(this);
   }
-  handleClick(event) {}
+  handleClick(event) {
+    this.setState({})
+  }
 
   logout() {
     this.props.logout();

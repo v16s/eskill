@@ -71,7 +71,7 @@ class Login extends React.Component {
               <div className="ui error message" />
             </form>
 
-            <div className="ui message" style={{ backgroundColor: "#fff" }}>
+            <div className="ui message">
               New to us? <Link to="/register">Register</Link>
             </div>
           </div>
