@@ -29,7 +29,7 @@ class Login extends React.Component {
         }}
       >
         <div
-          class="ui middle aligned center aligned grid"
+          className="ui middle aligned center aligned grid"
           style={{
             width: "60%",
             margin: "0 auto",
@@ -37,42 +37,44 @@ class Login extends React.Component {
             maxWidth: "500px"
           }}
         >
-          <div class="column">
+          <div className="column">
             <Image src={require("../logo.png")} size="small" centered />
 
             <form
-              class="ui large form"
+              className="ui large form"
               onSubmit={e => {
                 e.preventDefault();
                 this.sendToServer(e);
               }}
             >
               <div
-                class="ui secondary  segment"
+                className="ui secondary  segment"
                 style={{ backgroundColor: "#fff" }}
               >
                 <Header as="h2" style={{ color: "#666" }}>
                   eApproval
                 </Header>
-                <div class="field">
-                  <div class="ui left icon input">
-                    <i class="user icon" />
+                <div className="field">
+                  <div className="ui left icon input">
+                    <i className="user icon" />
                     <input type="text" placeholder="Register/Employee Number" />
                   </div>
                 </div>
-                <div class="field">
-                  <div class="ui left icon input">
-                    <i class="lock icon" />
+                <div className="field">
+                  <div className="ui left icon input">
+                    <i className="lock icon" />
                     <input type="password" placeholder="Password" />
                   </div>
                 </div>
-                <Button mode="strong">Log In</Button>
+                <Button mode="strong" type='submit'style={{
+                  'width': '100%'
+                }}>Log In</Button>
               </div>
 
-              <div class="ui error message" />
+              <div className="ui error message" />
             </form>
 
-            <div class="ui message" style={{ backgroundColor: "#fff" }}>
+            <div className="ui message" style={{ backgroundColor: "#fff" }}>
               New to us? <Link to="/register">Register</Link>
             </div>
           </div>

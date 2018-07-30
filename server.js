@@ -178,6 +178,7 @@ db.on("open", () => {
   console.log("connected to database");
 });
 io.on("connection", socket => {
+  console.log('user connected');
   const loginCheck = new Event();
   let isLoggedIn = false;
   socket.on("det", content => {
