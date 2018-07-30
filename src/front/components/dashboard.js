@@ -32,8 +32,8 @@ class Dashboard extends React.Component {
     this.emit = this.emit.bind(this);
     this.handleClick = this.handleClick.bind(this);
   }
-  handleClick(event) {
-    this.setState({})
+  handleClick() {
+    this.setState({visible: !this.state.visible})
   }
 
   logout() {
@@ -49,15 +49,16 @@ class Dashboard extends React.Component {
     return (
       <div>
         <Segment
-          inverted
+          
           style={{
             borderRadius: "0",
             marginBottom: "0"
           }}
         >
-          <Menu inverted secondary fluid borderless>
-            <Menu.Item onClick={this.tv}>
-              <Icon name="bars" size="large" />
+          <Menu secondary fluid borderless>
+            <Menu.Item onClick={e => this.handleClick()}>
+              <Icon name="bars" size="large" style={{
+            color: '#1456ff'}} />
             </Menu.Item>
             <Menu.Menu position="right">
               <Menu.Item
