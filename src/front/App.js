@@ -1,6 +1,5 @@
 import React from "react";
 import { Router, Switch, Route } from "react-router-dom";
-import "semantic-ui-css/semantic.css";
 import "./css/main.css";
 import Login from "./components/login";
 import Dashboard from "./components/dashboard";

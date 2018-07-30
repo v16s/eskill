@@ -48,27 +48,24 @@ class Login extends React.Component {
               }}
             >
               <div
-                className="ui secondary  segment"
-                style={{ backgroundColor: "#fff" }}
+                className="ui secondary segment basic login-wrapper"
+                
               >
-                <Header as="h2" style={{ color: "#666" }}>
-                  eApproval
+                <Header as="h2" className='login-heading'>
+                  eSkill
                 </Header>
                 <div className="field">
-                  <div className="ui left icon input">
-                    <i className="user icon" />
+                  <div className="ui left input">
                     <input type="text" placeholder="Register/Employee Number" />
                   </div>
                 </div>
                 <div className="field">
-                  <div className="ui left icon input">
-                    <i className="lock icon" />
+                  <div className="ui left input">
                     <input type="password" placeholder="Password" />
                   </div>
                 </div>
-                <Button mode="strong" type='submit'style={{
-                  'width': '100%'
-                }}>Log In</Button>
+                <button class="ui fluid large positive submit button" type="submit">Login</button>
+
               </div>
 
               <div className="ui error message" />

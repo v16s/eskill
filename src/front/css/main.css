@@ -1,7 +1,9 @@
+@import url('https://fonts.googleapis.com/css?family=Titillium+Web');
+
 body, html, #app {
   width: 100vw;
   min-height: 100vh;
-  background-color: #eee;
+  background-color: #fff;
 }
 #app>div {
   min-height: 100vh;
@@ -11,4 +13,29 @@ body, html, #app {
 }
 .ui.menu .ui.dropdown .menu > .item {
   padding: 0 !important;
+}
+.ui.header.login-heading {
+  letter-spacing: 1.5px;
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+  font-weight: 600;
+  font-family: 'Titillium Web';
+}
+.ui.segment.login-wrapper {
+  border: 1px solid #ddd;
+  letter-spacing: 2px !important;
+  background-color: #ffffff;
+  border-radius: 4px;
+}
+.ui.segment.login-wrapper .ui.form .fields .field .ui.input input, .ui.form .field .ui.input input {
+  background-color: #d7def0 !important;
+  border: none !important;
+  color: #333;
+}
+.ui.segment.login-wrapper .ui.form .fields .field .ui.input input::placeholder, .ui.form .field .ui.input input::placeholder {
+  color: #333;
+}
+.ui.ui.segment.login-wrapper .ui.fluid.large.positive.submit.button {
+  background-color: #1456ff;
 }
