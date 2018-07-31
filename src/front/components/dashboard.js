@@ -19,6 +19,9 @@ import {
 } from 'semantic-ui-react'
 import { timeFormat } from 'd3-time-format'
 import Categories from './categories'
+import Tag from './tag'
+import Configuration from './configuration';
+
 let formatTime = timeFormat('%B %d, %Y')
 
 class Dashboard extends React.Component {
@@ -130,8 +133,12 @@ class Dashboard extends React.Component {
             >
               <Grid padded stackable relaxed doubling divided='vertically'>
                 <Grid.Row>
-                  <Categories />
+                  <Categories />                
                   <Grid.Column width={8} />
+                </Grid.Row>
+                <Grid.Row>
+                  <Tag/>
+                  <Configuration/>
                 </Grid.Row>
               </Grid>
             </Segment>
