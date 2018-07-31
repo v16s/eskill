@@ -48,7 +48,7 @@ class Login extends React.Component {
                 this.sendToServer(e)
               }}
             >
-              <div className='ui secondary segment basic login-wrapper'>
+              <div className='ui secondary segment basic minimal'>
                 <Header as='h2' className='login-heading'>
                   eSkill
                 </Header>

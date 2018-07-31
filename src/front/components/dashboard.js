@@ -1,6 +1,6 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import History from "./history";
+import React from 'react'
+import { Link } from 'react-router-dom'
+import History from './history'
 import {
   Sidebar,
   Segment,
@@ -16,59 +16,66 @@ import {
   Dropdown,
   Pagination,
   Modal
-} from "semantic-ui-react";
-import { timeFormat } from "d3-time-format";
+} from 'semantic-ui-react'
+import { timeFormat } from 'd3-time-format'
 import Categories from './categories'
-let formatTime = timeFormat("%B %d, %Y");
+let formatTime = timeFormat('%B %d, %Y')
 
 class Dashboard extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
       visible: false,
       modalVisible: false,
       filter: props.documents
-    };
-    this.logout = this.logout.bind(this);
-    this.emit = this.emit.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    }
+    this.logout = this.logout.bind(this)
+    this.emit = this.emit.bind(this)
+    this.handleClick = this.handleClick.bind(this)
   }
-  handleClick() {
-    this.setState({visible: !this.state.visible})
-  }
-
-  logout() {
-    this.props.logout();
-  }
-  componentDidMount() {}
-  emit(name, obj) {
-    this.props.emit(name, obj);
+  handleClick () {
+    this.setState({ visible: !this.state.visible })
   }
 
-  render() {
-    let { md: det } = this.props;
+  logout () {
+    this.props.logout()
+  }
+  componentDidMount () {}
+  emit (name, obj) {
+    this.props.emit(name, obj)
+  }
+
+  render () {
+    let { md: det } = this.props
     return (
       <div>
         <Segment
-          
           style={{
-            borderRadius: "0",
-            marginBottom: "0"
+            borderRadius: '0',
+            marginBottom: '0'
           }}
         >
           <Menu secondary fluid borderless>
             <Menu.Item onClick={e => this.handleClick()}>
-              <Icon name="bars" size="large" style={{
-            color: '#1456ff'}} />
+              <Icon
+                name='bars'
+                size='large'
+                style={{
+                  color: '#1456ff'
+                }}
+              />
             </Menu.Item>
-            <Menu.Menu position="right">
+            <Menu.Item>
+              <Header as='h2' className='brand'>eSkill</Header>
+            </Menu.Item>
+            <Menu.Menu position='right'>
               <Menu.Item
-                name="logout"
+                name='logout'
                 onClick={e => {
-                  e.preventDefault();
-                  this.logout();
-                  History.push("/");
-                  window.location.reload();
+                  e.preventDefault()
+                  this.logout()
+                  History.push('/')
+                  window.location.reload()
                 }}
               />
             </Menu.Menu>
@@ -77,70 +84,73 @@ class Dashboard extends React.Component {
         <Sidebar.Pushable>
           <Sidebar
             as={Menu}
-            animation="push"
-            width="wide"
+            animation='push'
+            width='wide'
             visible={this.state.visible}
-            icon="labeled"
+            icon='labeled'
             vertical
             inverted
           >
-            <Menu.Item name="home">
-              <Icon name="home" />
+            <Menu.Item name='home'>
+              <Icon name='home' />
               Home
             </Menu.Item>
-            <Menu.Item name="user">
-              <Icon name="user" />
+            <Menu.Item name='user'>
+              <Icon name='user' />
               Edit Profile
             </Menu.Item>
             <Menu.Item
-              name="logout"
+              name='logout'
               onClick={e => {
-                e.preventDefault();
-                this.logout();
-                History.push("/");
-                window.location.reload();
+                e.preventDefault()
+                this.logout()
+                History.push('/')
+                window.location.reload()
               }}
             >
-              <Icon name="sign out" />
+              <Icon name='sign out' />
               Logout
             </Menu.Item>
           </Sidebar>
           <Sidebar.Pusher
             style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              padding: "10px 0"
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              padding: '10px 0'
             }}
           >
             <Segment
-              basic={true}
+              basic
               style={{
-                minHeight: "100%",
-                alignSelf: "flex-start",
-                width: "100%"
+                minHeight: '100%',
+                alignSelf: 'flex-start',
+                width: '100%'
               }}
             >
-              <Grid padded relaxed doubling divided="vertically">
+              <Grid padded stackable relaxed doubling divided='vertically'>
+                <Grid.Row>
                   <Categories />
+                  <Grid.Column width={8} />
+                </Grid.Row>
               </Grid>
             </Segment>
             <Header
-              size="tiny"
+              size='tiny'
               style={{
-                position: "relative",
-                textAlign: "center",
-                width: "100%",
-                alignSelf: "flex-end"
+                position: 'relative',
+                textAlign: 'center',
+                width: '100%',
+                alignSelf: 'flex-end'
               }}
             >
-              eApproval - SRM Institute of Science and Technology
+              eSkill - SRM Center for Applied Research in Education
             </Header>
           </Sidebar.Pusher>
         </Sidebar.Pushable>
       </div>
-    );
+    )
   }
 }
 
-export default Dashboard;
+export default Dashboard

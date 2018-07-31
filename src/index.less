@@ -1,5 +1,5 @@
 @primarycolor : #1456ff;
-@secondarycolor : @grey;
+@secondarycolor : @gray;
 @red : rgb(255, 34, 34);
 @orange : rgb(255, 138, 95);
 @yellow : #FFD700;
@@ -11,7 +11,7 @@
 @purple : rgb(126, 26, 240);
 @pink : #FF1493;
 @brown : rgb(102, 51, 27);
-@grey : #A0A0A0;
+@gray : #e3eafa;
 @black : #000000;
 body,
 html,
@@ -19,6 +19,7 @@ html,
   width: 100vw;
   min-height: 100vh;
   background-color: #fff;
+  font-family: 'Montserrat', sans-serif;
 }
 #app > div {
   min-height: 100vh;
@@ -34,19 +35,20 @@ html,
   letter-spacing: 1.5px;
   font-size: 22px;
   font-weight: bold;
-  color: #333;
+  color: #444;
   font-weight: 600;
   font-family: 'Titillium Web';
 }
-.ui.segment.login-wrapper {
-  border: 1px solid #e3eafa;
+.ui.segment.minimal {
+  border: 1px solid @gray;
   letter-spacing: 2px !important;
   background-color: #ffffff;
   border-radius: 4px;
+  box-shadow: none;
 }
 .ui.segment .ui.form .fields .field .ui.input input,
 .ui.segment .ui.input input {
-  background-color: #e3eafa !important;
+  background-color: @gray !important;
   border: none !important;
   color: #333;
   height: 50px;
@@ -65,13 +67,55 @@ html,
   height: 50px;
 }
 .ui.message {
-  border: 1px solid #e3eafa !important;
+  border: 1px solid @gray !important;
   box-shadow: none !important;
-  background-color: #e3eafa;
+  background-color: @gray;
 }
 .ui.secondary.menu .item {
   color: @primarycolor;
 }
 .ui.error.message {
   border: none !important;
+}
+.ui.dropdown.category-select {
+  border: none;
+  background-color: @gray;
+  line-height: 25px;
+  margin-right: 5px;
+}
+.ui.selection.dropdown > .dropdown.icon {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 5px;
+}
+.ui.selection.active.dropdown .menu {
+  background-color: @gray;
+  color: #333;
+  border: none;
+}
+.ui.dropdown.selected,
+.ui.dropdown .menu .item {
+  background-color: transparent;
+  height: 50px;
+  line-height: 25px;
+}
+.ui.table {
+  border-color: @gray;
+  letter-spacing: 1px;
+  font-size: 15px;
+}
+.ui.table thead {
+  background-color: @gray;
+}
+.ui.table thead th {
+  background-color: @gray;
+  border-bottom: none;
+  height: 50px;
+}
+.ui.segment {
+}
+.ui.header.brand {
+  color: @primarycolor;
 }
