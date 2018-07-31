@@ -1,41 +1,81 @@
-import React from 'react';
+import React from 'react'
 import {
-    Sidebar,
-    Segment,
-    Button,
-    Menu,
-    Image,
-    Container,
-    Table,
-    Icon,
-    Header,
-    Input,
-    Grid,
-    Dropdown,
-    Pagination,
-    Modal
-  } from "semantic-ui-react";
+  Sidebar,
+  Segment,
+  Button,
+  Menu,
+  Image,
+  Container,
+  Table,
+  Icon,
+  Header,
+  Input,
+  Grid,
+  Dropdown,
+  Pagination,
+  Modal
+} from 'semantic-ui-react'
 class Categories extends React.Component {
-    render() { 
-        return ( 
-            <Grid.Column width={8}>
-                  <Segment>
-                  <Input
-                    fluid
-                    size="large"
-                    icon="add"
-                    placeholder="Add Category"
-                  />
-                  <Input
-                    fluid
-                    size="large"
-                    icon="add"
-                    placeholder="Add Topic"
-                  />
-                  </Segment>
-                </Grid.Column>
-         );
-    }
+  render () {
+    return (
+      <Grid.Column width={8}>
+        <Segment>
+          <Segment basic>
+            <Input fluid size='large' placeholder='Add Category'>
+              <input
+                style={{
+                  borderTopRightRadius: '0px',
+                  borderBottomRightRadius: '0px'
+                }}
+              />
+              <Button
+                primary
+                style={{
+                  borderTopLeftRadius: '0px',
+                  borderBottomLeftRadius: '0px'
+                }}
+              >
+                <Icon
+                  name='add'
+                  style={{
+                    margin: '0',
+                    opacity: '1'
+                  }}
+                />
+              </Button>
+            </Input>
+
+          </Segment>
+          <Segment basic>
+            <Input fluid size='large' placeholder='Add Topic'>
+              <input
+                style={{
+                  borderTopRightRadius: '0px',
+                  borderBottomRightRadius: '0px'
+                }}
+              />
+              <Button
+                primary
+                style={{
+                  borderTopLeftRadius: '0px',
+                  borderBottomLeftRadius: '0px'
+                }}
+              >
+                <Icon
+                  name='add'
+                  style={{
+                    margin: '0',
+                    opacity: '1'
+                  }}
+                />
+              </Button>
+            </Input>
+
+          </Segment>
+        </Segment>
+      </Grid.Column>
+    )
+  }
 }
- 
-export default Categories;
+
+export default Categories
