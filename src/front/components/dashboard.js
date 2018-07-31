@@ -18,6 +18,7 @@ import {
   Modal
 } from "semantic-ui-react";
 import { timeFormat } from "d3-time-format";
+import Categories from './categories'
 let formatTime = timeFormat("%B %d, %Y");
 
 class Dashboard extends React.Component {
@@ -120,21 +121,8 @@ class Dashboard extends React.Component {
                 width: "100%"
               }}
             >
-              <Grid centered padded relaxed doubling divided="vertically">
-                <Grid.Column className="centered" width={7}>
-                  <Input
-                    fluid
-                    size="large"
-                    icon="search"
-                    placeholder="Search..."
-                    onChange={e => {
-                      this.updateSearch(e);
-                    }}
-                  />
-                </Grid.Column>
-                <Grid.Column width={13}>
-                  <Segment basic />
-                </Grid.Column>
+              <Grid padded relaxed doubling divided="vertically">
+                  <Categories />
               </Grid>
             </Segment>
             <Header

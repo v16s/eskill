@@ -64,7 +64,7 @@ class Login extends React.Component {
                     <input type="password" placeholder="Password" />
                   </div>
                 </div>
-                <button class="ui fluid large positive submit button" type="submit">Login</button>
+                <button className="ui fluid large positive submit button" type="submit">Login</button>
 
               </div>
 
