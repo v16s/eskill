@@ -15,13 +15,12 @@ import {
   Pagination,
   Modal
 } from 'semantic-ui-react'
-class Categories extends React.Component {
+class Configuration extends React.Component {
   render () {
     return (
       <Grid.Column width={8}>
         <Segment>
           <Segment basic>
-          <Header size='large' textAlign='center'>Add New Category/Topic</Header>
             <Input fluid size='large' placeholder='Add Category'>
               <input
                 style={{
@@ -124,11 +123,9 @@ class Categories extends React.Component {
             </Table>
           </Segment>
         </Segment>
-
-        
       </Grid.Column>
     )
   }
 }
 
-export default Categories
+export default Configuration

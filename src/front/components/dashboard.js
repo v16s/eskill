@@ -21,6 +21,9 @@ import { timeFormat } from 'd3-time-format'
 import Categories from './categories'
 import Department from './departments'
 import Stats from './stats'
+import Tag from './tag'
+import Configuration from './configuration';
+
 let formatTime = timeFormat('%B %d, %Y')
 
 class Dashboard extends React.Component {
@@ -138,7 +141,12 @@ class Dashboard extends React.Component {
                 
                   <Categories />
                   <Department />
+
                   <Grid.Column width={8} />
+                </Grid.Row>
+                <Grid.Row>
+                  <Tag/>
+                  <Configuration/>
                 </Grid.Row>
               </Grid>
 
