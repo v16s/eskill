@@ -21,9 +21,13 @@ class Configuration extends React.Component {
       <Grid.Column width={8}>
         <Segment>
           <Segment basic>
-            <Input fluid size='large' placeholder='Add Category'>
+            <Input fluid size='large' placeholder='Number of digits in Faculty ID'>
               <input
+                
+              />
+              <input  placeholder='Number of digits in Student ID'
                 style={{
+                  marginLeft: '5px',
                   borderTopRightRadius: '0px',
                   borderBottomRightRadius: '0px'
                 }}

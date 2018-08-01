@@ -138,10 +138,8 @@ class Dashboard extends React.Component {
                <Stats/>
                 </Grid.Row>
                 <Grid.Row>
-                
                   <Categories />
                   <Department />
-
                   <Grid.Column width={8} />
                 </Grid.Row>
                 <Grid.Row>
