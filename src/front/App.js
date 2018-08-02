@@ -8,7 +8,7 @@ import { instanceOf } from 'prop-types'
 import RegisterPage from './components/register'
 import ForgotPage from './components/forgot'
 import { Cookies, withCookies } from 'react-cookie'
-
+import _ from 'lodash'
 import io from 'socket.io-client'
 
 let socket = io('localhost:2000')
@@ -33,11 +33,13 @@ class Root extends React.Component {
       details: cookies.get('details') || {},
       email: cookies.get('email') || null,
       documents: cookies.get('documents') || null,
-      docs: cookies.get('docs') || null,
+      categories: cookies.get('categories') || null,
       level: cookies.get('level') || null,
-      fail: ''
+      fail: '',
+      catError: '',
+      topError: '',
+      topics: []
     }
-
     this.emit = this.emit.bind(this)
     this.logout = this.logout.bind(this)
     this.mainEmit = this.mainEmit.bind(this)
@@ -49,15 +51,16 @@ class Root extends React.Component {
     cookies.remove('isLoggedIn')
     cookies.remove('details')
     cookies.remove('documents')
-    cookies.remove('docs')
+    cookies.remove('categories')
     cookies.remove('email')
     cookies.remove('pass')
     cookies.remove('level')
     this.setState = {
       isLoggedIn: false,
       details: {},
-      docs: {},
-      email: null
+      categories: [],
+      email: null,
+      topics: []
     }
   }
   mainEmit (name, data) {
@@ -72,7 +75,15 @@ class Root extends React.Component {
   }
   componentDidMount (props) {
     const { cookies } = this.props
-
+    const { categories } = this.state
+    let topics = []
+    _.map(categories, c => {
+      c.topics.map(t => {
+        topics.push({ tid: t.id, name: t.name, cid: c._id })
+      })
+    })
+    console.log(topics, categories)
+    this.setState({ topics: topics })
     socket.on('validateLogin', content => {
       // console.log(content)
       cookies.set('err', content.condition)
@@ -98,19 +109,23 @@ class Root extends React.Component {
       cookies.set('documents', content)
       this.setState({ documents: content })
     })
-    socket.on('docs', content => {
-      let a = []
-      content[0].map(d => {
-        let obj = d
-        if (d.from == content[1]) {
-          obj.incoming = false
-        } else {
-          obj.incoming = true
-        }
-        a.unshift(obj)
+    socket.on('catError', error => {
+      console.log(error)
+      this.setState({ catError: error })
+    })
+    socket.on('topError', error => {
+      console.log(error)
+      this.setState({ topError: error })
+    })
+    socket.on('categories', cats => {
+      console.log(cats)
+      topics = []
+      _.map(cats, c => {
+        c.topics.map(t => {
+          topics.push({ tid: t.id, name: t.name, cid: c._id })
+        })
       })
-      cookies.set('docs', a)
-      this.setState({ docs: a })
+      this.setState({ categories: cats, topics: topics })
     })
   }
   render () {
@@ -126,10 +141,13 @@ class Root extends React.Component {
                   level={this.state.level}
                   emit={this.emit}
                   faculties={this.state.details.faculties}
-                  documents={this.state.docs}
+                  categories={this.state.categories}
                   history={this.props.history}
                   logout={this.logout}
                   details={this.state.details}
+                  catError={this.state.catError}
+                  topError={this.state.topError}
+                  topics={this.state.topics}
                   />
                 )}
               />

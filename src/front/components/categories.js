@@ -1,4 +1,5 @@
 import React from 'react'
+import _ from 'lodash'
 import {
   Sidebar,
   Segment,
@@ -10,91 +11,173 @@ import {
   Icon,
   Header,
   Input,
+  Form,
   Grid,
   Dropdown,
   Pagination,
   Modal
 } from 'semantic-ui-react'
 class Categories extends React.Component {
+  constructor (props) {
+    super(props)
+    this.category = React.createRef()
+    this.topic = React.createRef()
+    this.topicSelect = React.createRef()
+    this.state = {
+      catError: '',
+      topError: ''
+    }
+    this.handleCategory = this.handleCategory.bind(this)
+    this.handleTopic = this.handleTopic.bind(this)
+  }
+  handleCategory (e) {
+    e.preventDefault()
+    let { emit } = this.props
+    let category = this.category.current.inputRef.value
+    category.match(/[a-z]\w/gi) !== null && category !== null
+      ? emit('addCategory', category)
+      : this.setState({ catError: 'Invalid Category Name' })
+  }
+  handleTopic (e) {
+    console.log()
+    if (this.topicSelect.current.state.value > 0) {
+      let topic = this.topic.current.inputRef.value
+      topic.match(/[a-z]\w/gi) !== null && topic !== null
+        ? this.props.emit('addTopic', {
+          category: this.props.categories[
+              this.topicSelect.current.state.value - 1
+            ].name,
+          topic: topic
+        })
+        : this.setState({ topError: 'Invalid Topic Name' })
+    } else {
+      this.setState({ topError: 'Please Select a Category' })
+    }
+  }
+  componentWillUpdate (nextProps, nextState) {
+    if (this.props.catError !== nextProps.catError) {
+      nextState.catError = nextProps.catError
+    } else {
+      console.log(nextState.catError)
+    }
+    if (this.props.topError !== nextProps.topError) {
+      nextState.topError = nextProps.topError
+    } else {
+      console.log(nextState.topError)
+    }
+    return true
+  }
   render () {
+    let { categories } = this.props
+    let { catError, topError } = this.state
     return (
       <Grid.Column width={8}>
         <Segment>
           <Segment basic>
-          <Header size='large' textAlign='center'>Add New Category/Topic</Header>
-            <Input fluid size='large' placeholder='Add Category'>
-              <input
-                style={{
-                  borderTopRightRadius: '0px',
-                  borderBottomRightRadius: '0px'
-                }}
-              />
-              <Button
-                primary
-                style={{
-                  borderTopLeftRadius: '0px',
-                  borderBottomLeftRadius: '0px'
-                }}
-              >
-                <Icon
-                  name='add'
-                  style={{
-                    margin: '0',
-                    opacity: '1'
-                  }}
-                />
-              </Button>
-            </Input>
+            <Header size='large' textAlign='center'>
+              Add New Category/Topic
+            </Header>
+            <Form onSubmit={this.handleCategory}>
+              <Form.Field inline>
+                <Input
+                  fluid
+                  size='large'
+                  placeholder='Add Category'
+                  ref={this.category}
+                >
+                  <input
+                    style={{
+                      borderTopRightRadius: '0px',
+                      borderBottomRightRadius: '0px'
+                    }}
+                  />
+                  <Form.Button
+                    primary
+                    style={{
+                      borderTopLeftRadius: '0px',
+                      borderBottomLeftRadius: '0px'
+                    }}
+                  >
+                    <Icon
+                      name='add'
+                      style={{
+                        margin: '0',
+                        opacity: '1'
+                      }}
+                    />
+                  </Form.Button>
+                </Input>
+              </Form.Field>
+
+            </Form>
 
           </Segment>
+          <div
+            className='ui error message'
+            style={{
+              display: catError == '' ? 'none' : 'block',
+              border: 'none',
+              margin: '0 3.5%'
+            }}
+          >
+            {catError}
+          </div>
           <Segment basic>
-            <Input fluid size='large' placeholder='Add Topic'>
-              <Dropdown
-                placeholder='Select Category'
-                selection
-                className='category-select'
-                options={[
-                  {
-                    text: 'Category 1',
-                    value: 'c1'
-                  },
-                  {
-                    text: 'Category 2',
-                    value: 'c2'
-                  },
-                  {
-                    text: 'Category 3',
-                    value: 'c3'
-                  }
-                ]}
-                style={{
-                  borderTopRightRadius: '0px',
-                  borderBottomRightRadius: '0px'
-                }}
-              />
-              <input
-                style={{
-                  borderRadius: '0px'
-                }}
-              />
-              <Button
-                primary
-                style={{
-                  borderTopLeftRadius: '0px',
-                  borderBottomLeftRadius: '0px'
-                }}
-              >
-                <Icon
-                  name='add'
-                  style={{
-                    margin: '0',
-                    opacity: '1'
-                  }}
-                />
-              </Button>
-            </Input>
-
+            <Form onSubmit={this.handleTopic}>
+              <Form.Field inline>
+                <Input
+                  fluid
+                  size='large'
+                  placeholder='Add Topic'
+                  ref={this.topic}
+                >
+                  <Dropdown
+                    placeholder='Select Category'
+                    selection
+                    ref={this.topicSelect}
+                    className='category-select'
+                    options={_.map(categories, k => {
+                      return { text: k.name, value: k._id }
+                    })}
+                    style={{
+                      borderTopRightRadius: '0px',
+                      borderBottomRightRadius: '0px'
+                    }}
+                  />
+                  <input
+                    style={{
+                      borderRadius: '0px'
+                    }}
+                  />
+                  <Button
+                    primary
+                    style={{
+                      borderTopLeftRadius: '0px',
+                      borderBottomLeftRadius: '0px'
+                    }}
+                  >
+                    <Icon
+                      name='add'
+                      style={{
+                        margin: '0',
+                        opacity: '1'
+                      }}
+                    />
+                  </Button>
+                </Input>
+              </Form.Field>
+            </Form>
           </Segment>
+          <div
+            className='ui error message'
+            style={{
+              display: topError == '' ? 'none' : 'block',
+              border: 'none',
+              margin: '0 3.5%'
+            }}
+          >
+            {topError}
+          </div>
           <Segment basic>
             <Table>
               <Table.Header>
@@ -105,27 +188,20 @@ class Categories extends React.Component {
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                <Table.Row>
-                  <Table.Cell>101</Table.Cell>
-                  <Table.Cell>Topic 1</Table.Cell>
-                  <Table.Cell>Category 1</Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                  <Table.Cell>102</Table.Cell>
-                  <Table.Cell>Topic 2</Table.Cell>
-                  <Table.Cell>Category 1</Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                  <Table.Cell>201</Table.Cell>
-                  <Table.Cell>Topic 3</Table.Cell>
-                  <Table.Cell>Category 2</Table.Cell>
-                </Table.Row>
+                {this.props.topics.map((t, i) => {
+                  return (
+                    <Table.Row key={i}>
+                      <Table.Cell>{t.tid}</Table.Cell>
+                      <Table.Cell>{t.name}</Table.Cell>
+                      <Table.Cell>{t.cid}</Table.Cell>
+                    </Table.Row>
+                  )
+                })}
               </Table.Body>
             </Table>
           </Segment>
         </Segment>
 
-        
       </Grid.Column>
     )
   }
