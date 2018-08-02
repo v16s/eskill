@@ -139,7 +139,6 @@ class Dashboard extends React.Component {
                   <Stats />
                 </Grid.Row>
                 <Grid.Row>
-
                   <Categories
                     categories={this.props.categories}
                     emit={this.emit}
@@ -148,7 +147,6 @@ class Dashboard extends React.Component {
                     topics={this.props.topics}
                   />
                   <Department />
-
                   <Grid.Column width={8} />
                 </Grid.Row>
                 <Grid.Row>

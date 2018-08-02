@@ -21,6 +21,7 @@ class Department extends React.Component {
       <Grid.Column width={8}>
         <Segment>
           <Segment basic>
+          <Header size='large' textAlign='center'>Add New Department</Header>
           <Input fluid size='large' placeholder='Add Topic'>
               <Dropdown
                 placeholder='Department Name'
@@ -66,10 +67,6 @@ class Department extends React.Component {
                 />
               </Button>
             </Input>
-
-          </Segment>
-          <Segment basic>
-            
 
           </Segment>
           <Segment basic>
