@@ -32,9 +32,9 @@
   },
   "scripts": {
     "start": "parcel ./public/index.html ",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "build": "parcel build ./public/index.html",
+    "test": "nodemon -w server.js -x node server",
+    "server": "node server"
   },
   "devDependencies": {
     "less": "^3.8.0"
