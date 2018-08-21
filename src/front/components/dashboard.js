@@ -22,7 +22,7 @@ import Categories from './categories'
 import Department from './departments'
 import Stats from './stats'
 import Tag from './tag'
-import Configuration from './configuration';
+import Configuration from './configuration'
 
 let formatTime = timeFormat('%B %d, %Y')
 
@@ -32,7 +32,7 @@ class Dashboard extends React.Component {
     this.state = {
       visible: false,
       modalVisible: false,
-      filter: props.documents
+      filter: props.categories
     }
     this.logout = this.logout.bind(this)
     this.emit = this.emit.bind(this)
@@ -75,14 +75,15 @@ class Dashboard extends React.Component {
             </Menu.Item>
             <Menu.Menu position='right'>
               <Menu.Item
-                name='logout'
                 onClick={e => {
                   e.preventDefault()
                   this.logout()
                   History.push('/')
                   window.location.reload()
                 }}
-              />
+              >
+                <Icon name='sign out' size='large' />
+              </Menu.Item>
             </Menu.Menu>
           </Menu>
         </Segment>
@@ -135,16 +136,22 @@ class Dashboard extends React.Component {
             >
               <Grid padded stackable relaxed doubling divided='vertically'>
                 <Grid.Row>
-               <Stats/>
+                  <Stats />
                 </Grid.Row>
                 <Grid.Row>
-                  <Categories />
+                  <Categories
+                    categories={this.props.categories}
+                    emit={this.emit}
+                    catError={this.props.catError}
+                    topError={this.props.topError}
+                    topics={this.props.topics}
+                  />
                   <Department />
                   <Grid.Column width={8} />
                 </Grid.Row>
                 <Grid.Row>
-                  <Tag/>
-                  <Configuration/>
+                  <Tag />
+                  <Configuration />
                 </Grid.Row>
               </Grid>
 

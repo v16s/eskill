@@ -10,7 +10,7 @@ const cookieParser = require('cookie-parser')
 const mongoose = require('mongoose')
 const EventEmitter = require('events')
 const Schema = mongoose.Schema
-
+const _ = require('lodash')
 class Event extends EventEmitter {}
 const dbCheck = new Event()
 let validateEmail = email => {
@@ -84,7 +84,15 @@ let UserDetails = mongoose.model(
   }),
   'UserDetails'
 )
-
+let Category = mongoose.model(
+  'Category',
+  new Schema({
+    _id: String,
+    name: String,
+    topics: Array
+  }),
+  'Category'
+)
 let validateLogin = (acc, content, e) => {
   console.log(content)
   if (acc != null) {
@@ -123,6 +131,9 @@ io.on('connection', socket => {
           details: details,
           level: acc.level,
           type: acc.type
+        })
+        Category.find().sort({ $natural: 1 }).exec((err, cats) => {
+          socket.emit('categories', cats)
         })
       })
 
@@ -176,5 +187,75 @@ io.on('connection', socket => {
       details.save()
       user.save()
     })
+  })
+  socket.on('addCategory', cat => {
+    Category.findOne(
+      {
+        name: {
+          $regex: new RegExp(`(${cat})\\b`, 'gi')
+        }
+      },
+      (err, presentCat) => {
+        if (presentCat == null) {
+          socket.emit('catError', '')
+          let el = Category.findOne()
+            .limit(1)
+            .sort({ $natural: -1 })
+            .exec((err, el) => {
+              // console.log(el)
+              if (el == null) {
+                let newCat = new Category({
+                  _id: `1`,
+                  name: `${cat}`,
+                  topics: []
+                })
+                newCat.save()
+              } else {
+                let id = parseInt(el._id)
+                id++
+                let newCat = new Category({
+                  _id: `${id}`,
+                  name: `${cat}`,
+                  topics: []
+                })
+                newCat.save(err => {
+                  if (err == null) {
+                    Category.find().sort({ $natural: 1 }).exec((err, cats) => {
+                      socket.emit('categories', cats)
+                    })
+                  }
+                })
+              }
+            })
+        } else {
+          socket.emit('catError', 'Category already exists!')
+          console.log('exists')
+        }
+      }
+    )
+  })
+  socket.on('addTopic', info => {
+    Category.findOne(
+      {
+        name: {
+          $regex: new RegExp(`(${info.category})\\b`, 'gi')
+        }
+      },
+      (err, cat) => {
+        if (_.findIndex(cat.topics, { name: info.topic }) == -1) {
+          cat.topics.push({
+            id: `${cat._id * 100 + cat.topics.length + 1}`,
+            name: info.topic
+          })
+          cat.markModified('topics')
+          cat.save((err, sct) => {
+            console.log(sct)
+          })
+        } else {
+          socket.emit('topError', 'Topic already exists!')
+          console.log('exists')
+        }
+      }
+    )
   })
 })
