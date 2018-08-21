@@ -13,7 +13,8 @@ import {
   Grid,
   Dropdown,
   Pagination,
-  Modal
+  Modal,
+  Radio
 } from 'semantic-ui-react'
 class Configuration extends React.Component {
   render () {
@@ -21,6 +22,7 @@ class Configuration extends React.Component {
       <Grid.Column width={8}>
         <Segment>
           <Segment basic>
+          <Header size='large' textAlign='center'>Configuration</Header>
             <Input fluid size='large' placeholder='Number of digits in Faculty ID'>
               <input
                 
@@ -51,33 +53,17 @@ class Configuration extends React.Component {
 
           </Segment>
           <Segment basic>
-            <Input fluid size='large' placeholder='Add Topic'>
-              <Dropdown
-                placeholder='Select Category'
-                selection
-                className='category-select'
-                options={[
-                  {
-                    text: 'Category 1',
-                    value: 'c1'
-                  },
-                  {
-                    text: 'Category 2',
-                    value: 'c2'
-                  },
-                  {
-                    text: 'Category 3',
-                    value: 'c3'
-                  }
-                ]}
+          <Header as='h4'>Faculty/Student Registration
+          <Radio toggle style={{marginLeft:"2em",marginTop:'5px'}} />
+          </Header>
+          </Segment>
+          <Segment basic>
+          <Input fluid size='large' placeholder='Time Duration for 1 Question (Minutes)'>
+             
+              <input
                 style={{
                   borderTopRightRadius: '0px',
                   borderBottomRightRadius: '0px'
-                }}
-              />
-              <input
-                style={{
-                  borderRadius: '0px'
                 }}
               />
               <Button
@@ -96,35 +82,6 @@ class Configuration extends React.Component {
                 />
               </Button>
             </Input>
-
-          </Segment>
-          <Segment basic>
-            <Table>
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell>Topic ID</Table.HeaderCell>
-                  <Table.HeaderCell>Topic</Table.HeaderCell>
-                  <Table.HeaderCell>Category</Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                <Table.Row>
-                  <Table.Cell>101</Table.Cell>
-                  <Table.Cell>Topic 1</Table.Cell>
-                  <Table.Cell>Category 1</Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                  <Table.Cell>102</Table.Cell>
-                  <Table.Cell>Topic 2</Table.Cell>
-                  <Table.Cell>Category 1</Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                  <Table.Cell>201</Table.Cell>
-                  <Table.Cell>Topic 3</Table.Cell>
-                  <Table.Cell>Category 2</Table.Cell>
-                </Table.Row>
-              </Table.Body>
-            </Table>
           </Segment>
         </Segment>
       </Grid.Column>

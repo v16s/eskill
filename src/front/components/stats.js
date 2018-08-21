@@ -19,7 +19,7 @@ class Categories extends React.Component {
   render () {
     return (
         <Grid.Column >
-        <Segment raised 
+        <Segment basic
         style={{
           minHeight: '100%',
           alignSelf: 'flex-start',
@@ -27,40 +27,60 @@ class Categories extends React.Component {
         }}>
         <Grid>
             <Grid.Column width={4}>
-            <Segment basic 
+            <Segment raised
         style={{
           minHeight: '100%',
-          alignSelf: 'flex-start',
           width: '100%'
-        }}/>
+          
+        }}>
+        <Grid>
+        <Grid.Column width={10}><Header size='medium' textAlign='left'>Total Categories</Header></Grid.Column>
+        <Grid.Column width={5} floated='right'><Header size='medium' textAlign='right'>5</Header></Grid.Column>
+        </Grid>
+        </Segment>
         
             </Grid.Column>
 
             <Grid.Column width={4}>
-            <Segment basic 
+            <Segment raised
         style={{
           minHeight: '100%',
-          alignSelf: 'flex-start',
           width: '100%'
-        }}/>
+        }}>
+        <Grid>
+        <Grid.Column width={10}><Header size='medium' textAlign='left'>Total Categories</Header></Grid.Column>
+        <Grid.Column width={5} floated='right'><Header size='medium' textAlign='right'>5</Header></Grid.Column>
+        </Grid>
+        </Segment>
+        
             </Grid.Column>
 
              <Grid.Column width={4}>
-            <Segment basic 
+             <Segment raised
         style={{
           minHeight: '100%',
-          alignSelf: 'flex-start',
           width: '100%'
-        }}/>
+        }}>
+        <Grid>
+        <Grid.Column width={10}><Header size='medium' textAlign='left'>Total Categories</Header></Grid.Column>
+        <Grid.Column width={5} floated='right'><Header size='medium' textAlign='right'>5</Header></Grid.Column>
+        </Grid>
+        </Segment>
+        
             </Grid.Column>
 
              <Grid.Column width={4}>
-            <Segment basic 
+             <Segment raised
         style={{
           minHeight: '100%',
-          alignSelf: 'flex-start',
           width: '100%'
-        }}/>
+        }}>
+        <Grid>
+        <Grid.Column width={10}><Header size='medium' textAlign='left'>Total Categories</Header></Grid.Column>
+        <Grid.Column width={5} floated='right'><Header size='medium' textAlign='right'>5</Header></Grid.Column>
+        </Grid>
+        </Segment>
+        
             </Grid.Column>
 
 
