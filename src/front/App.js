@@ -38,11 +38,14 @@ class Root extends React.Component {
       fail: '',
       catError: '',
       topError: '',
+      catSuccess: 'none',
+      topSuccess: 'none',
       topics: []
     }
     this.emit = this.emit.bind(this)
     this.logout = this.logout.bind(this)
     this.mainEmit = this.mainEmit.bind(this)
+    this.setLoading = this.setLoading.bind(this)
   }
 
   logout (props) {
@@ -82,6 +85,7 @@ class Root extends React.Component {
         topics.push({ tid: t.id, name: t.name, cid: c._id })
       })
     })
+    topics = _.sortBy(topics, 'tid', 'asc')
     console.log(topics, categories)
     this.setState({ topics: topics })
     socket.on('validateLogin', content => {
@@ -110,23 +114,36 @@ class Root extends React.Component {
       this.setState({ documents: content })
     })
     socket.on('catError', error => {
-      console.log(error)
+      console.log('error', error)
       this.setState({ catError: error })
+      error != '' ? this.setState({ catSuccess: 'none' }) : null
     })
     socket.on('topError', error => {
       console.log(error)
       this.setState({ topError: error })
+      error != '' ? this.setState({ topSuccess: 'none' }) : null
+    })
+    socket.on('success', type => {
+      type == 'category' ? this.setState({ catSuccess: 'success' }) : null
+      type == 'topic' ? this.setState({ topSuccess: 'success' }) : null
     })
     socket.on('categories', cats => {
       console.log(cats)
       topics = []
       _.map(cats, c => {
         c.topics.map(t => {
-          topics.push({ tid: t.id, name: t.name, cid: c._id })
+          topics.push({ tid: parseInt(t.id), name: t.name, cid: c._id })
         })
       })
+      topics = _.sortBy(topics, 'tid', 'asc')
       this.setState({ categories: cats, topics: topics })
     })
+  }
+  setLoading (type) {
+    let newState = this.state
+    console.log(newState)
+    newState[type] = 'load'
+    this.setState(newState)
   }
   render () {
     return (
@@ -148,6 +165,9 @@ class Root extends React.Component {
                   catError={this.state.catError}
                   topError={this.state.topError}
                   topics={this.state.topics}
+                  catSuccess={this.state.catSuccess}
+                  setLoading={this.setLoading}
+                  topSuccess={this.state.topSuccess}
                   />
                 )}
               />

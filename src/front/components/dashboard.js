@@ -57,7 +57,8 @@ class Dashboard extends React.Component {
         <Segment
           style={{
             borderRadius: '0',
-            marginBottom: '0'
+            marginBottom: '0',
+            padding: '0.5em 1em'
           }}
         >
           <Menu secondary fluid borderless>
@@ -145,6 +146,9 @@ class Dashboard extends React.Component {
                     catError={this.props.catError}
                     topError={this.props.topError}
                     topics={this.props.topics}
+                    loading={this.props.setLoading}
+                    catSuccess={this.props.catSuccess}
+                    topSuccess={this.props.topSuccess}
                   />
                   <Department />
                   <Grid.Column width={8} />

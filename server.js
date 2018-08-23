@@ -87,7 +87,7 @@ let UserDetails = mongoose.model(
 let Category = mongoose.model(
   'Category',
   new Schema({
-    _id: String,
+    _id: Number,
     name: String,
     topics: Array
   }),
@@ -189,6 +189,7 @@ io.on('connection', socket => {
     })
   })
   socket.on('addCategory', cat => {
+    console.log('new category details:', cat)
     Category.findOne(
       {
         name: {
@@ -196,37 +197,48 @@ io.on('connection', socket => {
         }
       },
       (err, presentCat) => {
+        console.log(presentCat)
         if (presentCat == null) {
           socket.emit('catError', '')
-          let el = Category.findOne()
-            .limit(1)
-            .sort({ $natural: -1 })
-            .exec((err, el) => {
-              // console.log(el)
-              if (el == null) {
-                let newCat = new Category({
-                  _id: `1`,
-                  name: `${cat}`,
-                  topics: []
-                })
-                newCat.save()
-              } else {
-                let id = parseInt(el._id)
-                id++
-                let newCat = new Category({
-                  _id: `${id}`,
-                  name: `${cat}`,
-                  topics: []
-                })
-                newCat.save(err => {
-                  if (err == null) {
-                    Category.find().sort({ $natural: 1 }).exec((err, cats) => {
-                      socket.emit('categories', cats)
-                    })
-                  }
-                })
-              }
-            })
+          Category.find().sort({ $natural: -1 }).limit(1).exec((err, el) => {
+            console.log(el)
+            if (el.length == 0) {
+              let newCat = new Category({
+                _id: 1,
+                name: `${cat}`,
+                topics: []
+              })
+              newCat.save(err => {
+                if (err == null) {
+                  socket.emit('success', 'category')
+                  Category.find().sort({ $natural: 1 }).exec((err, cats) => {
+                    socket.emit('categories', cats)
+                  })
+                } else {
+                  console.log(err)
+                }
+              })
+            } else {
+              let id = parseInt(el[0]._id)
+              id++
+              let newCat = new Category({
+                _id: id,
+                name: `${cat}`,
+                topics: []
+              })
+              console.log(newCat)
+              newCat.save(err => {
+                if (err == null) {
+                  socket.emit('success', 'category')
+                  Category.find().sort({ $natural: 1 }).exec((err, cats) => {
+                    socket.emit('categories', cats)
+                  })
+                } else {
+                  console.log(err)
+                }
+              })
+            }
+          })
         } else {
           socket.emit('catError', 'Category already exists!')
           console.log('exists')
@@ -250,6 +262,10 @@ io.on('connection', socket => {
           cat.markModified('topics')
           cat.save((err, sct) => {
             console.log(sct)
+            socket.emit('success', 'topic')
+            Category.find().sort({ $natural: 1 }).exec((err, cats) => {
+              socket.emit('categories', cats)
+            })
           })
         } else {
           socket.emit('topError', 'Topic already exists!')

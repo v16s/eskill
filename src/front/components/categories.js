@@ -17,6 +17,7 @@ import {
   Pagination,
   Modal
 } from 'semantic-ui-react'
+import Spinner from 'react-spinkit'
 class Categories extends React.Component {
   constructor (props) {
     super(props)
@@ -34,22 +35,29 @@ class Categories extends React.Component {
     e.preventDefault()
     let { emit } = this.props
     let category = this.category.current.inputRef.value
-    category.match(/[a-z]\w/gi) !== null && category !== null
-      ? emit('addCategory', category)
-      : this.setState({ catError: 'Invalid Category Name' })
+
+    if (category.match(/[a-z]\w/gi) !== null && category !== null) {
+      this.props.loading('catSuccess')
+      emit('addCategory', category)
+    } else {
+      this.setState({ catError: 'Invalid Category Name' })
+    }
   }
   handleTopic (e) {
     console.log()
     if (this.topicSelect.current.state.value > 0) {
       let topic = this.topic.current.inputRef.value
-      topic.match(/[a-z]\w/gi) !== null && topic !== null
-        ? this.props.emit('addTopic', {
+      if (topic.match(/[a-z]\w/gi) !== null && topic !== null) {
+        this.props.emit('addTopic', {
           category: this.props.categories[
-              this.topicSelect.current.state.value - 1
-            ].name,
+            this.topicSelect.current.state.value - 1
+          ].name,
           topic: topic
         })
-        : this.setState({ topError: 'Invalid Topic Name' })
+        this.props.loading('topSuccess')
+      } else {
+        this.setState({ topError: 'Invalid Topic Name' })
+      }
     } else {
       this.setState({ topError: 'Please Select a Category' })
     }
@@ -57,6 +65,7 @@ class Categories extends React.Component {
   componentWillUpdate (nextProps, nextState) {
     if (this.props.catError !== nextProps.catError) {
       nextState.catError = nextProps.catError
+      nextState.catSuccess = nextProps.catSuccess
     } else {
       console.log(nextState.catError)
     }
@@ -68,8 +77,9 @@ class Categories extends React.Component {
     return true
   }
   render () {
-    let { categories } = this.props
+    let { categories, catSuccess, topSuccess } = this.props
     let { catError, topError } = this.state
+    console.log(catSuccess)
     return (
       <Grid.Column width={8}>
         <Segment>
@@ -112,6 +122,29 @@ class Categories extends React.Component {
             </Form>
 
           </Segment>
+          {
+            <div
+              className='ui'
+              style={{
+                display: catSuccess == 'load' ? 'flex' : 'none',
+                justifyContent: 'center'
+              }}
+            >
+              <Spinner color='#1456ff' name='circle' />
+            </div>
+          }
+          {catSuccess == 'success'
+            ? <div
+              className='ui success message'
+              style={{
+                display: 'block',
+                border: 'none',
+                margin: '0 3.5%'
+              }}
+              >
+                Category Successfully Added!
+              </div>
+            : null}
           <div
             className='ui error message'
             style={{
@@ -168,6 +201,29 @@ class Categories extends React.Component {
               </Form.Field>
             </Form>
           </Segment>
+          {
+            <div
+              className='ui'
+              style={{
+                display: topSuccess == 'load' ? 'flex' : 'none',
+                justifyContent: 'center'
+              }}
+            >
+              <Spinner color='#1456ff' name='circle' />
+            </div>
+          }
+          {topSuccess == 'success'
+            ? <div
+              className='ui success message'
+              style={{
+                display: 'block',
+                border: 'none',
+                margin: '0 3.5%'
+              }}
+              >
+                Topic Successfully Added!
+              </div>
+            : null}
           <div
             className='ui error message'
             style={{

@@ -117,6 +117,12 @@ html,
 .ui.header.brand {
   color: @primarycolor;
 }
-.ui[class*="vertically divided"].grid > .row:before {
+.ui[class*='vertically divided'].grid > .row:before {
   box-shadow: none;
+}
+.ui.toggle.checkbox input:checked ~ .box:before,
+.ui.toggle.checkbox input:checked ~ label:before,
+.ui.toggle.checkbox input:focus:checked ~ .box:before,
+.ui.toggle.checkbox input:focus:checked ~ label:before {
+  background-color: @primarycolor !important;
 }
