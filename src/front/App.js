@@ -1,7 +1,7 @@
 import React from 'react'
 import { Router, Switch, Route } from 'react-router-dom'
 import Login from './components/login'
-import Dashboard from './components/dashboard'
+import AdminDashboard from './components/AdminDashboard'
 
 import history from './components/history'
 import { instanceOf } from 'prop-types'
@@ -10,6 +10,7 @@ import ForgotPage from './components/forgot'
 import { Cookies, withCookies } from 'react-cookie'
 import _ from 'lodash'
 import io from 'socket.io-client'
+import CoordinatorDashboard from './components/CoordinatorDashboard';
 
 let socket = io('localhost:2000')
 class Root extends React.Component {
@@ -152,8 +153,8 @@ class Root extends React.Component {
           ? <Switch>
             <Route
               path='/'
-              render={() => (
-                <Dashboard
+              render={() => this.state.level == 2 ? (
+                <AdminDashboard
                   md={this.state.details.details}
                   level={this.state.level}
                   emit={this.emit}
@@ -169,7 +170,24 @@ class Root extends React.Component {
                   setLoading={this.setLoading}
                   topSuccess={this.state.topSuccess}
                   />
-                )}
+                ) : this.state.level == 1 ? (
+                  <CoordinatorDashboard
+                  md={this.state.details.details}
+                  level={this.state.level}
+                  emit={this.emit}
+                  faculties={this.state.details.faculties}
+                  categories={this.state.categories}
+                  history={this.props.history}
+                  logout={this.logout}
+                  details={this.state.details}
+                  catError={this.state.catError}
+                  topError={this.state.topError}
+                  topics={this.state.topics}
+                  catSuccess={this.state.catSuccess}
+                  setLoading={this.setLoading}
+                  topSuccess={this.state.topSuccess}
+                  />
+                ) : null}
               />
           </Switch>
           : <Switch>
