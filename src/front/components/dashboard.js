@@ -23,7 +23,7 @@ import Department from './departments'
 import Stats from './stats'
 import Tag from './tag'
 import Configuration from './configuration'
-
+import _ from 'lodash'
 let formatTime = timeFormat('%B %d, %Y')
 
 class Dashboard extends React.Component {
@@ -51,7 +51,9 @@ class Dashboard extends React.Component {
   }
 
   render () {
-    let { md: det } = this.props
+    let { md: det, topics, categories } = this.props
+    let tl = _.toArray(topics).length, cl = _.toArray(categories).length
+    console.log(cl, tl, typeof topics, typeof categories)
     return (
       <div>
         <Segment
@@ -137,7 +139,7 @@ class Dashboard extends React.Component {
             >
               <Grid padded stackable relaxed doubling divided='vertically'>
                 <Grid.Row>
-                  <Stats />
+                  <Stats categories={cl} topics={tl} />
                 </Grid.Row>
                 <Grid.Row>
                   <Categories

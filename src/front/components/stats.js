@@ -18,76 +18,109 @@ import {
 class Categories extends React.Component {
   render () {
     return (
-        <Grid.Column >
-        <Segment basic
-        style={{
-          minHeight: '100%',
-          alignSelf: 'flex-start',
-          width: '100%'
-        }}>
-        <Grid>
+      <Grid.Column>
+        <Segment
+          basic
+          style={{
+            minHeight: '100%',
+            alignSelf: 'flex-start',
+            width: '100%'
+          }}
+        >
+          <Grid>
             <Grid.Column width={4}>
-            <Segment raised
-        style={{
-          minHeight: '100%',
-          width: '100%'
-          
-        }}>
-        <Grid>
-        <Grid.Column width={10}><Header size='medium' textAlign='left'>Total Categories</Header></Grid.Column>
-        <Grid.Column width={5} floated='right'><Header size='medium' textAlign='right'>5</Header></Grid.Column>
-        </Grid>
-        </Segment>
-        
+              <Segment
+                raised
+                style={{
+                  minHeight: '100%',
+                  width: '100%'
+                }}
+              >
+                <Grid>
+                  <Grid.Column width={10}>
+                    <Header size='medium' textAlign='left'>
+                      Total Categories
+                    </Header>
+                  </Grid.Column>
+                  <Grid.Column width={5} floated='right'>
+                    <Header size='medium' textAlign='right'>
+                      {this.props.categories}
+                    </Header>
+                  </Grid.Column>
+                </Grid>
+              </Segment>
+
             </Grid.Column>
 
             <Grid.Column width={4}>
-            <Segment raised
-        style={{
-          minHeight: '100%',
-          width: '100%'
-        }}>
-        <Grid>
-        <Grid.Column width={10}><Header size='medium' textAlign='left'>Total Categories</Header></Grid.Column>
-        <Grid.Column width={5} floated='right'><Header size='medium' textAlign='right'>5</Header></Grid.Column>
-        </Grid>
-        </Segment>
-        
+              <Segment
+                raised
+                style={{
+                  minHeight: '100%',
+                  width: '100%'
+                }}
+              >
+                <Grid>
+                  <Grid.Column width={10}>
+                    <Header size='medium' textAlign='left'>Total Topics</Header>
+                  </Grid.Column>
+                  <Grid.Column width={5} floated='right'>
+                    <Header size='medium' textAlign='right'>
+                      {this.props.topics}
+                    </Header>
+                  </Grid.Column>
+                </Grid>
+              </Segment>
+
             </Grid.Column>
 
-             <Grid.Column width={4}>
-             <Segment raised
-        style={{
-          minHeight: '100%',
-          width: '100%'
-        }}>
-        <Grid>
-        <Grid.Column width={10}><Header size='medium' textAlign='left'>Total Categories</Header></Grid.Column>
-        <Grid.Column width={5} floated='right'><Header size='medium' textAlign='right'>5</Header></Grid.Column>
-        </Grid>
-        </Segment>
-        
+            <Grid.Column width={4}>
+              <Segment
+                raised
+                style={{
+                  minHeight: '100%',
+                  width: '100%'
+                }}
+              >
+                <Grid>
+                  <Grid.Column width={10}>
+                    <Header size='medium' textAlign='left'>
+                      Total Questions
+                    </Header>
+                  </Grid.Column>
+                  <Grid.Column width={5} floated='right'>
+                    <Header size='medium' textAlign='right'>5</Header>
+                  </Grid.Column>
+                </Grid>
+              </Segment>
+
             </Grid.Column>
 
-             <Grid.Column width={4}>
-             <Segment raised
-        style={{
-          minHeight: '100%',
-          width: '100%'
-        }}>
-        <Grid>
-        <Grid.Column width={10}><Header size='medium' textAlign='left'>Total Categories</Header></Grid.Column>
-        <Grid.Column width={5} floated='right'><Header size='medium' textAlign='right'>5</Header></Grid.Column>
-        </Grid>
-        </Segment>
-        
+            <Grid.Column width={4}>
+              <Segment
+                raised
+                style={{
+                  minHeight: '100%',
+                  width: '100%'
+                }}
+              >
+                <Grid>
+                  <Grid.Column width={10}>
+                    <Header size='medium' textAlign='left'>
+                      Total Users
+                    </Header>
+                  </Grid.Column>
+                  <Grid.Column width={5} floated='right'>
+                    <Header size='medium' textAlign='right'>5</Header>
+                  </Grid.Column>
+                </Grid>
+              </Segment>
+
             </Grid.Column>
 
-
-
-        </Grid>
+          </Grid>
         </Segment>
-        </Grid.Column>
+      </Grid.Column>
     )
   }
 }
