@@ -59,6 +59,21 @@ let Users = mongoose.model(
   }),
   'Users'
 )
+let Label = mongoose.model('Label', new Schema({
+  _id: String,
+  name: String
+}))
+let Questions = mongoose.model('Questions', new Schema({
+  _id: String,
+  ask: Object,
+  tags: Array,
+  category: Array,
+  label: Array,
+  topic: Array,
+  answer: String,
+  level: Number,
+  file: Array
+}))
 let UserDetails = mongoose.model(
   'UserDetails',
   new Schema({
