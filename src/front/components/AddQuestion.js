@@ -118,7 +118,7 @@ class AddQuestion extends React.Component {
             <Grid.Column>
              <Form.Radio/>
              </Grid.Column>
-             <Grid.Column>
+             <Grid.Column className='input-column'>
              <Input placeholder='Search...' size='small'/>
             </Grid.Column>
           </Grid>
@@ -128,7 +128,7 @@ class AddQuestion extends React.Component {
             <Grid.Column>
              <Form.Radio/>
              </Grid.Column>
-             <Grid.Column>
+             <Grid.Column className='input-column'>
              <Input placeholder='Search...' size='small'/>
             </Grid.Column>
           </Grid>
@@ -140,7 +140,7 @@ class AddQuestion extends React.Component {
             <Grid.Column>
              <Form.Radio/>
              </Grid.Column>
-             <Grid.Column>
+             <Grid.Column className='input-column'>
              <Input placeholder='Search...' size='small'/>
             </Grid.Column>
           </Grid>
@@ -150,13 +150,80 @@ class AddQuestion extends React.Component {
             <Grid.Column>
              <Form.Radio/>
              </Grid.Column>
-             <Grid.Column>
+             <Grid.Column className='input-column'>
              <Input placeholder='Search...' size='small'/>
             </Grid.Column>
           </Grid>
       </Grid.Column>
       </Grid.Row>
   </Grid>
+
+  <Segment basic>
+  <Form>
+    <Form.Group widths='equal'>
+    <Form.Field label='Select Level' control='select'>
+        <option value='male'>Male</option>
+        <option value='female'>Female</option>
+      </Form.Field>
+      <Form.Field label='File Upload' control='input' />  
+    </Form.Group>
+    </Form>
+          </Segment>
+          <Segment>
+          <Grid columns={4} divided>
+    <Grid.Row>
+      <Grid.Column>
+      <Form>
+    <Form.Field label='Exam' control='select'>
+        <option value='male'>Male</option>
+        <option value='female'>Female</option>
+      </Form.Field>
+    </Form>
+      </Grid.Column>
+      <Grid.Column>
+      <Form>
+    <Form.Field label='Company' control='select'>
+        <option value='male'>Male</option>
+        <option value='female'>Female</option>
+      </Form.Field>
+    </Form>
+      </Grid.Column>
+      <Grid.Column>
+      <Form>
+    <Form.Field label='Skill' control='select'>
+        <option value='male'>Male</option>
+        <option value='female'>Female</option>
+      </Form.Field>
+    </Form>
+      </Grid.Column>
+      <Grid.Column>
+      <Form>
+    <Form.Field label='Topic' control='select'>
+        <option value='male'>Male</option>
+        <option value='female'>Female</option>
+      </Form.Field>
+    </Form>
+      </Grid.Column>
+    </Grid.Row>
+    </Grid>
+    <Segment basic>
+            <Form.Field>
+                <Input fluid size='large'>
+              <input/>
+             </Input></Form.Field>
+            </Segment>
+            <Segment basic>
+            <Form.Field>
+                <label>Hints for description</label>
+                <Input fluid size='large' placeholder='Question Name'>
+              <input/>
+             </Input></Form.Field>
+            </Segment>
+
+             <Button fluid color='green'>Add Question</Button>
+
+
+          </Segment>
              </Segment>
              
         </Segment>
