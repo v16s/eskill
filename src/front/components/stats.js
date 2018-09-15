@@ -18,7 +18,8 @@ import {
 class Categories extends React.Component {
   render () {
     return (
-      <Grid.Column>
+      <Grid.Column className="stats">
+      
         <Segment
           basic
           style={{
@@ -27,7 +28,7 @@ class Categories extends React.Component {
             width: '100%'
           }}
         >
-          <Grid>
+          <Grid stackable>
             <Grid.Column width={4}>
               <Segment
                 raised
@@ -36,7 +37,7 @@ class Categories extends React.Component {
                   width: '100%'
                 }}
               >
-                <Grid>
+               
                   <Grid.Column width={10}>
                     <Header size='medium' textAlign='left'>
                       Total Categories
@@ -47,7 +48,7 @@ class Categories extends React.Component {
                       {this.props.categories}
                     </Header>
                   </Grid.Column>
-                </Grid>
+               
               </Segment>
 
             </Grid.Column>
@@ -60,7 +61,7 @@ class Categories extends React.Component {
                   width: '100%'
                 }}
               >
-                <Grid>
+                
                   <Grid.Column width={10}>
                     <Header size='medium' textAlign='left'>Total Topics</Header>
                   </Grid.Column>
@@ -69,7 +70,7 @@ class Categories extends React.Component {
                       {this.props.topics}
                     </Header>
                   </Grid.Column>
-                </Grid>
+               
               </Segment>
 
             </Grid.Column>
@@ -82,7 +83,7 @@ class Categories extends React.Component {
                   width: '100%'
                 }}
               >
-                <Grid>
+               
                   <Grid.Column width={10}>
                     <Header size='medium' textAlign='left'>
                       Total Questions
@@ -91,7 +92,7 @@ class Categories extends React.Component {
                   <Grid.Column width={5} floated='right'>
                     <Header size='medium' textAlign='right'>5</Header>
                   </Grid.Column>
-                </Grid>
+                
               </Segment>
 
             </Grid.Column>
@@ -104,7 +105,7 @@ class Categories extends React.Component {
                   width: '100%'
                 }}
               >
-                <Grid>
+               
                   <Grid.Column width={10}>
                     <Header size='medium' textAlign='left'>
                       Total Users
@@ -113,13 +114,14 @@ class Categories extends React.Component {
                   <Grid.Column width={5} floated='right'>
                     <Header size='medium' textAlign='right'>5</Header>
                   </Grid.Column>
-                </Grid>
+                
               </Segment>
 
             </Grid.Column>
 
-          </Grid>
+         </Grid>
         </Segment>
+        
       </Grid.Column>
     )
   }

@@ -17,38 +17,66 @@ import {
   Pagination,
   Modal
 } from 'semantic-ui-react'
+import Select from 'react-select'
 import Spinner from 'react-spinkit'
+import makeAnimated from 'react-select/lib/animated';
 class AddQuestion extends React.Component {
   constructor (props) {
     super(props)
+    this.state = {
+      categories: props.categories,
+      selCat: null,
+    }
+    this.catSelector = React.createRef()
+    this.qname = React.createRef()
+    this.qdef = React.createRef()
+    this.exams = React.createRef()
+    this.company = React.createRef()
+    this.skill = React.createRef()
+    this.topic = React.createRef()
+    this.handleChange = this.handleChange.bind(this)
+    
+  }
+  shouldComponentUpdate(nextProps, nextState) {
+    nextState.categories = nextProps.categories
+
+    return true
+  }
+  componentDidMount() {
+    
+    
   }
   handleChange (e) {
-    console.log(e)
+    console.log({
+      category: this.catSelector.current.state.value.label,
+      qname: this.qname.current.inputRef.value,
+      qdef: this.qdef.current.inputRef.value,
+      exams: this.exams.current.state.value,
+    })
   }
   render () {
+    
     return (
       <Grid.Column>
-        <Form>
+        <Form onSubmit={this.handleChange}>
           <Segment>
             <Segment basic>
-              <Form.Field>
+              <Form.Field required>
                 <label>Select Category</label>
-                <Dropdown
-                  fluid
-                  placeholder='Select Category'
-                  selection
-                  className='category-select'
+                <Select
+                ref={this.catSelector}
+                components={makeAnimated()}
                   options={[
                     {
-                      text: 'Category 1',
+                      label: 'Category 1',
                       value: 'c1'
                     },
                     {
-                      text: 'Category 2',
+                      label: 'Category 2',
                       value: 'c2'
                     },
                     {
-                      text: 'Category 3',
+                      label: 'Category 3',
                       value: 'c3'
                     }
                   ]}
@@ -58,7 +86,7 @@ class AddQuestion extends React.Component {
             <Segment basic>
               <Form.Field>
                 <label>Question Name</label>
-                <Input fluid size='large' placeholder='Question Name'>
+                <Input ref={this.qname} fluid size='large' placeholder='Question Name'>
                   <input />
                 </Input>
               </Form.Field>
@@ -71,9 +99,8 @@ class AddQuestion extends React.Component {
                   fluid
                   size='large'
                   placeholder='Question Description'
-                  onChange={e => {
-                    this.handleChange(e)
-                  }}
+                  
+                  ref={this.qdef}
                 >
                   <input />
                 </Input>
@@ -83,21 +110,7 @@ class AddQuestion extends React.Component {
             <Segment basic>
               <Input fluid size='large' placeholder='Question Name'>
                 <input />
-                <Button
-                  primary
-                  style={{
-                    borderTopLeftRadius: '0px',
-                    borderBottomLeftRadius: '0px'
-                  }}
-                >
-                  <Icon
-                    name='add'
-                    style={{
-                      margin: '0',
-                      opacity: '1'
-                    }}
-                  />
-                </Button>
+                
               </Input>
             </Segment>
             <Segment basic>
@@ -188,80 +201,116 @@ class AddQuestion extends React.Component {
                 </Form.Group>
               </Segment>
               <Segment>
+               
+
+              </Segment>
+              <Segment basic>
                 <Grid columns={4} divided>
                   <Grid.Row>
                     <Grid.Column>
-                      <Dropdown
-                        fluid
-                        placeholder='Select Category'
-                        selection
-                        className='category-select'
+                    <Select
+                    isMulti
+                ref={this.exams}
+                components={makeAnimated()}
                         options={[
-                          { text: 'Hello', value: 1 },
-                          { text: 'Hello', value: 2 },
-                          { text: 'Hello', value: 3 }
+                    {
+                      label: 'Exam 1',
+                      value: 'e1'
+                    },
+                    {
+                      label: 'Exam 2',
+                      value: 'e2'
+                    },
+                    {
+                      label: 'Exam 3',
+                      value: 'e3'
+                    }
                         ]}
                       />
                     </Grid.Column>
                     <Grid.Column>
-                      <Dropdown
-                        fluid
-                        placeholder='Select Category'
-                        selection
-                        className='category-select'
+                    <Select
+                    isMulti
+                ref={this.company}
+                components={makeAnimated()}
                         options={[
-                          { text: 'Hello', value: 1 },
-                          { text: 'Hello', value: 2 },
-                          { text: 'Hello', value: 3 }
+                    {
+                      label: 'Company 1',
+                      value: 'cm1'
+                    },
+                    {
+                      label: 'Company 2',
+                      value: 'cm2'
+                    },
+                    {
+                      label: 'Company 3',
+                      value: 'cm3'
+                    }
                         ]}
                       />
                     </Grid.Column>
                     <Grid.Column>
-                      <Dropdown
-                        fluid
-                        placeholder='Select Category'
-                        selection
-                        className='category-select'
+                    <Select
+                    isMulti
+                ref={this.skill}
+                components={makeAnimated()}
                         options={[
-                          { text: 'Hello', value: 1 },
-                          { text: 'Hello', value: 2 },
-                          { text: 'Hello', value: 3 }
+                    {
+                      label: 'Skill 1',
+                      value: 's1'
+                    },
+                    {
+                      label: 'Skill 2',
+                      value: 's2'
+                    },
+                    {
+                      label: 'Skill 3',
+                      value: 's3'
+                    }
                         ]}
                       />
                     </Grid.Column>
                     <Grid.Column>
-                      <Dropdown
-                        fluid
-                        placeholder='Select Category'
-                        selection
-                        className='category-select'
+                    <Select
+                    isMulti
+                ref={this.topic}
+                components={makeAnimated()}
                         options={[
-                          { text: 'Hello', value: 1 },
-                          { text: 'Hello', value: 2 },
-                          { text: 'Hello', value: 3 }
+                    {
+                      label: 'Topic 1',
+                      value: 't1'
+                    },
+                    {
+                      label: 'Topic 2',
+                      value: 't2'
+                    },
+                    {
+                      label: 'Topic 3',
+                      value: 't3'
+                    }
                         ]}
                       />
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
-                <Segment basic>
-                  <Form.Field>
-                    <Input fluid size='large'>
-                      <input />
-                    </Input>
-                  </Form.Field>
-                </Segment>
+               
                 <Segment basic>
                   <Form.Field>
                     <label>Hints for description</label>
                     <Input fluid size='large' placeholder='Question Name'>
                       <input />
+                      
                     </Input>
                   </Form.Field>
                 </Segment>
 
-                <Button fluid color='green'>Add Question</Button>
+                
+              </Segment>
+              <Segment>
 
+              </Segment>
+              <Segment basic>
+              <Form.Button fluid color='green'>Add Question</Form.Button>
               </Segment>
             </Segment>
 
