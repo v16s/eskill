@@ -207,13 +207,13 @@ class AddQuestion extends React.Component {
                 <Form.Group widths='equal'>
                   <Dropdown
                     fluid
-                    placeholder='Select Category'
+                    placeholder='Select Level'
                     selection
                     className='category-select'
                     options={[
-                      { text: 'Hello', value: 1 },
-                      { text: 'Hello', value: 2 },
-                      { text: 'Hello', value: 3 }
+                      { text: 'Level 1', value: 1 },
+                      { text: 'Level 2', value: 2 },
+                      { text: 'Level 3', value: 3 }
                     ]}
                   />
                   <Form.Field>
@@ -228,6 +228,7 @@ class AddQuestion extends React.Component {
                   <Grid.Row>
                     <Grid.Column>
                     <Select
+                    placeholder='Exams'
                     isMulti
                 ref={this.exams}
                 components={makeAnimated()}
@@ -252,6 +253,7 @@ class AddQuestion extends React.Component {
                     isMulti
                 ref={this.company}
                 components={makeAnimated()}
+                placeholder='Companies'
                         options={[
                     {
                       label: 'Company 1',
@@ -273,6 +275,7 @@ class AddQuestion extends React.Component {
                     isMulti
                 ref={this.skill}
                 components={makeAnimated()}
+                placeholder='Skills'
                         options={[
                     {
                       label: 'Skill 1',
@@ -294,6 +297,7 @@ class AddQuestion extends React.Component {
                     isMulti
                 ref={this.topic}
                 components={makeAnimated()}
+                placeholder='Topics'
                         options={[
                     {
                       label: 'Topic 1',
