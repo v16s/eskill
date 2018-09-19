@@ -132,7 +132,7 @@ class AddQuestion extends React.Component {
                   
                 </Input>
               </Form.Field>
-              <Button primary content='Latex Guide' style={{alignSelf: 'flex-end'}}/>
+              <Button fluid basic primary content='Latex Guide' style={{alignSelf: 'flex-end'}}/>
             </Segment>
 
 
@@ -317,7 +317,11 @@ class AddQuestion extends React.Component {
                   </Grid.Row>
                 </Grid>
                
-                <Segment basic>
+               
+
+                
+              </Segment>
+             
                   <Form.Field>
                     <label>Hints for description</label>
                     <Input fluid size='large' placeholder='Question Name'>
@@ -325,13 +329,10 @@ class AddQuestion extends React.Component {
                       
                     </Input>
                   </Form.Field>
-                </Segment>
-
                 
-              </Segment>
               <Segment></Segment>
               <Segment basic>
-              <Form.Button fluid color='green'>Add Question</Form.Button>
+              <Form.Button fluid primary>Add Question</Form.Button>
               </Segment>
             </Segment>
 
