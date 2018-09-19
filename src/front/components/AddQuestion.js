@@ -17,6 +17,7 @@ import {
   Pagination,
   Modal
 } from 'semantic-ui-react'
+import Preview from './Preview'
 import Select from 'react-select'
 import Spinner from 'react-spinkit'
 import makeAnimated from 'react-select/lib/animated';
@@ -26,6 +27,8 @@ class AddQuestion extends React.Component {
     this.state = {
       categories: props.categories,
       selCat: null,
+      previewData: 'Question Description with an equation: $x^2 + 2x = 0$',
+      name: 'Question Name',
     }
     this.catSelector = React.createRef()
     this.qname = React.createRef()
@@ -35,7 +38,8 @@ class AddQuestion extends React.Component {
     this.skill = React.createRef()
     this.topic = React.createRef()
     this.handleChange = this.handleChange.bind(this)
-    
+    this.handleNameChange = this.handleNameChange.bind(this)
+    this.handlePreviewChange = this.handlePreviewChange.bind(this)
   }
   shouldComponentUpdate(nextProps, nextState) {
     nextState.categories = nextProps.categories
@@ -53,6 +57,12 @@ class AddQuestion extends React.Component {
       qdef: this.qdef.current.inputRef.value,
       exams: this.exams.current.state.value,
     })
+  }
+  handlePreviewChange(e) {
+    this.setState({previewData: e.target.value})
+  }
+  handleNameChange(e) {
+    this.setState({name: e.target.value})
   }
   render () {
     
@@ -86,57 +96,35 @@ class AddQuestion extends React.Component {
             <Segment basic>
               <Form.Field>
                 <label>Question Name</label>
-                <Input ref={this.qname} fluid size='large' placeholder='Question Name'>
+                <Input onChange={this.handleNameChange} ref={this.qname} fluid size='large' placeholder='Question Name'>
                   <input />
                 </Input>
               </Form.Field>
             </Segment>
 
-            <Segment basic>
+           <Segment basic style={{
+             display: 'flex',
+             flexDirection: 'column'
+           }}>
               <Form.Field>
                 <label>Question Description</label>
-                <Input
-                  fluid
-                  size='large'
-                  placeholder='Question Description'
+                <Input fluid size='large' >
+                  <textarea onChange={this.handlePreviewChange} placeholder="Question Description with an equation: $x^2 + 2x = 0$"/>
                   
-                  ref={this.qdef}
-                >
-                  <input />
+                  
                 </Input>
               </Form.Field>
+              <Button primary content='Latex Guide' style={{alignSelf: 'flex-end'}}/>
             </Segment>
 
-            <Segment basic>
-              <Input fluid size='large' placeholder='Question Name'>
-                <input />
-                
-              </Input>
-            </Segment>
-            <Segment basic>
-              <Form.Field>
-                <label>Equation</label>
-                <Input fluid size='large'>
-                  <input />
-                  <Button
-                    primary
-                    content='Add Equation'
-                    style={{
-                      borderTopLeftRadius: '0px',
-                      borderBottomLeftRadius: '0px'
-                    }}
-                  />
-                  <Button primary content='Latex Guide' />
-                </Input>
-              </Form.Field>
-            </Segment>
 
+              <Preview desc={this.state.previewData} name={this.state.name}/>
             <Segment basic>
               <Form.Field>
                 <Grid columns={2} divided>
                   <Grid.Row>
                     <Grid.Column>
-                      <Grid column={2}>
+                      <Grid column={2} className='radio-column'>
                         <Grid.Column>
                           <Form.Radio />
                         </Grid.Column>
@@ -147,7 +135,7 @@ class AddQuestion extends React.Component {
                     </Grid.Column>
                     <Grid.Column>
                       <Grid column={2}>
-                        <Grid.Column>
+                        <Grid.Column className='radio-column'>
                           <Form.Radio />
                         </Grid.Column>
                         <Grid.Column className='input-column'>
@@ -159,7 +147,7 @@ class AddQuestion extends React.Component {
                   <Grid.Row>
                     <Grid.Column>
                       <Grid column={2}>
-                        <Grid.Column>
+                        <Grid.Column className='radio-column'>
                           <Form.Radio />
                         </Grid.Column>
                         <Grid.Column className='input-column'>
@@ -169,7 +157,7 @@ class AddQuestion extends React.Component {
                     </Grid.Column>
                     <Grid.Column>
                       <Grid column={2}>
-                        <Grid.Column>
+                        <Grid.Column className='radio-column'>
                           <Form.Radio />
                         </Grid.Column>
                         <Grid.Column className='input-column'>
@@ -180,6 +168,7 @@ class AddQuestion extends React.Component {
                   </Grid.Row>
                 </Grid>
               </Form.Field>
+              <Segment></Segment>
               <Segment basic>
                 <Form.Group widths='equal'>
                   <Dropdown
@@ -199,10 +188,6 @@ class AddQuestion extends React.Component {
                     </Input>
                   </Form.Field>
                 </Form.Group>
-              </Segment>
-              <Segment>
-               
-
               </Segment>
               <Segment basic>
                 <Grid columns={4} divided>
@@ -306,9 +291,7 @@ class AddQuestion extends React.Component {
 
                 
               </Segment>
-              <Segment>
-
-              </Segment>
+              <Segment></Segment>
               <Segment basic>
               <Form.Button fluid color='green'>Add Question</Form.Button>
               </Segment>

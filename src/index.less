@@ -47,7 +47,7 @@ html,
   box-shadow: none;
 }
 .ui.segment .ui.form .fields .field .ui.input input,
-.ui.segment .ui.input input {
+.ui.segment .ui.input input, textarea {
   background-color: @gray !important;
   border: none !important;
   color: #333;
@@ -59,6 +59,9 @@ html,
   color: rgba(191, 191, 191, 0.87) !important;
   font-size: 16px;
   letter-spacing: 1.5px;
+}
+.ui.form .ui.input input:focus::placeholder {
+  color:#333 !important;
 }
 .ui.segment .ui.primary.button {
   background-color: @primarycolor;
@@ -138,4 +141,7 @@ html,
 }
 .stats .ui.raised.segment{
   display: flex;
+}
+code {
+  background-color: @gray;
 }
