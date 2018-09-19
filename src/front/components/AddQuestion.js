@@ -17,6 +17,7 @@ import {
   Pagination,
   Modal
 } from 'semantic-ui-react'
+import Answers from './Answers'
 import Preview from './Preview'
 import Select from 'react-select'
 import Spinner from 'react-spinkit'
@@ -29,6 +30,13 @@ class AddQuestion extends React.Component {
       selCat: null,
       previewData: 'Question Description with an equation: $x^2 + 2x = 0$',
       name: 'Question Name',
+      value: '',
+      options: {
+        a: 'Option A',
+      b: 'Option B',
+      c: 'Option C',
+      d: 'Option D'
+    }
     }
     this.catSelector = React.createRef()
     this.qname = React.createRef()
@@ -40,6 +48,8 @@ class AddQuestion extends React.Component {
     this.handleChange = this.handleChange.bind(this)
     this.handleNameChange = this.handleNameChange.bind(this)
     this.handlePreviewChange = this.handlePreviewChange.bind(this)
+    this.handleRadio = this.handleRadio.bind(this)
+    this.handleAnswer = this.handleAnswer.bind(this)
   }
   shouldComponentUpdate(nextProps, nextState) {
     nextState.categories = nextProps.categories
@@ -58,14 +68,22 @@ class AddQuestion extends React.Component {
       exams: this.exams.current.state.value,
     })
   }
+  handleRadio (e, { value }) {
+    this.setState({ value })
+  }
   handlePreviewChange(e) {
     this.setState({previewData: e.target.value})
   }
   handleNameChange(e) {
     this.setState({name: e.target.value})
   }
+  handleAnswer(e, opt) {
+    let {options} = this.state
+    options[opt] = e.target.value
+    this.setState({options: options})
+  }
   render () {
-    
+    let {value} = this.state
     return (
       <Grid.Column>
         <Form onSubmit={this.handleChange}>
@@ -124,22 +142,30 @@ class AddQuestion extends React.Component {
                 <Grid columns={2} divided>
                   <Grid.Row>
                     <Grid.Column>
-                      <Grid column={2} className='radio-column'>
-                        <Grid.Column>
-                          <Form.Radio />
+                      <Grid column={2}>
+                        <Grid.Column className='radio-column'>
+                          <Form.Radio
+                          value='a'
+                          checked={value == 'a'}
+                          onChange={this.handleRadio}
+                           />
                         </Grid.Column>
                         <Grid.Column className='input-column'>
-                          <Input placeholder='Search...' size='small' />
+                          <Input placeholder='Option A' size='small' onChange={e => this.handleAnswer(e, 'a')} />
                         </Grid.Column>
                       </Grid>
                     </Grid.Column>
                     <Grid.Column>
                       <Grid column={2}>
                         <Grid.Column className='radio-column'>
-                          <Form.Radio />
+                          <Form.Radio 
+                            value='b'
+                          checked={value == 'b'}
+                          onChange={this.handleRadio}
+                          />
                         </Grid.Column>
                         <Grid.Column className='input-column'>
-                          <Input placeholder='Search...' size='small' />
+                          <Input placeholder='Option B' size='small' onChange={e => this.handleAnswer(e, 'b')} />
                         </Grid.Column>
                       </Grid>
                     </Grid.Column>
@@ -148,27 +174,35 @@ class AddQuestion extends React.Component {
                     <Grid.Column>
                       <Grid column={2}>
                         <Grid.Column className='radio-column'>
-                          <Form.Radio />
+                          <Form.Radio 
+                            value='c'
+                          checked={value == 'c'}
+                          onChange={this.handleRadio}
+                          />
                         </Grid.Column>
                         <Grid.Column className='input-column'>
-                          <Input placeholder='Search...' size='small' />
+                          <Input placeholder='Option C' size='small' onChange={e => this.handleAnswer(e, 'c')} />
                         </Grid.Column>
                       </Grid>
                     </Grid.Column>
                     <Grid.Column>
                       <Grid column={2}>
                         <Grid.Column className='radio-column'>
-                          <Form.Radio />
+                          <Form.Radio 
+                            value='d'
+                          checked={value == 'd'}
+                          onChange={this.handleRadio}
+                          />
                         </Grid.Column>
                         <Grid.Column className='input-column'>
-                          <Input placeholder='Search...' size='small' />
+                          <Input placeholder='Option D' size='small' onChange={e => this.handleAnswer(e, 'd')} />
                         </Grid.Column>
                       </Grid>
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
               </Form.Field>
-              <Segment></Segment>
+              <Answers correct={value} options={this.state.options} />
               <Segment basic>
                 <Form.Group widths='equal'>
                   <Dropdown
