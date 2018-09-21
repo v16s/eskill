@@ -10,40 +10,81 @@ import {
   Icon,
   Header,
   Input,
+  Form,
   Grid,
   Dropdown,
   Pagination,
   Modal
 } from 'semantic-ui-react'
 class Tag extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state={
+      dropVal: '',
+      inputVal: '',
+      tagError: ''
+    }
+    this.handleDropdown = this.handleDropdown.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleInput = this.handleInput.bind(this)
+  }
+  handleSubmit() {
+    let {dropVal, inputVal} = this.state
+    if(dropVal=='') {
+      this.setState({tagError: 'Please choose a group!'})
+    } else if(inputVal=='' || inputVal.match(/[a-z]\w/gi) == null) {
+      this.setState({tagError: 'Invalid Tag Name!'})
+    } else {
+      this.setState({tagError: ''})
+      this.props.emit('addTag', {group: dropVal, name: inputVal})
+    }
+  }
+  handleInput(e) {
+    this.setState({inputVal: e.target.value})
+  }
+  handleDropdown(e, syn) {
+    this.setState({dropVal: syn.value})
+  }
+  componentWillUpdate (nextProps, nextState) {
+    if (this.props.tagError !== nextProps.tagError) {
+      nextState.tagError = nextProps.tagError
+      nextState.tagSuccess = nextProps.tagSuccess
+    } else {
+    }
+    return true
+  }
   render () {
+    let {tagError} = this.state
+    let {tagSuccess, tags} = this.props
+    console.log(tags);
     return (
       <Grid.Column width={8}>
         <Segment>
-          
+          <Form onSubmit={this.handleSubmit}>
           <Segment basic>
           <Header size='large' textAlign='center'>Add New Tag</Header>
             <Input fluid size='large' placeholder='Tag Name'>
               <Dropdown
+                onChange={this.handleDropdown}
                 placeholder='Choose Group'
                 selection
                 className='category-select'
                 options={[
                   {
                     text: 'Company',
-                    value: 'c1'
+                    value: 'company'
                   },
                   {
                     text: 'Exam',
-                    value: 'c2'
+                    value: 'exam'
                   },
                   {
                     text: 'Subject',
-                    value: 'c3'
+                    value: 'subject'
                   },
                   {
                     text: 'Topic',
-                    value: 'c4'
+                    value: 'topic'
                   }
                 ]}
                 style={{
@@ -52,6 +93,7 @@ class Tag extends React.Component {
                 }}
               />
               <input
+              onChange={this.handleInput}
                 style={{
                   borderRadius: '0px'
                 }}
@@ -74,35 +116,51 @@ class Tag extends React.Component {
             </Input>
 
           </Segment>
-          <Segment basic>
+          {tagSuccess == 'success'
+            ? <div
+              className='ui success message'
+              style={{
+                display: 'block',
+                border: 'none',
+                margin: '0 3.5%'
+              }}
+              >
+                Tag Successfully Added!
+              </div>
+            : null}
+          {tagError !== '' ? <div
+            className='ui error message'
+            style={{
+              display: 'block',
+              border: 'none',
+              margin: '0 3.5%'
+            }}
+          >
+            {tagError}
+          </div> : null}
+          {tags != null ? (<Segment basic>
             <Table>
               <Table.Header>
                 <Table.Row>
-                  <Table.HeaderCell>Tag ID</Table.HeaderCell>
                   <Table.HeaderCell>Tag Name</Table.HeaderCell>
                   <Table.HeaderCell>Group Name</Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                <Table.Row>
-                  <Table.Cell>101</Table.Cell>
-                  <Table.Cell>GATE</Table.Cell>
-                  <Table.Cell>Exam</Table.Cell>
+                {tags.map(t => (
+                  <Table.Row>
+                  <Table.Cell>{t.name}</Table.Cell>
+                  <Table.Cell style={{
+                    textTransform: 'capitalize'
+                  }}>{t.group}</Table.Cell>
                 </Table.Row>
-                <Table.Row>
-                  <Table.Cell>102</Table.Cell>
-                  <Table.Cell>TOEFL</Table.Cell>
-                  <Table.Cell>Exam</Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                  <Table.Cell>201</Table.Cell>
-                  <Table.Cell>Wipro</Table.Cell>
-                  <Table.Cell>Company</Table.Cell>
-                </Table.Row>
+                ))}
               </Table.Body>
             </Table>
-          </Segment>
+          </Segment>) : null}
+          </Form>
         </Segment>
+        
       </Grid.Column>
     )
   }

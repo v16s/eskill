@@ -156,7 +156,7 @@ class Dashboard extends React.Component {
                   <Grid.Column width={8} />
                 </Grid.Row>
                 <Grid.Row>
-                  <Tag />
+                  <Tag tagError={this.props.tagError} tagSuccess={this.props.tagSuccess} emit={this.emit} tags={this.props.tags}/>
                   <Configuration />
                 </Grid.Row>
               </Grid>

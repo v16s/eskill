@@ -35,12 +35,15 @@ class Root extends React.Component {
       email: cookies.get('email') || null,
       documents: cookies.get('documents') || null,
       categories: cookies.get('categories') || null,
+      tags: cookies.get('categories') || null,
       level: cookies.get('level') || null,
       fail: '',
       catError: '',
       topError: '',
+      tagError: '',
       catSuccess: 'none',
       topSuccess: 'none',
+      tagSuccess: 'none',
       topics: []
     }
     this.emit = this.emit.bind(this)
@@ -59,10 +62,12 @@ class Root extends React.Component {
     cookies.remove('email')
     cookies.remove('pass')
     cookies.remove('level')
+    cookies.remove('tags')
     this.setState = {
       isLoggedIn: false,
       details: {},
       categories: [],
+      tags: [],
       email: null,
       topics: []
     }
@@ -124,9 +129,15 @@ class Root extends React.Component {
       this.setState({ topError: error })
       error != '' ? this.setState({ topSuccess: 'none' }) : null
     })
+    socket.on('tagError', error => {
+      console.log(error)
+      this.setState({ tagError: error })
+      error != '' ? this.setState({ tagError: 'none' }) : null
+    })
     socket.on('success', type => {
       type == 'category' ? this.setState({ catSuccess: 'success' }) : null
       type == 'topic' ? this.setState({ topSuccess: 'success' }) : null
+      type == 'tag' ? this.setState({ tagSuccess: 'success' }) : null
     })
     socket.on('categories', cats => {
       console.log(cats)
@@ -138,6 +149,33 @@ class Root extends React.Component {
       })
       topics = _.sortBy(topics, 'tid', 'asc')
       this.setState({ categories: cats, topics: topics })
+    })
+    socket.on('tags', tags => {
+      let company=[], exam=[], subject=[], topic=[]
+      _.map(tags, t=> {
+        switch(t.group) {
+          case 'company':
+          company.push(t)
+          break;
+          case 'exam':
+          exam.push(t)
+          break;
+          case 'subject':
+          subject.push(t)
+          break;
+          case 'topic':
+          topic.push(t)
+          break;
+        }
+      })
+      this.setState({grouped: 
+        {
+        company: company,
+        exam: exam,
+        subject: subject,
+        topic: topic
+      }, tags: tags
+    }) 
     })
   }
   setLoading (type) {
@@ -169,6 +207,10 @@ class Root extends React.Component {
                   catSuccess={this.state.catSuccess}
                   setLoading={this.setLoading}
                   topSuccess={this.state.topSuccess}
+                  tags={this.state.tags}
+                  grouped={this.state.grouped}
+                  tagError={this.state.tagError}
+                  tagSuccess={this.state.tagSuccess}
                   />
                 ) : this.state.level == 1 ? (
                   <CoordinatorDashboard
@@ -186,6 +228,10 @@ class Root extends React.Component {
                   catSuccess={this.state.catSuccess}
                   setLoading={this.setLoading}
                   topSuccess={this.state.topSuccess}
+                  tags={this.state.tags}
+                  grouped={this.state.grouped}
+                  tagError={this.state.tagError}
+                  tagSuccess={this.state.tagSuccess}
                   />
                 ) : null}
               />

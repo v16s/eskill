@@ -63,6 +63,10 @@ let Label = mongoose.model('Label', new Schema({
   _id: String,
   name: String
 }))
+let Tags = mongoose.model('Tags', new Schema({
+  group: String,
+  name: String,
+}), 'Tags')
 let Questions = mongoose.model('Questions', new Schema({
   _id: String,
   ask: Object,
@@ -73,7 +77,9 @@ let Questions = mongoose.model('Questions', new Schema({
   answer: String,
   level: Number,
   file: Array
-}))
+}),
+ 'Questions'
+)
 let UserDetails = mongoose.model(
   'UserDetails',
   new Schema({
@@ -124,6 +130,8 @@ db.on('open', () => {
   console.log('connected to database')
 })
 io.on('connection', socket => {
+  let loggedIn=false,
+  level=0
   console.log('user connected')
   const loginCheck = new Event()
   let isLoggedIn = false
@@ -140,6 +148,7 @@ io.on('connection', socket => {
     }
     loginCheck.on('success', acc => {
       console.log('login success')
+      loggedIn = true;
       UserDetails.findById(acc._id, (err, details) => {
         socket.emit('validateLogin', {
           validate: true,
@@ -147,8 +156,12 @@ io.on('connection', socket => {
           level: acc.level,
           type: acc.type
         })
+        level=acc.level
         Category.find().sort({ $natural: 1 }).exec((err, cats) => {
           socket.emit('categories', cats)
+        })
+        Tags.find().exec((err, tags) => {
+          socket.emit('tags', tags)
         })
       })
 
@@ -203,90 +216,118 @@ io.on('connection', socket => {
       user.save()
     })
   })
-  socket.on('addCategory', cat => {
-    console.log('new category details:', cat)
-    Category.findOne(
-      {
-        name: {
-          $regex: new RegExp(`(${cat})\\b`, 'gi')
+    socket.on('addCategory', cat => {
+      if(loggedIn && level==2)
+      {console.log('new category details:', cat)
+      Category.findOne(
+        {
+          name: {
+            $regex: new RegExp(`(${cat})\\b`, 'gi')
+          }
+        },
+        (err, presentCat) => {
+          console.log(presentCat)
+          if (presentCat == null) {
+            socket.emit('catError', '')
+            Category.find().sort({ $natural: -1 }).limit(1).exec((err, el) => {
+              console.log(el)
+              if (el.length == 0) {
+                let newCat = new Category({
+                  _id: 1,
+                  name: `${cat}`,
+                  topics: []
+                })
+                newCat.save(err => {
+                  if (err == null) {
+                    socket.emit('success', 'category')
+                    Category.find().sort({ $natural: 1 }).exec((err, cats) => {
+                      socket.emit('categories', cats)
+                    })
+                  } else {
+                    console.log(err)
+                  }
+                })
+              } else {
+                let id = parseInt(el[0]._id)
+                id++
+                let newCat = new Category({
+                  _id: id,
+                  name: `${cat}`,
+                  topics: []
+                })
+                console.log(newCat)
+                newCat.save(err => {
+                  if (err == null) {
+                    socket.emit('success', 'category')
+                    Category.find().sort({ $natural: 1 }).exec((err, cats) => {
+                      socket.emit('categories', cats)
+                    })
+                  } else {
+                    console.log(err)
+                  }
+                })
+              }
+            })
+          } else {
+            socket.emit('catError', 'Category already exists!')
+            console.log('exists')
+          }
         }
-      },
-      (err, presentCat) => {
-        console.log(presentCat)
-        if (presentCat == null) {
-          socket.emit('catError', '')
-          Category.find().sort({ $natural: -1 }).limit(1).exec((err, el) => {
-            console.log(el)
-            if (el.length == 0) {
-              let newCat = new Category({
-                _id: 1,
-                name: `${cat}`,
-                topics: []
-              })
-              newCat.save(err => {
-                if (err == null) {
-                  socket.emit('success', 'category')
-                  Category.find().sort({ $natural: 1 }).exec((err, cats) => {
-                    socket.emit('categories', cats)
-                  })
-                } else {
-                  console.log(err)
-                }
-              })
-            } else {
-              let id = parseInt(el[0]._id)
-              id++
-              let newCat = new Category({
-                _id: id,
-                name: `${cat}`,
-                topics: []
-              })
-              console.log(newCat)
-              newCat.save(err => {
-                if (err == null) {
-                  socket.emit('success', 'category')
-                  Category.find().sort({ $natural: 1 }).exec((err, cats) => {
-                    socket.emit('categories', cats)
-                  })
-                } else {
-                  console.log(err)
-                }
+      )}
+    })
+    socket.on('addTag', info => {
+      if(loggedIn && level==2){
+      Tags.findOne({
+        name: {
+          $regex: new RegExp(`(${info.name})\\b`, 'gi')
+        }
+      }, (err, presentTag) => {
+        if(presentTag == null) {
+          socket.emit('tagError', '')
+          let tag = new Tags({
+            name: info.name,
+            group: info.group
+          });
+          tag.save(err => {
+            if(err==null) {
+              socket.emit('success', 'tag')
+              Tags.find().exec((err, tags) => {
+                socket.emit('tags', tags)
               })
             }
           })
         } else {
-          socket.emit('catError', 'Category already exists!')
-          console.log('exists')
+          socket.emit('tagError', 'Tag already Exists!');
         }
-      }
-    )
-  })
-  socket.on('addTopic', info => {
-    Category.findOne(
-      {
-        name: {
-          $regex: new RegExp(`(${info.category})\\b`, 'gi')
-        }
-      },
-      (err, cat) => {
-        if (_.findIndex(cat.topics, { name: info.topic }) == -1) {
-          cat.topics.push({
-            id: `${cat._id * 100 + cat.topics.length + 1}`,
-            name: info.topic
-          })
-          cat.markModified('topics')
-          cat.save((err, sct) => {
-            console.log(sct)
-            socket.emit('success', 'topic')
-            Category.find().sort({ $natural: 1 }).exec((err, cats) => {
-              socket.emit('categories', cats)
+      })}
+    })
+    socket.on('addTopic', info => {
+      if(loggedIn && level==2){
+      Category.findOne(
+        {
+          name: {
+            $regex: new RegExp(`(${info.category})\\b`, 'gi')
+          }
+        },
+        (err, cat) => {
+          if (_.findIndex(cat.topics, { name: info.topic }) == -1) {
+            cat.topics.push({
+              id: `${cat._id * 100 + cat.topics.length + 1}`,
+              name: info.topic
             })
-          })
-        } else {
-          socket.emit('topError', 'Topic already exists!')
-          console.log('exists')
+            cat.markModified('topics')
+            cat.save((err, sct) => {
+              console.log(sct)
+              socket.emit('success', 'topic')
+              Category.find().sort({ $natural: 1 }).exec((err, cats) => {
+                socket.emit('categories', cats)
+              })
+            })
+          } else {
+            socket.emit('topError', 'Topic already exists!')
+            console.log('exists')
+          }
         }
-      }
-    )
-  })
+      )}
+    })
 })
