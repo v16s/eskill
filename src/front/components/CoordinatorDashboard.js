@@ -144,7 +144,7 @@ class CoordinatorDashboard extends React.Component {
                   <Stats categories={cl} topics={tl} />
                 </Grid.Row>   
                 <Grid.Row>
-                  <AddQuestion categories={this.props.categories}/>
+                  <AddQuestion categories={this.props.categories} tags={this.props.tags} grouped={this.props.grouped}/>
                   </Grid.Row>                       
               </Grid>
 

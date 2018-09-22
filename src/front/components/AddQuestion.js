@@ -40,7 +40,11 @@ class AddQuestion extends React.Component {
         d: 'Option D'
       },
       topics: [],
-      hints: 'A hint for your question'
+      hints: 'A hint for your question',
+      hidden: true,
+      tags: [],
+      level: 0,
+      err: ''
     }
     this.catSelector = React.createRef()
     this.qname = React.createRef()
@@ -62,6 +66,7 @@ class AddQuestion extends React.Component {
     this.handleExamChange = this.handleExamChange.bind(this)
     this.handleHintsChange = this.handleHintsChange.bind(this)
     this.handleTagTopicChange = this.handleTagTopicChange.bind(this)
+    this.toggleForm = this.toggleForm.bind(this)
   }
   shouldComponentUpdate (nextProps, nextState) {
     nextState.categories = nextProps.categories
@@ -69,15 +74,41 @@ class AddQuestion extends React.Component {
     return true
   }
   componentDidMount () {}
+  toggleForm() {
+    this.setState({hidden: !this.state.hidden})
+  }
   handleChange (e) {
-    console.log({
+    let data = {
       category: this.state.selCat,
       qname: this.state.name,
       qdef: this.state.previewData,
       exams: this.exams.current.state.value,
       options: this.state.options,
-      answer: this.state.value
-    })
+      answer: this.state.value,
+      tags: this.state.tags,
+      level: this.state.level,
+      hints: this.state.hints,
+      topic: this.state.selTopic
+    }
+    if(data.category == null) {
+      this.setState({err: 'cat'})
+      window.scrollTo(0,0)
+    } else if(data.topic == null) {
+      this.setState({err: 'top'})
+      window.scrollTo(0,0)
+    }
+    else if(data.qdef == 'Question Description with an equation: $x^2 + 2x = 0$' || data.qdef.match(/[a-z]\w/gi) == null) {
+      this.setState({err: 'def'})
+      window.scrollTo(0,0)
+    } else if(data.answer == '') {
+      this.setState({err: 'ans'})
+      window.scrollTo(0,0)
+    } else if(data.tags.length==0) {
+      this.setState({err: 'tag'})
+      window.scrollTo(0,0)
+    } else {
+      console.log(data);
+    }
   }
   handleRadio (e, { value }) {
     this.setState({ value })
@@ -99,21 +130,67 @@ class AddQuestion extends React.Component {
   handleTopicChange (e) {
     this.setState({ selTopic: { _id: e.value, name: e.label } })
   }
-  handleLevelChange (e) {}
-  handleExamChange (e) {}
-  handleSkillChange (e) {}
-  handleTagTopicChange (e) {}
+  handleLevelChange (e, syn) {
+    this.setState({level: syn.value})
+  }
+  handleExamChange (e) {
+    let {tags} = this.state
+    tags = _.reject(tags, {group: 'exam'})
+    tags = tags.concat(_.map(e, k => {
+      return {
+        _id: k.value, 
+        name: k.label,
+        group: k.group
+      }
+    }))
+    this.setState({tags: tags})
+  }
+  handleSkillChange (e) {
+    let {tags} = this.state
+    tags = _.reject(tags, {group: 'subject'})
+    tags = tags.concat(_.map(e, k => {
+      return {
+        _id: k.value, 
+        name: k.label,
+        group: k.group
+      }
+    }))
+    this.setState({tags: tags})
+  }
+  handleTagTopicChange (e) {
+    let {tags} = this.state
+    tags = _.reject(tags, {group: 'topic'})
+    tags = tags.concat(_.map(e, k => {
+      return {
+        _id: k.value, 
+        name: k.label,
+        group: k.group
+      }
+    }))
+    this.setState({tags: tags})
+  }
   handleHintsChange (e) {
     this.setState({ hints: e.target.value })
   }
-  handleCompanyChange (e) {}
+  handleCompanyChange (e) {let {tags} = this.state
+  tags = _.reject(tags, {group: 'company'})
+  tags = tags.concat(_.map(e, k => {
+    return {
+      _id: k.value, 
+      name: k.label,
+      group: k.group
+    }
+  }))
+  this.setState({tags: tags})}
   render () {
-    let { value, topics } = this.state
-    let { categories } = this.props
+    let { value, topics, hidden } = this.state
+    let { categories, tags, grouped } = this.props
     return (
       <Grid.Column>
-        <Form onSubmit={this.handleChange}>
+        
           <Segment>
+          {hidden ? null : (
+            <Form id='addform' onSubmit={this.handleChange}>
             <Segment basic>
               <Form.Group widths='equal'>
                 <Form.Field>
@@ -127,6 +204,7 @@ class AddQuestion extends React.Component {
                     })}
                     onChange={this.handleCategoryChange}
                   />
+                  
                 </Form.Field>
                 <Form.Field>
                   <label>Select Topic</label>
@@ -140,8 +218,27 @@ class AddQuestion extends React.Component {
                     isDisabled={topics.length == 0}
                     onChange={this.handleTopicChange}
                   />
+                  
                 </Form.Field>
               </Form.Group>
+              {this.state.err == 'cat' ? <div
+            className='ui error message'
+            style={{
+              display: 'block',
+              border: 'none'
+            }}
+          >
+            Please select a category
+          </div> : null}
+          {this.state.err == 'top' ? <div
+            className='ui error message'
+            style={{
+              display: 'block',
+              border: 'none'
+            }}
+          >
+            Please select a topic
+          </div> : null}
             </Segment>
             <Segment basic>
               <Form.Field>
@@ -173,8 +270,17 @@ class AddQuestion extends React.Component {
                     onChange={this.handlePreviewChange}
                     placeholder='Question Description with an equation: $x^2 + 2x = 0$'
                   />
-
+                  
                 </Input>
+                {this.state.err == 'def' ? <div
+            className='ui error message'
+            style={{
+              display: 'block',
+              border: 'none'
+            }}
+          >
+            Please fill this field up
+          </div> : null}
               </Form.Field>
               <Button
                 fluid
@@ -270,20 +376,30 @@ class AddQuestion extends React.Component {
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
+                {this.state.err == 'ans' ? <div
+            className='ui error message'
+            style={{
+              display: 'block',
+              border: 'none'
+            }}
+          >
+            Please choose the correct option
+          </div> : null}
               </Form.Field>
               <Answers correct={value} options={this.state.options} />
               <Segment basic>
                 <Form.Group widths='equal'>
                   <Dropdown
                     fluid
-                    placeholder='Select Level'
+                    placeholder='Level 1'
                     required
                     selection
+                    onChange={this.handleLevelChange}
                     className='category-select'
                     options={[
-                      { text: 'Level 1', value: 1 },
-                      { text: 'Level 2', value: 2 },
-                      { text: 'Level 3', value: 3 }
+                      { text: 'Level 1', value: 0 },
+                      { text: 'Level 2', value: 1 },
+                      { text: 'Level 3', value: 2 }
                     ]}
                   />
                   <Form.Field>
@@ -297,89 +413,88 @@ class AddQuestion extends React.Component {
                 <Grid columns={4} divided>
                   <Grid.Row>
                     <Grid.Column>
+                    {grouped != undefined ? (
                       <Select
-                        placeholder='Exams'
+                        iplaceholder='Exams'
                         isMulti
                         ref={this.exams}
-                        components={makeAnimated()}
-                        options={[
-                          {
-                            label: 'Exam 1',
-                            value: 'e1'
-                          },
-                          {
-                            label: 'Exam 2',
-                            value: 'e2'
-                          },
-                          {
-                            label: 'Exam 3',
-                            value: 'e3'
+                        options={_.map(grouped.exam, k => {
+                          return {
+                            value: k._id,
+                            label: k.name,
+                            group: k.group
                           }
-                        ]}
+                        })}
+                        onChange={this.handleExamChange}
                       />
+                     ) : null}
                     </Grid.Column>
                     <Grid.Column>
+                    {grouped != undefined ? (
                       <Select
                         isMulti
                         ref={this.company}
                         components={makeAnimated()}
                         placeholder='Companies'
-                        options={[
-                          {
-                            label: 'Company 1',
-                            value: 'cm1'
-                          },
-                          {
-                            label: 'Company 2',
-                            value: 'cm2'
-                          },
-                          {
-                            label: 'Company 3',
-                            value: 'cm3'
+                        options={_.map(grouped.company, k => {
+                          return {
+                            value: k._id,
+                            label: k.name,
+                            group: k.group
                           }
-                        ]}
+                        })}
+                        onChange={this.handleCompanyChange}
                       />
+                     ) : null}
                     </Grid.Column>
                     <Grid.Column>
+                    {grouped != undefined ? (
                       <Select
                         isMulti
                         ref={this.skill}
                         components={makeAnimated()}
-                        placeholder='Skills'
-                        options={[
-                          {
-                            label: 'Skill 1',
-                            value: 's1'
-                          },
-                          {
-                            label: 'Skill 2',
-                            value: 's2'
-                          },
-                          {
-                            label: 'Skill 3',
-                            value: 's3'
+                        placeholder='Subjects'
+                        options={_.map(grouped.subject, k => {
+                          return {
+                            value: k._id,
+                            label: k.name,
+                            group: k.group
                           }
-                        ]}
+                        })}
+                        onChange={this.handleSkillChange}
                       />
+                     ) : null}
+                      
                     </Grid.Column>
                     <Grid.Column>
+                     {grouped != undefined ? (
                       <Select
                         isMulti
                         ref={this.topic}
                         components={makeAnimated()}
                         placeholder='Topics'
-                        options={_.map(topics, k => {
+                        options={_.map(grouped.topic, k => {
                           return {
-                            value: k.id,
-                            label: k.name
+                            value: k._id,
+                            label: k.name,
+                            group: k.group
                           }
                         })}
                         onChange={this.handleTagTopicChange}
                       />
+                     ) : null}
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
-
+                {this.state.err == 'tag' ? <div
+            className='ui error message'
+            style={{
+              display: 'block',
+              border: 'none'
+            }}
+          >
+            Please choose at least one tag
+          </div> : null}
               </Segment>
 
               <Form.Field>
@@ -400,13 +515,22 @@ class AddQuestion extends React.Component {
                 <b>Hint:</b> <Latex>{this.state.hints}</Latex>
               </Segment>
 
-              <Form.Button fluid primary>Add Question</Form.Button>
+              
 
             </Segment>
-
+</Form>
+          )}
+<Segment basic style={{margin: '0'}}>
+<Button onClick={e => {
+  hidden ? this.toggleForm() : null
+}} form='addform' fluid primary className='addQButton'>
+Add Question</Button>
+<Button onClick={this.toggleForm} fluid primary className='addQButton'>
+<Icon name={hidden ? 'angle down' : 'angle up'} />  </Button>
+</Segment>
           </Segment>
 
-        </Form>
+        
       </Grid.Column>
     )
   }
