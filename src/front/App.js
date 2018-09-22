@@ -2,10 +2,11 @@ import React from 'react'
 import { Router, Switch, Route } from 'react-router-dom'
 import Login from './components/login'
 import AdminDashboard from './components/AdminDashboard'
-
+import StudentDashboard from './components/StudentDashboard'
 import history from './components/history'
 import { instanceOf } from 'prop-types'
 import RegisterPage from './components/register'
+import NewTest from './components/newtest'
 import ForgotPage from './components/forgot'
 import { Cookies, withCookies } from 'react-cookie'
 import _ from 'lodash'
@@ -189,6 +190,10 @@ class Root extends React.Component {
       <Router history={history}>
         {this.state.isLoggedIn
           ? <Switch>
+
+             {this.state.level == 0 ? <Route
+              path='/newtest'
+              render={() => <NewTest emit={this.emit} />} /> : null}  
             <Route
               path='/'
               render={() => this.state.level == 2 ? (
@@ -233,8 +238,28 @@ class Root extends React.Component {
                   tagError={this.state.tagError}
                   tagSuccess={this.state.tagSuccess}
                   />
-                ) : null}
+                ) : <StudentDashboard
+                  md={this.state.details.details}
+                  level={this.state.level}
+                  emit={this.emit}
+                  faculties={this.state.details.faculties}
+                  categories={this.state.categories}
+                  history={this.props.history}
+                  logout={this.logout}
+                  details={this.state.details}
+                  catError={this.state.catError}
+                  topError={this.state.topError}
+                  topics={this.state.topics}
+                  catSuccess={this.state.catSuccess}
+                  setLoading={this.setLoading}
+                  topSuccess={this.state.topSuccess}
+                  tags={this.state.tags}
+                  grouped={this.state.grouped}
+                  tagError={this.state.tagError}
+                  tagSuccess={this.state.tagSuccess}/>}
+              />}
               />
+
           </Switch>
           : <Switch>
             <Route
