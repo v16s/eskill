@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import History from './history'
 import Queries from './queries'
+import Attempted from './attempted'
 import {
   Sidebar,
   Segment,
@@ -17,7 +18,9 @@ import {
   Dropdown,
   Pagination,
   Modal,
-  GridRow
+  GridRow,
+  Card,
+  GridColumn
 } from 'semantic-ui-react'
 import Categories from './categories'
 import AddQuestion from './AddQuestion'
@@ -129,22 +132,41 @@ import _ from 'lodash'
               padding: '10px 0'
             }}
           >
-            <Segment
-              basic
-              style={{
-                minHeight: '100%',
-                alignSelf: 'flex-start',
-                width: '100%'
-              }}
-            >
-<Grid padded stackable relaxed doubling divided='vertically'>
-                <Grid.Row>
-                  <Queries categories={cl} topics={tl} />
-                </Grid.Row>   
-              </Grid>
+          <Segment centered
+           style= {{
+            minHeight: '100%',
+            alignSelf: 'flex-start',
+            width: '100%'
+          }}>
+          <Grid padded stackable relaxed doubling divided='vertically'>
+          <Grid.Row>
+            <Queries categories={cl} topics={tl} />
+          </Grid.Row>   
+          </Grid>
 
-            <Button><Link to='/newtest'>New Test</Link></Button>
-            
+          <Grid padded stackable relaxed doubling divided='vertically'>
+          <Grid.Row>
+            <Attempted categories={cl} topics={tl} />
+          </Grid.Row>   
+          </Grid>
+
+
+          <Grid padded stackable relaxed doubling divided='vertically'>
+          <Grid.Row>
+
+            </Grid.Row>
+            </Grid>
+
+            <Grid columns={2} divided>
+            <Grid.Row>
+              <Grid.Column stretched>
+              <Button><Link to='/newtest'>New Test</Link></Button>
+              </Grid.Column>
+              <Grid.Column stretched>
+                <Button><Link to='/sar'>Skill Analysis Report</Link></Button>
+                </Grid.Column>
+                </Grid.Row>
+              </Grid>
             </Segment>
 
 
