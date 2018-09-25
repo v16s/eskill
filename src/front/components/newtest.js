@@ -124,13 +124,25 @@ import {
             }}
           >
 <Segment basic>
+            <Segment>
+            <Grid columns={2}>
+            <Grid.Row>
+            <Button.Group fluid>
+                <Button danger>SELECT CATEGORY</Button>
+                <Button positive>SEARCH TAGS</Button>
+              </Button.Group>
+              <Grid.Column stretched>
+              </Grid.Column>
+                </Grid.Row>
+              </Grid>
+
 <Grid.Column>
-            <Grid columns={2} divided>
+            <Grid columns={2}>
             <Grid.Row>
               <Grid.Column>
                 <Grid column={2}>
                   <Grid.Column className='input-column'>
-                  <Dropdown placeholder='Choose Category' fluid selection />
+                  <Dropdown placeholder='Choose Category' fluid selection  />
                   </Grid.Column>
                 </Grid>
               </Grid.Column>
@@ -159,8 +171,11 @@ import {
                 </Grid>
               </Grid.Column>
             </Grid.Row>
+            <Button primary fluid>Start New Test</Button>
           </Grid>
           </Grid.Column>
+          
+          </Segment>
           </Segment>
         <Header
               size='tiny'
