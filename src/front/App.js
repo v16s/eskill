@@ -18,7 +18,7 @@ class Root extends React.Component {
   static propTypes = {
     cookies: instanceOf(Cookies).isRequired
   }
-  constructor (props) {
+  constructor(props) {
     super(props)
     const { cookies } = this.props
 
@@ -45,7 +45,9 @@ class Root extends React.Component {
       catSuccess: 'none',
       topSuccess: 'none',
       tagSuccess: 'none',
-      topics: []
+      topics: [],
+      questions: cookies.get('questions') || [],
+      qstate: cookies.get('qstate') || []
     }
     this.emit = this.emit.bind(this)
     this.logout = this.logout.bind(this)
@@ -53,7 +55,7 @@ class Root extends React.Component {
     this.setLoading = this.setLoading.bind(this)
   }
 
-  logout (props) {
+  logout(props) {
     const { cookies } = this.props
     cookies.remove('err')
     cookies.remove('isLoggedIn')
@@ -64,26 +66,30 @@ class Root extends React.Component {
     cookies.remove('pass')
     cookies.remove('level')
     cookies.remove('tags')
+    cookies.remove('questions')
+    cookies.remove('qstate')
     this.setState = {
       isLoggedIn: false,
       details: {},
       categories: [],
       tags: [],
       email: null,
-      topics: []
+      topics: [],
+      questions: [],
+      qstate: []
     }
   }
-  mainEmit (name, data) {
+  mainEmit(name, data) {
     const { cookies } = this.props
     socket.emit(name, data)
     this.setState({ email: data.email })
     cookies.set('email', data.email)
     cookies.set('pass', data.pass)
   }
-  emit (name, data) {
+  emit(name, data) {
     socket.emit(name, data)
   }
-  componentDidMount (props) {
+  componentDidMount(props) {
     const { cookies } = this.props
     const { categories } = this.state
     let topics = []
@@ -120,6 +126,11 @@ class Root extends React.Component {
       cookies.set('documents', content)
       this.setState({ documents: content })
     })
+    socket.on('q', q => {
+      cookies.set('questions', q[0])
+      cookies.set('qstate', q[1])
+      this.setState({questions: q[0], qstate: q[1]})
+    })
     socket.on('catError', error => {
       console.log('error', error)
       this.setState({ catError: error })
@@ -152,48 +163,52 @@ class Root extends React.Component {
       this.setState({ categories: cats, topics: topics })
     })
     socket.on('tags', tags => {
-      let company=[], exam=[], subject=[], topic=[]
-      _.map(tags, t=> {
-        switch(t.group) {
+      let company = [], exam = [], subject = [], topic = []
+      _.map(tags, t => {
+        switch (t.group) {
           case 'company':
-          company.push(t)
-          break;
+            company.push(t)
+            break;
           case 'exam':
-          exam.push(t)
-          break;
+            exam.push(t)
+            break;
           case 'subject':
-          subject.push(t)
-          break;
+            subject.push(t)
+            break;
           case 'topic':
-          topic.push(t)
-          break;
+            topic.push(t)
+            break;
         }
       })
-      this.setState({grouped: 
+      this.setState({
+        grouped:
         {
-        company: company,
-        exam: exam,
-        subject: subject,
-        topic: topic
-      }, tags: tags
-    }) 
+          company: company,
+          exam: exam,
+          subject: subject,
+          topic: topic
+        }, tags: tags
+      })
     })
   }
-  setLoading (type) {
+  setLoading(type) {
     let newState = this.state
     console.log(newState)
     newState[type] = 'load'
     this.setState(newState)
   }
-  render () {
+  render() {
     return (
       <Router history={history}>
         {this.state.isLoggedIn
           ? <Switch>
 
-             {this.state.level == 0 ? <Route
+            {this.state.level == 0 ? <Route
               path='/newtest'
-              render={() => <NewTest emit={this.emit} />} /> : null}  
+              render={() => <NewTest logout={this.logout} topics={this.state.topics} grouped={this.state.grouped} categories={this.state.categories} emit={this.emit} />} /> : null}
+              {this.state.level == 0 ? <Route
+              path='/question/:id'
+              render={(props) => <NewTest logout={this.logout} topics={this.state.topics} grouped={this.state.grouped} categories={this.state.categories} emit={this.emit} question={this.state.questions[props.match.params.id]} />} /> : null}
             <Route
               path='/'
               render={() => this.state.level == 2 ? (
@@ -216,9 +231,9 @@ class Root extends React.Component {
                   grouped={this.state.grouped}
                   tagError={this.state.tagError}
                   tagSuccess={this.state.tagSuccess}
-                  />
-                ) : this.state.level == 1 ? (
-                  <CoordinatorDashboard
+                />
+              ) : this.state.level == 1 ? (
+                <CoordinatorDashboard
                   md={this.state.details.details}
                   level={this.state.level}
                   emit={this.emit}
@@ -237,45 +252,47 @@ class Root extends React.Component {
                   grouped={this.state.grouped}
                   tagError={this.state.tagError}
                   tagSuccess={this.state.tagSuccess}
-                  />
-                ) : <StudentDashboard
-                  md={this.state.details.details}
-                  level={this.state.level}
-                  emit={this.emit}
-                  faculties={this.state.details.faculties}
-                  categories={this.state.categories}
-                  history={this.props.history}
-                  logout={this.logout}
-                  details={this.state.details}
-                  catError={this.state.catError}
-                  topError={this.state.topError}
-                  topics={this.state.topics}
-                  catSuccess={this.state.catSuccess}
-                  setLoading={this.setLoading}
-                  topSuccess={this.state.topSuccess}
-                  tags={this.state.tags}
-                  grouped={this.state.grouped}
-                  tagError={this.state.tagError}
-                  tagSuccess={this.state.tagSuccess}/>}
-              />}
-              />
+                />
+              ) : <StudentDashboard
+                    md={this.state.details.details}
+                    level={this.state.level}
+                    emit={this.emit}
+                    faculties={this.state.details.faculties}
+                    categories={this.state.categories}
+                    history={this.props.history}
+                    logout={this.logout}
+                    details={this.state.details}
+                    catError={this.state.catError}
+                    topError={this.state.topError}
+                    topics={this.state.topics}
+                    catSuccess={this.state.catSuccess}
+                    setLoading={this.setLoading}
+                    topSuccess={this.state.topSuccess}
+                    tags={this.state.tags}
+                    grouped={this.state.grouped}
+                    tagError={this.state.tagError}
+                    tagSuccess={this.state.tagSuccess}
+                    q={this.state.qstate}
+                     />}
+            />}
+            />
 
           </Switch>
           : <Switch>
             <Route
               path='/register'
               render={() => <RegisterPage emit={this.emit} />}
-              />
+            />
             <Route
               path='/forgot'
               render={() => <ForgotPage emit={this.emit} />}
-              />
+            />
             <Route
               path='/'
               render={() => (
                 <Login fail={this.state.fail} emit={this.mainEmit} />
-                )}
-              />
+              )}
+            />
           </Switch>}
       </Router>
     )

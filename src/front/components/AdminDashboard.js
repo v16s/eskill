@@ -100,7 +100,7 @@ class Dashboard extends React.Component {
             vertical
             inverted
           >
-            <Menu.Item name='home'>
+            <Menu.Item name='home' onClick={e => {history.push('/')}}>
               <Icon name='home' />
               Home
             </Menu.Item>

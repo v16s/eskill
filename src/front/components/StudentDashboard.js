@@ -22,41 +22,93 @@ import {
   Card,
   GridColumn
 } from 'semantic-ui-react'
-import Categories from './categories'
-import AddQuestion from './AddQuestion'
+import history from './history'
+import { localPoint } from '@vx/event'
+import { Pie } from '@vx/shape'
+import { Group } from '@vx/group'
+
+import { withTooltip, Tooltip } from '@vx/tooltip'
 import _ from 'lodash'
 
-  class StudentDashboard extends React.Component{
-      constructor(props) {
-        super(props)
-        this.state = {
-          visible: false,
-          modalVisible: false,
-          filter: props.categories
-        }
-        this.logout = this.logout.bind(this)
-        this.emit = this.emit.bind(this)
-        this.handleClick = this.handleClick.bind(this)
-      }
-      handleClick () {
-        this.setState({ visible: !this.state.visible })
-      }
-    
-      logout () {
-        this.props.logout()
-      }
-      componentDidMount () {}
-      emit (name, obj) {
-        this.props.emit(name, obj)
+const white = '#888888'
+const black = '#000000'
+
+const usage = d => d.usage
+
+class StudentDashboard extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      visible: false,
+      modalVisible: false,
+      filter: props.categories
     }
-  
-  render(){
-    let { md: det, topics, categories } = this.props
-    let tl = _.toArray(topics).length, cl = _.toArray(categories).length
-    console.log(cl, tl, typeof topics, typeof categories)
-      return(
-     <div>
-         <Segment
+    this.logout = this.logout.bind(this)
+    this.emit = this.emit.bind(this)
+    this.handleClick = this.handleClick.bind(this)
+    this.handleTooltip = this.handleTooltip.bind(this)
+  }
+  handleTooltip ({ event, da }) {
+    const { showTooltip } = this.props
+    const { x, y } = localPoint(event)
+
+    showTooltip({
+      tooltipData: { ...da },
+      tooltipLeft: x,
+      tooltipTop: y
+    })
+  }
+  handleClick () {
+    this.setState({ visible: !this.state.visible })
+  }
+
+  logout () {
+    this.props.logout()
+  }
+  componentDidMount () {}
+  emit (name, obj) {
+    this.props.emit(name, obj)
+  }
+
+  render () {
+    let width = 600
+
+    let height = 600
+
+    let margin = { top: 10, bottom: 10, right: 10, left: 10 }
+    let {
+      md: det,
+      topics,
+      categories,
+      hideTooltip,
+      tooltipData,
+      tooltipTop,
+      tooltipLeft,
+      events,
+      q
+    } = this.props
+    console.log(q)
+    let data = []
+    q.map((k, i) => {
+      data.push({
+        label: k.n,
+        usage: 1,
+        name: `Question ${k.n}`,
+        state: k.a,
+        ind: i
+      })
+    })
+
+    let tl = _.toArray(topics).length
+    const radius = Math.min(width, height) / 2
+    const centerY = height / 2
+    const centerX = width / 2
+
+    let cl = _.toArray(categories).length
+
+    return (
+      <div>
+        <Segment
           style={{
             borderRadius: '0',
             marginBottom: '0',
@@ -74,7 +126,9 @@ import _ from 'lodash'
               />
             </Menu.Item>
             <Menu.Item>
-              <Header as='h2' className='brand'>eSkill</Header>
+              <Header as='h2' className='brand'>
+                eSkill
+              </Header>
             </Menu.Item>
             <Menu.Menu position='right'>
               <Menu.Item
@@ -91,9 +145,7 @@ import _ from 'lodash'
           </Menu>
         </Segment>
 
-
-
-<Sidebar.Pushable>
+        <Sidebar.Pushable>
           <Sidebar
             as={Menu}
             animation='push'
@@ -103,7 +155,7 @@ import _ from 'lodash'
             vertical
             inverted
           >
-            <Menu.Item name='home'>
+            <Menu.Item name='home' onClick={e => {history.push('/')}}>
               <Icon name='home' />
               Home
             </Menu.Item>
@@ -132,45 +184,98 @@ import _ from 'lodash'
               padding: '10px 0'
             }}
           >
-          <Segment centered
-           style= {{
-            minHeight: '100%',
-            alignSelf: 'flex-start',
-            width: '100%'
-          }}>
-          <Grid padded stackable relaxed doubling divided='vertically'>
-          <Grid.Row>
-            <Queries categories={cl} topics={tl} />
-          </Grid.Row>   
-          </Grid>
-
-          <Grid padded stackable relaxed doubling divided='vertically'>
-          <Grid.Row>
-            <Attempted categories={cl} topics={tl} />
-          </Grid.Row>   
-          </Grid>
-
-
-          <Grid padded stackable relaxed doubling divided='vertically'>
-          <Grid.Row>
-
-            </Grid.Row>
-            </Grid>
-
-            <Grid columns={2} divided>
-            <Grid.Row>
-              <Grid.Column stretched>
-              <Button><Link to='/newtest'>New Test</Link></Button>
-              </Grid.Column>
-              <Grid.Column stretched>
-                <Button><Link to='/sar'>Skill Analysis Report</Link></Button>
-                </Grid.Column>
-                </Grid.Row>
-              </Grid>
+            <Segment basic style={{ height: '700px' }}>
+              <Segment
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  justifyContent: 'center'
+                }}
+              >
+                <svg height={height} width={width}>
+                  <Group top={centerY - margin.top} left={centerX}>
+                    <Pie
+                      data={data}
+                      pieValue={usage}
+                      outerRadius={radius - radius / 3}
+                      innerRadius={radius - radius / 6}
+                      cornerRadius={0}
+                      padAngle={0}
+                    >
+                      {pie => {
+                        return pie.arcs.map((arc, i) => {
+                          const opacity = 1
+                          const [centroidX, centroidY] = pie.path.centroid(arc)
+                          const { startAngle, endAngle } = arc
+                          const hasSpaceForLabel = endAngle - startAngle >= 0.1
+                          return (
+                            <g key={`browser-${arc.data.label}-${i}`}>
+                              <a
+                                href={`/question/${arc.data.ind}`}
+                                onClick={e => {
+                                  e.preventDefault()
+                                  history.push(`/question/${arc.data.ind}`)
+                                }}
+                              >
+                                <path
+                                  d={pie.path(arc)}
+                                  fill={
+                                    arc.data.state == 0
+                                      ? 'blue'
+                                      : arc.data.state == 1
+                                        ? 'yellow'
+                                        : arc.data.state == 2 ? 'green' : 'red'
+                                  }
+                                  stroke='#222'
+                                  strokeLinecap='square'
+                                  strokeLinejoin='bevel'
+                                  fillOpacity={opacity}
+                                  onMouseMove={event =>
+                                    this.handleTooltip({
+                                      event,
+                                      da: {
+                                        content: arc.data.name,
+                                        bgc:
+                                          arc.data.state == 0
+                                            ? 'red'
+                                            : arc.data.state == 1
+                                              ? 'yellow'
+                                              : 'green',
+                                        color:
+                                          arc.data.state == 0
+                                            ? 'white'
+                                            : 'black'
+                                      }
+                                    })
+                                  }
+                                  onMouseLeave={event => hideTooltip()}
+                                />
+                              </a>
+                            </g>
+                          )
+                        })
+                      }}
+                    </Pie>
+                  </Group>
+                </svg>
+                {tooltipData && (
+                  <div>
+                    <Tooltip
+                      top={tooltipTop - 18}
+                      left={tooltipLeft + 12}
+                      style={{
+                        backgroundColor: tooltipData.bgc,
+                        color: tooltipData.color
+                      }}
+                    >
+                      {`${tooltipData.content}`}
+                    </Tooltip>
+                  </div>
+                )}
+              </Segment>
             </Segment>
-
-
-        <Header
+            <Header
               size='tiny'
               style={{
                 position: 'relative',
@@ -181,14 +286,11 @@ import _ from 'lodash'
             >
               eSkill - SRM Center for Applied Research in Education
             </Header>
-            </Sidebar.Pusher>
+          </Sidebar.Pusher>
         </Sidebar.Pushable>
-     </div>
-    
-    ) 
+      </div>
+    )
   }
-}    
+}
 
-  
-
-  export default StudentDashboard
+export default withTooltip(StudentDashboard)

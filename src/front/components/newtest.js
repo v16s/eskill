@@ -1,53 +1,75 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import {
-    Sidebar,
-    Segment,
-    Button,
-    Menu,
-    Image,
-    Container,
-    Table,
-    Icon,
-    Header,
-    Input,
-    Grid,
-    Dropdown,
-    Pagination,
-    Modal,
-    Form,
-    GridRow
-  } from 'semantic-ui-react'
-  import History from './history'
-  import _ from 'lodash'
+  Sidebar,
+  Segment,
+  Button,
+  Menu,
+  Image,
+  Container,
+  Table,
+  Icon,
+  Header,
+  Input,
+  Grid,
+  Dropdown,
+  Pagination,
+  Modal,
+  Form,
+  GridRow
+} from 'semantic-ui-react'
+import history from './history'
+import Select from 'react-select'
+import makeAnimated from 'react-select/lib/animated'
+import History from './history'
+import _ from 'lodash'
+import Preview from './Preview'
+class NewTest extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      visible: false,
+      modalVisible: false,
+      filter: props.categories,
+      selCat: null,
+      topics: [],
+      selTopic: null,
+      value: ''
+    }
+    this.logout = this.logout.bind(this)
+    this.emit = this.emit.bind(this)
+    this.handleClick = this.handleClick.bind(this)
+    this.handleCategoryChange = this.handleCategoryChange.bind(this)
+    this.handleTopicChange = this.handleTopicChange.bind(this)
+    this.handleRadio = this.handleRadio.bind(this)
+  }
+  handleCategoryChange (e) {
+    this.setState({ topics: e.topics, selCat: { _id: e.value, name: e.label } })
+  }
+  handleTopicChange (e) {
+    this.setState({ selTopic: { _id: e.value, name: e.label } })
+  }
+  handleClick () {
+    this.setState({ visible: !this.state.visible })
+  }
 
-  class NewTest extends React.Component{
-      constructor(props){
-          super(props)
-          this.state = {
-            visible: false,
-            modalVisible: false,
-            filter: props.categories
-          }
-          this.logout = this.logout.bind(this)
-          this.emit = this.emit.bind(this)
-          this.handleClick = this.handleClick.bind(this)
-        }
-        handleClick () {
-          this.setState({ visible: !this.state.visible })
-        }
-      
-        logout () {
-          this.props.logout()
-        }
-        componentDidMount () {}
-        emit (name, obj) {
-          this.props.emit(name, obj)
-      }
-      render(){
-          return(<div>
-
-         <Segment
+  logout () {
+    this.props.logout()
+  }
+  componentDidMount () {}
+  emit (name, obj) {
+    this.props.emit(name, obj)
+  }
+  handleRadio (e, { value }) {
+    this.setState({ value })
+  }
+  render () {
+    let { topics, value } = this.state
+    let { categories, question: q } = this.props
+    console.log(categories, topics)
+    return (
+      <div>
+        <Segment
           style={{
             borderRadius: '0',
             marginBottom: '0',
@@ -65,7 +87,9 @@ import {
               />
             </Menu.Item>
             <Menu.Item>
-              <Header as='h2' className='brand'>eSkill</Header>
+              <Header as='h2' className='brand'>
+                eSkill
+              </Header>
             </Menu.Item>
             <Menu.Menu position='right'>
               <Menu.Item
@@ -82,9 +106,7 @@ import {
           </Menu>
         </Segment>
 
-
-
-<Sidebar.Pushable>
+        <Sidebar.Pushable>
           <Sidebar
             as={Menu}
             animation='push'
@@ -94,7 +116,15 @@ import {
             vertical
             inverted
           >
-            <Menu.Item name='home'>
+            <Menu.Item
+              name='home'
+              onClick={e => {
+                history.push('/')
+              }}
+              onClick={e => {
+                history.push('/')
+              }}
+            >
               <Icon name='home' />
               Home
             </Menu.Item>
@@ -123,61 +153,123 @@ import {
               padding: '10px 0'
             }}
           >
-<Segment basic>
-            <Segment>
-            <Grid columns={2}>
-            <Grid.Row>
-            <Button.Group fluid>
-                <Button danger>SELECT CATEGORY</Button>
-                <Button positive>SEARCH TAGS</Button>
-              </Button.Group>
-              <Grid.Column stretched>
-              </Grid.Column>
-                </Grid.Row>
-              </Grid>
+            <Segment basic>
+              {q != undefined ? (
+                <Segment>
+                  <Preview q={q} without />
 
-<Grid.Column>
-            <Grid columns={2}>
-            <Grid.Row>
-              <Grid.Column>
-                <Grid column={2}>
-                  <Grid.Column className='input-column'>
-                  <Dropdown placeholder='Choose Category' fluid selection  />
-                  </Grid.Column>
-                </Grid>
-              </Grid.Column>
-              <Grid.Column>
-                <Grid column={2}>
-                  <Grid.Column className='input-column'>
-                  <Dropdown placeholder='Choose Topic' fluid selection />
-                  </Grid.Column>
-                </Grid>
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row>
-              <Grid.Column>
-                <Grid column={2}>
-                  <Grid.Column className='input-column'>
-                  <Dropdown placeholder='Choose No. of Questions' fluid selection />
-                  </Grid.Column>
-                </Grid>
-              </Grid.Column>
-              <Grid.Column>
-                <Grid column={2}>
-                 
-                  <Grid.Column className='input-column'>
-                  <Dropdown placeholder='Select Level' fluid selection />
-                  </Grid.Column>
-                </Grid>
-              </Grid.Column>
-            </Grid.Row>
-            <Button primary fluid>Start New Test</Button>
-          </Grid>
-          </Grid.Column>
-          
-          </Segment>
-          </Segment>
-        <Header
+                  <Segment basic>
+                    {' '}
+                    <Grid columns={2} divided>
+                      <Grid.Row>
+                        <Grid.Column>
+                          <Grid column={2}>
+                            <Grid.Column className='radio-column'>
+                              <Form.Radio
+                                value='a'
+                                checked={value == 'a'}
+                                onChange={this.handleRadio}
+                              />
+                            </Grid.Column>
+                            <Grid.Column className='input-column'>
+                              <Segment
+                                className='cursorpointer'
+                                onClick={e =>
+                                  this.handleRadio(e, { value: 'a' })
+                                }
+                                inverted={value === 'a'}
+                                color={value === 'a' ? 'green' : null}
+                              >
+                                {q.options.a.split(') ').pop()}
+                              </Segment>
+                            </Grid.Column>
+                          </Grid>
+                        </Grid.Column>
+                        <Grid.Column>
+                          <Grid column={2}>
+                            <Grid.Column className='radio-column'>
+                              <Form.Radio
+                                value='b'
+                                checked={value == 'b'}
+                                onChange={this.handleRadio}
+                              />
+                            </Grid.Column>
+                            <Grid.Column className='input-column'>
+                              <Segment
+                                className='cursorpointer'
+                                onClick={e =>
+                                  this.handleRadio(e, { value: 'b' })
+                                }
+                                inverted={value === 'b'}
+                                color={value === 'b' ? 'green' : null}
+                              >
+                                {q.options.b.split(') ').pop()}
+                              </Segment>
+                            </Grid.Column>
+                          </Grid>
+                        </Grid.Column>
+                      </Grid.Row>
+                      <Grid.Row>
+                        <Grid.Column>
+                          <Grid column={2}>
+                            <Grid.Column className='radio-column'>
+                              <Form.Radio
+                                value='c'
+                                checked={value == 'c'}
+                                onChange={this.handleRadio}
+                              />
+                            </Grid.Column>
+                            <Grid.Column className='input-column'>
+                              <Segment
+                                className='cursorpointer'
+                                onClick={e =>
+                                  this.handleRadio(e, { value: 'c' })
+                                }
+                                inverted={value === 'c'}
+                                color={value === 'c' ? 'green' : null}
+                              >
+                                {q.options.c.split(') ').pop()}
+                              </Segment>
+                            </Grid.Column>
+                          </Grid>
+                        </Grid.Column>
+                        <Grid.Column>
+                          <Grid column={2}>
+                            <Grid.Column className='radio-column'>
+                              <Form.Radio
+                                value='d'
+                                checked={value == 'd'}
+                                onChange={this.handleRadio}
+                              />
+                            </Grid.Column>
+                            <Grid.Column className='input-column'>
+                              <Segment
+                                className='cursorpointer'
+                                onClick={e =>
+                                  this.handleRadio(e, { value: 'd' })
+                                }
+                                inverted={value === 'd'}
+                                color={value === 'd' ? 'green' : null}
+                              >
+                                {q.options.d.split(') ').pop()}
+                              </Segment>
+                            </Grid.Column>
+                          </Grid>
+                        </Grid.Column>
+                      </Grid.Row>
+                    </Grid>
+                  </Segment>
+
+                  <Segment basic>
+                    <Button primary fluid>
+                      Submit
+                    </Button>
+                  </Segment>
+                </Segment>
+              ) : null}
+            </Segment>
+
+            <Header
               size='tiny'
               style={{
                 position: 'relative',
@@ -188,11 +280,10 @@ import {
             >
               eSkill - SRM Center for Applied Research in Education
             </Header>
-            </Sidebar.Pusher>
+          </Sidebar.Pusher>
         </Sidebar.Pushable>
-    
-         </div>
-          )
-      }
+      </div>
+    )
   }
-  export default NewTest
+}
+export default NewTest

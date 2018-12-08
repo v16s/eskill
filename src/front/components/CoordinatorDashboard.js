@@ -23,8 +23,6 @@ import Categories from './categories'
 import AddQuestion from './AddQuestion'
 import _ from 'lodash'
 
-
-
 class CoordinatorDashboard extends React.Component {
   constructor (props) {
     super(props)
@@ -50,12 +48,13 @@ class CoordinatorDashboard extends React.Component {
   }
   render () {
     let { md: det, topics, categories } = this.props
-    let tl = _.toArray(topics).length, cl = _.toArray(categories).length
+    let tl = _.toArray(topics).length
+
+    let cl = _.toArray(categories).length
     console.log(cl, tl, typeof topics, typeof categories)
     return (
-     
       <div>
-       <Segment
+        <Segment
           style={{
             borderRadius: '0',
             marginBottom: '0',
@@ -73,7 +72,9 @@ class CoordinatorDashboard extends React.Component {
               />
             </Menu.Item>
             <Menu.Item>
-              <Header as='h2' className='brand'>eSkill</Header>
+              <Header as='h2' className='brand'>
+                eSkill
+              </Header>
             </Menu.Item>
             <Menu.Menu position='right'>
               <Menu.Item
@@ -90,9 +91,7 @@ class CoordinatorDashboard extends React.Component {
           </Menu>
         </Segment>
 
-
-
-<Sidebar.Pushable>
+        <Sidebar.Pushable>
           <Sidebar
             as={Menu}
             animation='push'
@@ -102,7 +101,7 @@ class CoordinatorDashboard extends React.Component {
             vertical
             inverted
           >
-            <Menu.Item name='home'>
+            <Menu.Item name='home' onClick={e => {history.push('/')}}>
               <Icon name='home' />
               Home
             </Menu.Item>
@@ -142,16 +141,19 @@ class CoordinatorDashboard extends React.Component {
               <Grid padded stackable relaxed doubling divided='vertically'>
                 <Grid.Row>
                   <Stats categories={cl} topics={tl} />
-                </Grid.Row>   
+                </Grid.Row>
                 <Grid.Row>
-                  <AddQuestion categories={this.props.categories} tags={this.props.tags} grouped={this.props.grouped}/>
-                  </Grid.Row>                       
+                  <AddQuestion
+                    categories={this.props.categories}
+                    tags={this.props.tags}
+                    grouped={this.props.grouped}
+                    emit={this.emit}
+                  />
+                </Grid.Row>
               </Grid>
-
             </Segment>
 
-
-        <Header
+            <Header
               size='tiny'
               style={{
                 position: 'relative',
@@ -162,10 +164,9 @@ class CoordinatorDashboard extends React.Component {
             >
               eSkill - SRM Center for Applied Research in Education
             </Header>
-            </Sidebar.Pusher>
+          </Sidebar.Pusher>
         </Sidebar.Pushable>
-    </div>
-      
+      </div>
     )
   }
 }

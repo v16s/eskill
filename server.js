@@ -12,6 +12,7 @@ const EventEmitter = require('events')
 const Schema = mongoose.Schema
 const _ = require('lodash')
 class Event extends EventEmitter {}
+let count = 0
 const dbCheck = new Event()
 let validateEmail = email => {
   var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -55,7 +56,8 @@ let Users = mongoose.model(
     email: String,
     password: String,
     type: String,
-    level: Number
+    level: Number,
+    questions: Array
   }),
   'Users'
 )
@@ -68,15 +70,14 @@ let Tags = mongoose.model('Tags', new Schema({
   name: String,
 }), 'Tags')
 let Questions = mongoose.model('Questions', new Schema({
-  _id: String,
-  ask: Object,
-  tags: Array,
-  category: Array,
+  category: Object,
   label: Array,
-  topic: Array,
+  topic: Object,
   answer: String,
-  level: Number,
-  file: Array
+  options: Object,
+  qname: String,
+  qdef: String,
+  hints: String
 }),
  'Questions'
 )
@@ -128,6 +129,9 @@ let validateLogin = (acc, content, e) => {
 }
 db.on('open', () => {
   console.log('connected to database')
+Questions.countDocuments((err, c) => {
+  count = c
+  })
 })
 io.on('connection', socket => {
   let loggedIn=false,
@@ -163,9 +167,34 @@ io.on('connection', socket => {
         Tags.find().exec((err, tags) => {
           socket.emit('tags', tags)
         })
+        
+        if(level == 0 && (acc.questions == undefined || acc.questions.length == 0)) {
+          let q = []
+          while(q.length < 100){
+            var r = Math.floor(Math.random()*count);
+            if(q.indexOf(r) === -1) q.push(r);
+            
+        }
+        acc.questions = q
+            acc.markModified('questions')
+            acc.save(err => {
+              if(err) {
+                console.log(err)
+              } else {
+                console.log('saved')
+              }
+            })
+        } else if(level == 0) {
+          Questions.find().exec((err, q) => {
+            let questions = []
+            acc.questions.map(k => {
+              questions.push(q[k.n])
+            })
+            socket.emit('q', [questions, acc.questions])
+          })
+        }
       })
 
-      socket.on('add', a => {})
     })
     loginCheck.on('fail', reason => {
       console.log(reason)
@@ -329,5 +358,25 @@ io.on('connection', socket => {
           }
         }
       )}
+    })
+
+    socket.on('addQuestion', q => {
+      console.log(q)
+      let question = new Questions({
+        category: q.category,
+        qname: q.qname,
+        qdef: q.qdef,
+        options: q.options,
+        answer: q.answer,
+        hints: q.hints,
+        topic: q.topic
+      })
+      question.save(err => {
+        if(err == null) {
+          socket.emit('added', 'success')
+        } else {
+          socket.emit('added', 'error')
+        }
+      })
     })
 })

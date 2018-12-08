@@ -21,7 +21,7 @@ class XYZ extends React.Component {
         <Button onClick={this.toggleVisibility}>Toggle Visibility</Button>
         <Sidebar.Pushable as={Segment}>
           <Sidebar as={Menu} animation='overlay' width='thin' visible={visible} icon='labeled' vertical inverted>
-            <Menu.Item name='home'>
+            <Menu.Item name='home' onClick={e => {history.push('/')}}>
               <Icon name='home' />
               Home
             </Menu.Item>

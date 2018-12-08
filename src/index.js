@@ -1,16 +1,16 @@
-import React from "react";
-import { CookiesProvider } from "react-cookie";
-import ReactDOM from "react-dom";
-import './index.less'
-import "./index.css";
-import App from "./front/App";
+import React from 'react'
+import { CookiesProvider } from 'react-cookie'
+import ReactDOM from 'react-dom'
+import './index.scss'
+import './index.css'
+import App from './front/App'
 
 const render = Component => {
   ReactDOM.render(
     <CookiesProvider>
-        <Component />
+      <Component />
     </CookiesProvider>,
-    document.getElementById("root")
-  );
-};
-render(App);
+    document.getElementById('root')
+  )
+}
+render(App)

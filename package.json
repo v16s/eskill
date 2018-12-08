@@ -8,10 +8,12 @@
   "private": true,
   "dependencies": {
     "@aragon/ui": "^0.16.0",
+    "@vx/vx": "^0.0.181",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.3",
+    "csvtojson": "^2.0.8",
     "d3-time-format": "^2.1.1",
     "events": "^3.0.0",
     "express": "^4.16.3",
@@ -41,6 +43,7 @@
     "server": "node server"
   },
   "devDependencies": {
-    "less": "^3.8.0"
+    "less": "^3.8.0",
+    "node-sass": "^4.10.0"
   }
 }
