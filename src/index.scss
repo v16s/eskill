@@ -68,6 +68,18 @@ textarea {
 .ui.form .ui.input input:focus::placeholder {
   color: #333 !important;
 }
+.react-datepicker-wrapper {
+  width: 100%;
+  & div {
+    width: 100%;
+  }
+  & .button {
+    height: 38px !important;
+  }
+}
+.visible.menu {
+  z-index: 99;
+}
 .ui.segment .ui.primary.button {
   background-color: $primarycolor;
   text-transform: uppercase;
@@ -165,6 +177,11 @@ textarea {
 }
 .stats .ui.raised.segment {
   display: flex;
+}
+.center-label {
+  font-size: 25px;
+  font-weight: bold;
+  fill: $primarycolor;
 }
 .queries .ten.wide.column {
   display: flex;

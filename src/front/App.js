@@ -53,6 +53,7 @@ class Root extends React.Component {
     this.logout = this.logout.bind(this)
     this.mainEmit = this.mainEmit.bind(this)
     this.setLoading = this.setLoading.bind(this)
+    this.stateSet = this.stateSet.bind(this)
   }
 
   logout(props) {
@@ -127,7 +128,6 @@ class Root extends React.Component {
       this.setState({ documents: content })
     })
     socket.on('q', q => {
-      cookies.set('questions', q[0])
       cookies.set('qstate', q[1])
       this.setState({questions: q[0], qstate: q[1]})
     })
@@ -197,6 +197,11 @@ class Root extends React.Component {
     newState[type] = 'load'
     this.setState(newState)
   }
+  stateSet(key, value) {
+    let newstate = this.state
+    newstate[key] = value
+    this.setState(newstate)
+  }
   render() {
     return (
       <Router history={history}>
@@ -208,7 +213,7 @@ class Root extends React.Component {
               render={() => <NewTest logout={this.logout} topics={this.state.topics} grouped={this.state.grouped} categories={this.state.categories} emit={this.emit} />} /> : null}
               {this.state.level == 0 ? <Route
               path='/question/:id'
-              render={(props) => <NewTest logout={this.logout} topics={this.state.topics} grouped={this.state.grouped} categories={this.state.categories} emit={this.emit} question={this.state.questions[props.match.params.id]} />} /> : null}
+              render={(props) => <NewTest stateSet={this.stateSet} q={this.state.qstate} logout={this.logout} topics={this.state.topics} grouped={this.state.grouped} categories={this.state.categories} emit={this.emit} question={this.state.questions[props.match.params.id]} i={props.match.params.id} />} /> : null}
             <Route
               path='/'
               render={() => this.state.level == 2 ? (
@@ -272,7 +277,7 @@ class Root extends React.Component {
                     grouped={this.state.grouped}
                     tagError={this.state.tagError}
                     tagSuccess={this.state.tagSuccess}
-                    q={this.state.qstate}
+                    qs={this.state.qstate}
                      />}
             />}
             />

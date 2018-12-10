@@ -85,11 +85,11 @@ class StudentDashboard extends React.Component {
       tooltipTop,
       tooltipLeft,
       events,
-      q
+      qs
     } = this.props
-    console.log(q)
+
     let data = []
-    q.map((k, i) => {
+    qs.map((k, i) => {
       data.push({
         label: k.n,
         usage: 1,
@@ -155,7 +155,12 @@ class StudentDashboard extends React.Component {
             vertical
             inverted
           >
-            <Menu.Item name='home' onClick={e => {history.push('/')}}>
+            <Menu.Item
+              name='home'
+              onClick={e => {
+                history.push('/')
+              }}
+            >
               <Icon name='home' />
               Home
             </Menu.Item>
@@ -222,12 +227,14 @@ class StudentDashboard extends React.Component {
                                   d={pie.path(arc)}
                                   fill={
                                     arc.data.state == 0
-                                      ? 'blue'
+                                      ? '#1456ff'
                                       : arc.data.state == 1
-                                        ? 'yellow'
-                                        : arc.data.state == 2 ? 'green' : 'red'
+                                        ? '#ff3262'
+                                        : arc.data.state == 2
+                                          ? '#00ef5f'
+                                          : '#ffe500'
                                   }
-                                  stroke='#222'
+                                  stroke='#fff'
                                   strokeLinecap='square'
                                   strokeLinejoin='bevel'
                                   fillOpacity={opacity}
@@ -258,21 +265,17 @@ class StudentDashboard extends React.Component {
                       }}
                     </Pie>
                   </Group>
+                  <Group
+                    top={centerY - margin.top}
+                    left={centerX}
+                    width={200}
+                    height={40}
+                  >
+                    <text text-anchor='middle' className='center-label'>
+                      eSkill Sample
+                    </text>
+                  </Group>
                 </svg>
-                {tooltipData && (
-                  <div>
-                    <Tooltip
-                      top={tooltipTop - 18}
-                      left={tooltipLeft + 12}
-                      style={{
-                        backgroundColor: tooltipData.bgc,
-                        color: tooltipData.color
-                      }}
-                    >
-                      {`${tooltipData.content}`}
-                    </Tooltip>
-                  </div>
-                )}
               </Segment>
             </Segment>
             <Header

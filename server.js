@@ -175,22 +175,54 @@ io.on('connection', socket => {
             if(q.indexOf(r) === -1) q.push(r);
             
         }
-        acc.questions = q
+
+        acc.questions = q.map(k => {
+          return {n: k, a: 0}
+        })
             acc.markModified('questions')
             acc.save(err => {
               if(err) {
                 console.log(err)
               } else {
                 console.log('saved')
+                Questions.find().exec((err, q) => {
+                  let questions = []
+                  acc.questions.map(k => {
+                    
+                      
+                 
+                    questions.push(q[k.n])
+                  })
+                  socket.emit('q', [questions, acc.questions])
+                  socket.on('changeQuestion', q => {
+                    acc.questions = q
+                    console.log('questions changed')
+                    acc.markModified('questions')
+                    acc.save(err => {
+      
+                    })
+                  })
+                })
               }
             })
         } else if(level == 0) {
           Questions.find().exec((err, q) => {
             let questions = []
             acc.questions.map(k => {
+              
+                
+           
               questions.push(q[k.n])
             })
             socket.emit('q', [questions, acc.questions])
+            socket.on('changeQuestion', q => {
+              acc.questions = q
+              console.log('questions changed')
+              acc.markModified('questions')
+              acc.save(err => {
+
+              })
+            })
           })
         }
       })
@@ -379,4 +411,5 @@ io.on('connection', socket => {
         }
       })
     })
+    
 })
