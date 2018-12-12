@@ -1,6 +1,7 @@
-import React from "react";
+import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import History from "./history";
+import Stats from "./stats";
 import {
   Sidebar,
   Segment,
@@ -15,18 +16,14 @@ import {
   Grid,
   Dropdown,
   Pagination,
-  Modal
+  Modal,
+  GridRow
 } from "semantic-ui-react";
-import { timeFormat } from "d3-time-format";
 import Categories from "./categories";
-import Department from "./departments";
-import Stats from "./stats";
-import Tag from "./tag";
-import Configuration from "./configuration";
+import AddQuestion from "./AddQuestion";
 import _ from "lodash";
-let formatTime = timeFormat("%B %d, %Y");
-
-class Dashboard extends React.Component {
+import StudentTable from "./StudentTable";
+class FacultyDashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -49,11 +46,11 @@ class Dashboard extends React.Component {
   emit(name, obj) {
     this.props.emit(name, obj);
   }
-
   render() {
     let { md: det, topics, categories } = this.props;
-    let tl = _.toArray(topics).length,
-      cl = _.toArray(categories).length;
+    let tl = _.toArray(topics).length;
+
+    let cl = _.toArray(categories).length;
     console.log(cl, tl, typeof topics, typeof categories);
     return (
       <div>
@@ -65,35 +62,21 @@ class Dashboard extends React.Component {
             width: "100%"
           }}
         >
-          <Grid padded stackable relaxed doubling divided="vertically">
+          <Grid padded stackable relaxed centered divided="vertically">
             <Grid.Row>
-              <Stats categories={cl} topics={tl} />
-            </Grid.Row>
-            <Grid.Row>
-              <Categories
-                categories={this.props.categories}
-                emit={this.emit}
-                catError={this.props.catError}
-                topError={this.props.topError}
-                topics={this.props.topics}
-                loading={this.props.setLoading}
-                catSuccess={this.props.catSuccess}
-                topSuccess={this.props.topSuccess}
-              />
-              <Department />
-              <Grid.Column width={8} />
-            </Grid.Row>
-            <Grid.Row>
-              <Tag
-                tagError={this.props.tagError}
-                tagSuccess={this.props.tagSuccess}
-                emit={this.emit}
-                tags={this.props.tags}
-              />
-              <Configuration emit={this.props.emit} mode={this.props.mode} />
+              <Grid.Column width={13}>
+                <Segment>
+                  <StudentTable
+                    details={this.props.details}
+                    stateSet={this.props.stateSet}
+                    emit={this.props.emit}
+                  />
+                </Segment>
+              </Grid.Column>
             </Grid.Row>
           </Grid>
         </Segment>
+
         <Header
           size="tiny"
           style={{
@@ -110,4 +93,4 @@ class Dashboard extends React.Component {
   }
 }
 
-export default Dashboard;
+export default FacultyDashboard;

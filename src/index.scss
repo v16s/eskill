@@ -16,18 +16,23 @@ $secondarycolor: $gray;
 $black: #000000;
 body,
 html,
-#app {
+#root {
   width: 100vw;
   min-height: 100vh;
   background-color: #fff;
   font-family: "Montserrat", sans-serif;
 }
-#app > div {
+#root > div {
   min-height: 100vh;
+}
+.brand-menu:hover {
+  cursor: pointer;
 }
 .pushable,
 .pushable > .pusher {
   min-height: calc(100vh - 71px);
+  width: calc(100vw);
+  margin: 0;
 }
 .ui.menu .ui.dropdown .menu > .item {
   padding: 0 !important;
@@ -60,6 +65,9 @@ textarea {
 .ui.segment.cursorpointer:hover {
   cursor: pointer;
 }
+.ui.indicating.progress .bar {
+  background-color: $primarycolor !important;
+}
 .ui.input input::placeholder {
   color: rgba(191, 191, 191, 0.87) !important;
   font-size: 16px;
@@ -80,6 +88,12 @@ textarea {
 .visible.menu {
   z-index: 99;
 }
+.field button.ui.primary.button {
+  height: 36px !important;
+  &:hover {
+    background-color: darken($primarycolor, 10%);
+  }
+}
 .ui.segment .ui.primary.button {
   background-color: $primarycolor;
   text-transform: uppercase;
@@ -97,6 +111,38 @@ textarea {
       text-decoration: none;
     }
   }
+}
+.courseCard {
+  min-height: 400px !important;
+  &:hover {
+    cursor: pointer;
+  }
+  &.request-course {
+    border: 2px dashed darken($gray, 30%);
+    box-shadow: none;
+    & h4.ui.header {
+      color: $primarycolor;
+    }
+  }
+  & .content {
+    display: flex;
+    flex-direction: column;
+    & .description {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    &.extra {
+      flex-direction: row !important;
+    }
+    & h3 {
+      color: $primarycolor;
+      text-align: center;
+    }
+  }
+}
+.pushable {
 }
 .ui.segment .ui.primary.basic.button {
   box-shadow: 0px 0px 0px 1px $primarycolor inset !important;

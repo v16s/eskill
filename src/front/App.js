@@ -1,74 +1,75 @@
-import React from 'react'
-import { Router, Switch, Route } from 'react-router-dom'
-import Login from './components/login'
-import AdminDashboard from './components/AdminDashboard'
-import StudentDashboard from './components/StudentDashboard'
-import history from './components/history'
-import { instanceOf } from 'prop-types'
-import RegisterPage from './components/register'
-import NewTest from './components/newtest'
-import ForgotPage from './components/forgot'
-import { Cookies, withCookies } from 'react-cookie'
-import _ from 'lodash'
-import io from 'socket.io-client'
-import CoordinatorDashboard from './components/CoordinatorDashboard';
-
-let socket = io('localhost:2000')
+import React from "react";
+import { Router, Switch, Route } from "react-router-dom";
+import Login from "./components/login";
+import AdminDashboard from "./components/AdminDashboard";
+import StudentDashboard from "./components/StudentDashboard";
+import history from "./components/history";
+import { instanceOf } from "prop-types";
+import RegisterPage from "./components/register";
+import NewTest from "./components/newtest";
+import ForgotPage from "./components/forgot";
+import { Cookies, withCookies } from "react-cookie";
+import _ from "lodash";
+import io from "socket.io-client";
+import CoordinatorDashboard from "./components/CoordinatorDashboard";
+import FacultyDashboard from "./components/FacultyDashboard";
+import QuestionPage from "./components/QuestionPage";
+let socket = io("localhost:2000");
+import { Sidebar, Segment, Menu, Icon, Header } from "semantic-ui-react";
+import RequestCourse from "./components/RequestCourse";
 class Root extends React.Component {
   static propTypes = {
     cookies: instanceOf(Cookies).isRequired
-  }
+  };
   constructor(props) {
-    super(props)
-    const { cookies } = this.props
+    super(props);
+    const { cookies } = this.props;
 
-    if (cookies.get('email') != null && cookies.get('isLoggedIn')) {
-      socket.emit('det', {
-        email: cookies.get('email'),
-        pass: cookies.get('pass')
-      })
-      console.log('emitted details')
-    }
     this.state = {
-      isLoggedIn: cookies.get('isLoggedIn') || false,
-      err: cookies.get('err') || null,
-      details: cookies.get('details') || {},
-      email: cookies.get('email') || null,
-      documents: cookies.get('documents') || null,
-      categories: cookies.get('categories') || null,
-      tags: cookies.get('categories') || null,
-      level: cookies.get('level') || null,
-      fail: '',
-      catError: '',
-      topError: '',
-      tagError: '',
-      catSuccess: 'none',
-      topSuccess: 'none',
-      tagSuccess: 'none',
+      isLoggedIn: cookies.get("isLoggedIn") || false,
+      err: cookies.get("err") || null,
+      details: cookies.get("details") || {},
+      email: cookies.get("email") || null,
+      documents: cookies.get("documents") || null,
+      categories: cookies.get("categories") || null,
+      tags: cookies.get("categories") || null,
+      level: cookies.get("level") || null,
+      fail: "",
+      catError: "",
+      topError: "",
+      tagError: "",
+      catSuccess: "none",
+      topSuccess: "none",
+      tagSuccess: "none",
       topics: [],
-      questions: cookies.get('questions') || [],
-      qstate: cookies.get('qstate') || []
-    }
-    this.emit = this.emit.bind(this)
-    this.logout = this.logout.bind(this)
-    this.mainEmit = this.mainEmit.bind(this)
-    this.setLoading = this.setLoading.bind(this)
-    this.stateSet = this.stateSet.bind(this)
-  }
+      qstate: cookies.get("qstate") || [],
+      mode: false,
+      selcatname: "",
+      visible: false
+    };
+    this.emit = this.emit.bind(this);
+    this.logout = this.logout.bind(this);
+    this.mainEmit = this.mainEmit.bind(this);
+    this.setLoading = this.setLoading.bind(this);
+    this.stateSet = this.stateSet.bind(this);
 
+    this.handleClick = this.handleClick.bind(this);
+  }
+  handleClick() {
+    this.setState({ visible: !this.state.visible });
+  }
   logout(props) {
-    const { cookies } = this.props
-    cookies.remove('err')
-    cookies.remove('isLoggedIn')
-    cookies.remove('details')
-    cookies.remove('documents')
-    cookies.remove('categories')
-    cookies.remove('email')
-    cookies.remove('pass')
-    cookies.remove('level')
-    cookies.remove('tags')
-    cookies.remove('questions')
-    cookies.remove('qstate')
+    const { cookies } = this.props;
+    cookies.remove("err");
+    cookies.remove("isLoggedIn");
+    cookies.remove("details");
+    cookies.remove("documents");
+    cookies.remove("categories");
+    cookies.remove("email");
+    cookies.remove("pass");
+    cookies.remove("level");
+    cookies.remove("tags");
+    cookies.remove("qstate");
     this.setState = {
       isLoggedIn: false,
       details: {},
@@ -76,232 +77,425 @@ class Root extends React.Component {
       tags: [],
       email: null,
       topics: [],
-      questions: [],
       qstate: []
-    }
+    };
   }
+
   mainEmit(name, data) {
-    const { cookies } = this.props
-    socket.emit(name, data)
-    this.setState({ email: data.email })
-    cookies.set('email', data.email)
-    cookies.set('pass', data.pass)
+    const { cookies } = this.props;
+    socket.emit(name, data);
+    this.setState({ email: data.email });
+    cookies.set("email", data.email);
+    cookies.set("pass", data.pass);
   }
   emit(name, data) {
-    socket.emit(name, data)
+    socket.emit(name, data);
   }
   componentDidMount(props) {
-    const { cookies } = this.props
-    const { categories } = this.state
-    let topics = []
+    const { cookies } = this.props;
+    const { categories } = this.state;
+    socket.on("connect", () => {
+      if (cookies.get("email") != null && cookies.get("isLoggedIn")) {
+        socket.emit("det", {
+          email: cookies.get("email"),
+          pass: cookies.get("pass")
+        });
+        console.log("emitted details");
+      }
+    });
+    let topics = [];
     _.map(categories, c => {
       c.topics.map(t => {
-        topics.push({ tid: t.id, name: t.name, cid: c._id })
-      })
-    })
-    topics = _.sortBy(topics, 'tid', 'asc')
-    console.log(topics, categories)
-    this.setState({ topics: topics })
-    socket.on('validateLogin', content => {
+        topics.push({ tid: t.id, name: t.name, cid: c._id });
+      });
+    });
+    topics = _.sortBy(topics, "tid", "asc");
+    console.log(topics, categories);
+    this.setState({ topics: topics });
+    socket.on("mode", mode => {
+      this.setState({ mode: mode });
+    });
+    socket.on("validateLogin", content => {
       // console.log(content)
-      cookies.set('err', content.condition)
-      cookies.set('isLoggedIn', content.validate)
-      cookies.set('details', content.details)
-      cookies.set('level', content.level)
+      cookies.set("err", content.condition);
+      cookies.set("isLoggedIn", content.validate);
+      cookies.set("details", content.details);
+      cookies.set("level", content.level);
       this.setState({
         level: content.level,
         isLoggedIn: content.validate,
         err: content.condition,
         details: content.details,
-        fail: ''
-      })
-    })
-    socket.on('fail', reason => {
-      this.setState({ fail: reason })
-    })
-    socket.on('details', content => {
-      cookies.set('details', content)
-      this.setState({ details: content })
-    })
-    socket.on('documents', content => {
-      cookies.set('documents', content)
-      this.setState({ documents: content })
-    })
-    socket.on('q', q => {
-      cookies.set('qstate', q[1])
-      this.setState({questions: q[0], qstate: q[1]})
-    })
-    socket.on('catError', error => {
-      console.log('error', error)
-      this.setState({ catError: error })
-      error != '' ? this.setState({ catSuccess: 'none' }) : null
-    })
-    socket.on('topError', error => {
-      console.log(error)
-      this.setState({ topError: error })
-      error != '' ? this.setState({ topSuccess: 'none' }) : null
-    })
-    socket.on('tagError', error => {
-      console.log(error)
-      this.setState({ tagError: error })
-      error != '' ? this.setState({ tagError: 'none' }) : null
-    })
-    socket.on('success', type => {
-      type == 'category' ? this.setState({ catSuccess: 'success' }) : null
-      type == 'topic' ? this.setState({ topSuccess: 'success' }) : null
-      type == 'tag' ? this.setState({ tagSuccess: 'success' }) : null
-    })
-    socket.on('categories', cats => {
-      console.log(cats)
-      topics = []
+        fail: ""
+      });
+    });
+    socket.on("changeDetails", ({ details }) => {
+      console.log("details updated");
+      cookies.set("details", details);
+      this.setState({ details: details });
+    });
+    socket.on("fail", reason => {
+      this.setState({ fail: reason });
+    });
+    socket.on("details", content => {
+      cookies.set("details", content);
+      this.setState({ details: content });
+    });
+    socket.on("documents", content => {
+      cookies.set("documents", content);
+      this.setState({ documents: content });
+    });
+    socket.on("q", q => {
+      cookies.set("qstate", q);
+      this.setState({ qstate: q });
+    });
+    socket.on("catError", error => {
+      console.log("error", error);
+      this.setState({ catError: error });
+      error != "" ? this.setState({ catSuccess: "none" }) : null;
+    });
+    socket.on("topError", error => {
+      console.log(error);
+      this.setState({ topError: error });
+      error != "" ? this.setState({ topSuccess: "none" }) : null;
+    });
+    socket.on("tagError", error => {
+      console.log(error);
+      this.setState({ tagError: error });
+      error != "" ? this.setState({ tagError: "none" }) : null;
+    });
+    socket.on("success", type => {
+      type == "category" ? this.setState({ catSuccess: "success" }) : null;
+      type == "topic" ? this.setState({ topSuccess: "success" }) : null;
+      type == "tag" ? this.setState({ tagSuccess: "success" }) : null;
+    });
+    socket.on("categories", cats => {
+      console.log(cats);
+      topics = [];
       _.map(cats, c => {
         c.topics.map(t => {
-          topics.push({ tid: parseInt(t.id), name: t.name, cid: c._id })
-        })
-      })
-      topics = _.sortBy(topics, 'tid', 'asc')
-      this.setState({ categories: cats, topics: topics })
-    })
-    socket.on('tags', tags => {
-      let company = [], exam = [], subject = [], topic = []
+          topics.push({ tid: parseInt(t.id), name: t.name, cid: c._id });
+        });
+      });
+      topics = _.sortBy(topics, "tid", "asc");
+      this.setState({ categories: cats, topics: topics });
+    });
+    socket.on("tags", tags => {
+      let company = [],
+        exam = [],
+        subject = [],
+        topic = [];
       _.map(tags, t => {
         switch (t.group) {
-          case 'company':
-            company.push(t)
+          case "company":
+            company.push(t);
             break;
-          case 'exam':
-            exam.push(t)
+          case "exam":
+            exam.push(t);
             break;
-          case 'subject':
-            subject.push(t)
+          case "subject":
+            subject.push(t);
             break;
-          case 'topic':
-            topic.push(t)
+          case "topic":
+            topic.push(t);
             break;
         }
-      })
+      });
       this.setState({
-        grouped:
-        {
+        grouped: {
           company: company,
           exam: exam,
           subject: subject,
           topic: topic
-        }, tags: tags
-      })
-    })
+        },
+        tags: tags
+      });
+    });
+    window.onbeforeunload = () => {
+      socket.emit("disconnect");
+    };
   }
   setLoading(type) {
-    let newState = this.state
-    console.log(newState)
-    newState[type] = 'load'
-    this.setState(newState)
+    let newState = this.state;
+    console.log(newState);
+    newState[type] = "load";
+    this.setState(newState);
   }
   stateSet(key, value) {
-    let newstate = this.state
-    newstate[key] = value
-    this.setState(newstate)
+    let newstate = this.state;
+    newstate[key] = value;
+    this.setState(newstate);
   }
   render() {
     return (
       <Router history={history}>
-        {this.state.isLoggedIn
-          ? <Switch>
+        {this.state.isLoggedIn ? (
+          <div>
+            <Segment
+              style={{
+                borderRadius: "0",
+                marginBottom: "0",
+                padding: "0.5em 1em"
+              }}
+            >
+              <Menu secondary fluid borderless>
+                <Menu.Item onClick={e => this.handleClick()}>
+                  <Icon
+                    name="bars"
+                    size="large"
+                    style={{
+                      color: "#1456ff"
+                    }}
+                  />
+                </Menu.Item>
+                <Menu.Item
+                  onClick={e => {
+                    history.push("/");
+                  }}
+                  className="brand-menu"
+                >
+                  <Header as="h2" className="brand">
+                    eSkill
+                  </Header>
+                </Menu.Item>
+                <Menu.Menu position="right">
+                  <Menu.Item
+                    onClick={e => {
+                      e.preventDefault();
+                      this.logout();
+                      window.location.href = "/";
+                    }}
+                  >
+                    <Icon name="sign out" size="large" />
+                  </Menu.Item>
+                </Menu.Menu>
+              </Menu>
+            </Segment>
 
-            {this.state.level == 0 ? <Route
-              path='/newtest'
-              render={() => <NewTest logout={this.logout} topics={this.state.topics} grouped={this.state.grouped} categories={this.state.categories} emit={this.emit} />} /> : null}
-              {this.state.level == 0 ? <Route
-              path='/question/:id'
-              render={(props) => <NewTest stateSet={this.stateSet} q={this.state.qstate} logout={this.logout} topics={this.state.topics} grouped={this.state.grouped} categories={this.state.categories} emit={this.emit} question={this.state.questions[props.match.params.id]} i={props.match.params.id} />} /> : null}
+            <Sidebar.Pushable>
+              <Sidebar
+                as={Menu}
+                animation="push"
+                width="wide"
+                visible={this.state.visible}
+                icon="labeled"
+                vertical
+                inverted
+              >
+                <Menu.Item
+                  name="home"
+                  onClick={e => {
+                    history.push("/");
+                  }}
+                  onClick={e => {
+                    history.push("/");
+                  }}
+                >
+                  <Icon name="home" />
+                  Home
+                </Menu.Item>
+                <Menu.Item name="user">
+                  <Icon name="user" />
+                  Edit Profile
+                </Menu.Item>
+                <Menu.Item
+                  name="logout"
+                  onClick={e => {
+                    e.preventDefault();
+                    this.logout();
+                    window.location.href = "/";
+                  }}
+                >
+                  <Icon name="sign out" />
+                  Logout
+                </Menu.Item>
+              </Sidebar>
+              <Sidebar.Pusher
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  padding: "10px 0"
+                }}
+              >
+                {" "}
+                <Switch>
+                  {this.state.level == 0 ? (
+                    <Route
+                      path="/question/:category/:id"
+                      render={props => (
+                        <NewTest
+                          stateSet={this.stateSet}
+                          q={this.state.qstate}
+                          logout={this.logout}
+                          topics={this.state.topics}
+                          grouped={this.state.grouped}
+                          categories={this.state.categories}
+                          emit={this.emit}
+                          i={props.match.params.id}
+                          cat={this.state.selcatname}
+                          cid={props.match.params.category}
+                        />
+                      )}
+                    />
+                  ) : null}
+                  {this.state.level == 0 ? (
+                    <Route
+                      path="/request"
+                      render={props => (
+                        <RequestCourse
+                          stateSet={this.stateSet}
+                          q={this.state.qstate}
+                          logout={this.logout}
+                          categories={this.state.categories}
+                          emit={this.emit}
+                          details={this.state.details}
+                        />
+                      )}
+                    />
+                  ) : null}
+                  {this.state.level == 0 ? (
+                    <Route
+                      path="/question/:category"
+                      render={props => (
+                        <QuestionPage
+                          md={this.state.details.details}
+                          level={this.state.level}
+                          emit={this.emit}
+                          faculties={this.state.details.faculties}
+                          categories={this.state.categories}
+                          history={this.props.history}
+                          logout={this.logout}
+                          details={this.state.details}
+                          catError={this.state.catError}
+                          topError={this.state.topError}
+                          topics={this.state.topics}
+                          catSuccess={this.state.catSuccess}
+                          setLoading={this.setLoading}
+                          topSuccess={this.state.topSuccess}
+                          tags={this.state.tags}
+                          grouped={this.state.grouped}
+                          tagError={this.state.tagError}
+                          tagSuccess={this.state.tagSuccess}
+                          qs={this.state.qstate}
+                          stateSet={this.stateSet}
+                          cat={this.state.selcatname}
+                          cid={props.match.params.category}
+                        />
+                      )}
+                    />
+                  ) : null}
+                  <Route
+                    path="/"
+                    render={() =>
+                      this.state.level == 2 ? (
+                        <AdminDashboard
+                          mode={this.state.mode}
+                          md={this.state.details.details}
+                          level={this.state.level}
+                          emit={this.emit}
+                          faculties={this.state.details.faculties}
+                          categories={this.state.categories}
+                          history={this.props.history}
+                          logout={this.logout}
+                          details={this.state.details}
+                          catError={this.state.catError}
+                          topError={this.state.topError}
+                          topics={this.state.topics}
+                          catSuccess={this.state.catSuccess}
+                          setLoading={this.setLoading}
+                          topSuccess={this.state.topSuccess}
+                          tags={this.state.tags}
+                          grouped={this.state.grouped}
+                          tagError={this.state.tagError}
+                          tagSuccess={this.state.tagSuccess}
+                        />
+                      ) : this.state.level == 4 ? (
+                        <FacultyDashboard
+                          md={this.state.details.details}
+                          emit={this.emit}
+                          history={this.props.history}
+                          logout={this.logout}
+                          setLoading={this.setLoading}
+                          stateSet={this.stateSet}
+                          emit={this.emit}
+                          {...this.state}
+                        />
+                      ) : this.state.level == 1 ? (
+                        <CoordinatorDashboard
+                          md={this.state.details.details}
+                          level={this.state.level}
+                          emit={this.emit}
+                          faculties={this.state.details.faculties}
+                          categories={this.state.categories}
+                          history={this.props.history}
+                          logout={this.logout}
+                          details={this.state.details}
+                          catError={this.state.catError}
+                          topError={this.state.topError}
+                          topics={this.state.topics}
+                          catSuccess={this.state.catSuccess}
+                          setLoading={this.setLoading}
+                          topSuccess={this.state.topSuccess}
+                          tags={this.state.tags}
+                          grouped={this.state.grouped}
+                          tagError={this.state.tagError}
+                          tagSuccess={this.state.tagSuccess}
+                        />
+                      ) : (
+                        <StudentDashboard
+                          md={this.state.details.details}
+                          level={this.state.level}
+                          emit={this.emit}
+                          faculties={this.state.details.faculties}
+                          categories={this.state.categories}
+                          history={this.props.history}
+                          logout={this.logout}
+                          details={this.state.details}
+                          catError={this.state.catError}
+                          topError={this.state.topError}
+                          topics={this.state.topics}
+                          catSuccess={this.state.catSuccess}
+                          setLoading={this.setLoading}
+                          topSuccess={this.state.topSuccess}
+                          tags={this.state.tags}
+                          grouped={this.state.grouped}
+                          tagError={this.state.tagError}
+                          tagSuccess={this.state.tagSuccess}
+                          qs={this.state.qstate}
+                          stateSet={this.stateSet}
+                        />
+                      )
+                    }
+                  />
+                  } />
+                </Switch>
+              </Sidebar.Pusher>
+            </Sidebar.Pushable>
+          </div>
+        ) : (
+          <Switch>
             <Route
-              path='/'
-              render={() => this.state.level == 2 ? (
-                <AdminDashboard
-                  md={this.state.details.details}
-                  level={this.state.level}
-                  emit={this.emit}
-                  faculties={this.state.details.faculties}
-                  categories={this.state.categories}
-                  history={this.props.history}
-                  logout={this.logout}
-                  details={this.state.details}
-                  catError={this.state.catError}
-                  topError={this.state.topError}
-                  topics={this.state.topics}
-                  catSuccess={this.state.catSuccess}
-                  setLoading={this.setLoading}
-                  topSuccess={this.state.topSuccess}
-                  tags={this.state.tags}
-                  grouped={this.state.grouped}
-                  tagError={this.state.tagError}
-                  tagSuccess={this.state.tagSuccess}
-                />
-              ) : this.state.level == 1 ? (
-                <CoordinatorDashboard
-                  md={this.state.details.details}
-                  level={this.state.level}
-                  emit={this.emit}
-                  faculties={this.state.details.faculties}
-                  categories={this.state.categories}
-                  history={this.props.history}
-                  logout={this.logout}
-                  details={this.state.details}
-                  catError={this.state.catError}
-                  topError={this.state.topError}
-                  topics={this.state.topics}
-                  catSuccess={this.state.catSuccess}
-                  setLoading={this.setLoading}
-                  topSuccess={this.state.topSuccess}
-                  tags={this.state.tags}
-                  grouped={this.state.grouped}
-                  tagError={this.state.tagError}
-                  tagSuccess={this.state.tagSuccess}
-                />
-              ) : <StudentDashboard
-                    md={this.state.details.details}
-                    level={this.state.level}
-                    emit={this.emit}
-                    faculties={this.state.details.faculties}
-                    categories={this.state.categories}
-                    history={this.props.history}
-                    logout={this.logout}
-                    details={this.state.details}
-                    catError={this.state.catError}
-                    topError={this.state.topError}
-                    topics={this.state.topics}
-                    catSuccess={this.state.catSuccess}
-                    setLoading={this.setLoading}
-                    topSuccess={this.state.topSuccess}
-                    tags={this.state.tags}
-                    grouped={this.state.grouped}
-                    tagError={this.state.tagError}
-                    tagSuccess={this.state.tagSuccess}
-                    qs={this.state.qstate}
-                     />}
-            />}
+              path="/register"
+              render={() => (
+                <RegisterPage mode={this.state.mode} emit={this.emit} />
+              )}
             />
-
-          </Switch>
-          : <Switch>
             <Route
-              path='/register'
-              render={() => <RegisterPage emit={this.emit} />}
-            />
-            <Route
-              path='/forgot'
+              path="/forgot"
               render={() => <ForgotPage emit={this.emit} />}
             />
             <Route
-              path='/'
+              path="/"
               render={() => (
                 <Login fail={this.state.fail} emit={this.mainEmit} />
               )}
             />
-          </Switch>}
+          </Switch>
+        )}
       </Router>
-    )
+    );
   }
 }
-Root = withCookies(Root)
-export default Root
+Root = withCookies(Root);
+export default Root;

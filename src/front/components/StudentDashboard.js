@@ -1,299 +1,182 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import History from './history'
-import Queries from './queries'
-import Attempted from './attempted'
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import History from "./history";
+import Queries from "./queries";
+import Attempted from "./attempted";
 import {
   Sidebar,
   Segment,
   Button,
   Menu,
   Image,
-  Container,
-  Table,
   Icon,
   Header,
-  Input,
   Grid,
-  Dropdown,
-  Pagination,
-  Modal,
-  GridRow,
-  Card,
-  GridColumn
-} from 'semantic-ui-react'
-import history from './history'
-import { localPoint } from '@vx/event'
-import { Pie } from '@vx/shape'
-import { Group } from '@vx/group'
+  Progress,
+  Card
+} from "semantic-ui-react";
+import history from "./history";
+import "react-circular-progressbar/dist/styles.css";
+import CircularProgressbar from "react-circular-progressbar";
 
-import { withTooltip, Tooltip } from '@vx/tooltip'
-import _ from 'lodash'
-
-const white = '#888888'
-const black = '#000000'
-
-const usage = d => d.usage
+import _ from "lodash";
 
 class StudentDashboard extends React.Component {
-  constructor (props) {
-    super(props)
+  constructor(props) {
+    super(props);
     this.state = {
       visible: false,
       modalVisible: false,
       filter: props.categories
-    }
-    this.logout = this.logout.bind(this)
-    this.emit = this.emit.bind(this)
-    this.handleClick = this.handleClick.bind(this)
-    this.handleTooltip = this.handleTooltip.bind(this)
+    };
+    this.logout = this.logout.bind(this);
+    this.emit = this.emit.bind(this);
   }
-  handleTooltip ({ event, da }) {
-    const { showTooltip } = this.props
-    const { x, y } = localPoint(event)
-
-    showTooltip({
-      tooltipData: { ...da },
-      tooltipLeft: x,
-      tooltipTop: y
-    })
-  }
-  handleClick () {
-    this.setState({ visible: !this.state.visible })
+  handleClick() {
+    this.setState({ visible: !this.state.visible });
   }
 
-  logout () {
-    this.props.logout()
-  }
-  componentDidMount () {}
-  emit (name, obj) {
-    this.props.emit(name, obj)
+  logout() {
+    this.props.logout();
   }
 
-  render () {
-    let width = 600
+  componentDidMount() {}
+  emit(name, obj) {
+    this.props.emit(name, obj);
+  }
 
-    let height = 600
+  render() {
+    let { qs: qstate, categories } = this.props;
 
-    let margin = { top: 10, bottom: 10, right: 10, left: 10 }
-    let {
-      md: det,
-      topics,
-      categories,
-      hideTooltip,
-      tooltipData,
-      tooltipTop,
-      tooltipLeft,
-      events,
-      qs
-    } = this.props
-
-    let data = []
-    qs.map((k, i) => {
-      data.push({
-        label: k.n,
-        usage: 1,
-        name: `Question ${k.n}`,
-        state: k.a,
-        ind: i
-      })
-    })
-
-    let tl = _.toArray(topics).length
-    const radius = Math.min(width, height) / 2
-    const centerY = height / 2
-    const centerX = width / 2
-
-    let cl = _.toArray(categories).length
-
+    let questions = _.chunk(Object.keys(qstate), 4);
     return (
       <div>
-        <Segment
-          style={{
-            borderRadius: '0',
-            marginBottom: '0',
-            padding: '0.5em 1em'
-          }}
-        >
-          <Menu secondary fluid borderless>
-            <Menu.Item onClick={e => this.handleClick()}>
-              <Icon
-                name='bars'
-                size='large'
-                style={{
-                  color: '#1456ff'
-                }}
-              />
-            </Menu.Item>
-            <Menu.Item>
-              <Header as='h2' className='brand'>
-                eSkill
-              </Header>
-            </Menu.Item>
-            <Menu.Menu position='right'>
-              <Menu.Item
-                onClick={e => {
-                  e.preventDefault()
-                  this.logout()
-                  History.push('/')
-                  window.location.reload()
-                }}
-              >
-                <Icon name='sign out' size='large' />
-              </Menu.Item>
-            </Menu.Menu>
-          </Menu>
-        </Segment>
-
-        <Sidebar.Pushable>
-          <Sidebar
-            as={Menu}
-            animation='push'
-            width='wide'
-            visible={this.state.visible}
-            icon='labeled'
-            vertical
-            inverted
-          >
-            <Menu.Item
-              name='home'
-              onClick={e => {
-                history.push('/')
-              }}
-            >
-              <Icon name='home' />
-              Home
-            </Menu.Item>
-            <Menu.Item name='user'>
-              <Icon name='user' />
-              Edit Profile
-            </Menu.Item>
-            <Menu.Item
-              name='logout'
-              onClick={e => {
-                e.preventDefault()
-                this.logout()
-                History.push('/')
-                window.location.reload()
-              }}
-            >
-              <Icon name='sign out' />
-              Logout
-            </Menu.Item>
-          </Sidebar>
-          <Sidebar.Pusher
+        <Segment basic style={{ flexGrow: "1" }}>
+          <Segment>
+            <Header as="h3">Assigned Courses</Header>
+          </Segment>
+          <Segment
+            basic
             style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              padding: '10px 0'
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              justifyContent: "center"
             }}
           >
-            <Segment basic style={{ height: '700px' }}>
-              <Segment
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  display: 'flex',
-                  justifyContent: 'center'
-                }}
-              >
-                <svg height={height} width={width}>
-                  <Group top={centerY - margin.top} left={centerX}>
-                    <Pie
-                      data={data}
-                      pieValue={usage}
-                      outerRadius={radius - radius / 3}
-                      innerRadius={radius - radius / 6}
-                      cornerRadius={0}
-                      padAngle={0}
-                    >
-                      {pie => {
-                        return pie.arcs.map((arc, i) => {
-                          const opacity = 1
-                          const [centroidX, centroidY] = pie.path.centroid(arc)
-                          const { startAngle, endAngle } = arc
-                          const hasSpaceForLabel = endAngle - startAngle >= 0.1
-                          return (
-                            <g key={`browser-${arc.data.label}-${i}`}>
-                              <a
-                                href={`/question/${arc.data.ind}`}
-                                onClick={e => {
-                                  e.preventDefault()
-                                  history.push(`/question/${arc.data.ind}`)
-                                }}
-                              >
-                                <path
-                                  d={pie.path(arc)}
-                                  fill={
-                                    arc.data.state == 0
-                                      ? '#1456ff'
-                                      : arc.data.state == 1
-                                        ? '#ff3262'
-                                        : arc.data.state == 2
-                                          ? '#00ef5f'
-                                          : '#ffe500'
-                                  }
-                                  stroke='#fff'
-                                  strokeLinecap='square'
-                                  strokeLinejoin='bevel'
-                                  fillOpacity={opacity}
-                                  onMouseMove={event =>
-                                    this.handleTooltip({
-                                      event,
-                                      da: {
-                                        content: arc.data.name,
-                                        bgc:
-                                          arc.data.state == 0
-                                            ? 'red'
-                                            : arc.data.state == 1
-                                              ? 'yellow'
-                                              : 'green',
-                                        color:
-                                          arc.data.state == 0
-                                            ? 'white'
-                                            : 'black'
+            <Grid stackable container columns={4} style={{ flexGrow: "1" }}>
+              {questions.map((q, qi) => {
+                return (
+                  <Grid.Row key={"row-" + qi}>
+                    {q.map((qu, i) => {
+                      let qd = qstate[qu];
+                      let attempted = 0,
+                        complete = 0;
+                      if (qd.a === true) {
+                        qd.q.map(x => {
+                          if (x.a > 0) {
+                            attempted++;
+                            if (x.a < 3) {
+                              complete++;
+                            }
+                          }
+                        });
+                      }
+                      return (
+                        <Grid.Column key={"col-" + qi + "-" + i}>
+                          <Card
+                            className="courseCard"
+                            onClick={e => {
+                              if (qd.a === true) {
+                                history.push(`/question/${qd.cid}`);
+                                this.props.stateSet("selcatname", qu);
+                              }
+                            }}
+                          >
+                            <Card.Content>
+                              <Card.Header>{qu}</Card.Header>
+                              <Card.Description>
+                                {qd.a === false ? (
+                                  <Header as="h3">Awaiting Approval</Header>
+                                ) : qd.a == "rejected" ? (
+                                  <Header as="h3">Rejected</Header>
+                                ) : (
+                                  <CircularProgressbar
+                                    percentage={complete}
+                                    text={`${complete}% Complete`}
+                                    styles={{
+                                      path: { stroke: `#1456ff` },
+                                      text: {
+                                        fill: "#1456ff",
+                                        fontSize: "8px",
+                                        fontFamily: "Lato, sans-serif"
+                                      },
+                                      root: {
+                                        minWidth: "150px",
+                                        minHeight: "150px"
                                       }
-                                    })
-                                  }
-                                  onMouseLeave={event => hideTooltip()}
-                                />
-                              </a>
-                            </g>
-                          )
-                        })
-                      }}
-                    </Pie>
-                  </Group>
-                  <Group
-                    top={centerY - margin.top}
-                    left={centerX}
-                    width={200}
-                    height={40}
+                                    }}
+                                  />
+                                )}
+                              </Card.Description>
+                            </Card.Content>
+                            {qd.a === true ? (
+                              <Card.Content extra>
+                                <Icon name="tasks" />
+                                {attempted} Questions Attempted
+                              </Card.Content>
+                            ) : null}
+                          </Card>
+                        </Grid.Column>
+                      );
+                    })}
+                  </Grid.Row>
+                );
+              })}
+              <Grid.Row>
+                <Grid.Column>
+                  <Card
+                    style={{ height: "100%" }}
+                    className="courseCard request-course"
+                    onClick={e => {
+                      history.push("/request");
+                    }}
                   >
-                    <text text-anchor='middle' className='center-label'>
-                      eSkill Sample
-                    </text>
-                  </Group>
-                </svg>
-              </Segment>
-            </Segment>
-            <Header
-              size='tiny'
-              style={{
-                position: 'relative',
-                textAlign: 'center',
-                width: '100%',
-                alignSelf: 'flex-end'
-              }}
-            >
-              eSkill - SRM Center for Applied Research in Education
-            </Header>
-          </Sidebar.Pusher>
-        </Sidebar.Pushable>
+                    <Card.Content
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        textAlign: "center"
+                      }}
+                    >
+                      <Icon
+                        name="add"
+                        size="huge"
+                        style={{ alignSelf: "center", color: "#1456ff" }}
+                      />
+                      <Header as="h4">Request Course</Header>
+                    </Card.Content>
+                  </Card>
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          </Segment>
+        </Segment>
+        <Header
+          size="tiny"
+          style={{
+            position: "relative",
+            textAlign: "center",
+            width: "100%",
+            alignSelf: "flex-end"
+          }}
+        >
+          eSkill - SRM Center for Applied Research in Education
+        </Header>
       </div>
-    )
+    );
   }
 }
 
-export default withTooltip(StudentDashboard)
+export default StudentDashboard;
