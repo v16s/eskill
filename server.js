@@ -145,6 +145,28 @@ db.on("open", () => {
 
   dbconnect = true;
 });
+app.post("/api/student", (req, res) => {
+  let { sid, cat } = req.body;
+  Users.findById(sid, (err, student) => {
+    let { questions } = student;
+    let q = {};
+
+    let at = 0,
+      cm = 0;
+    questions[cat].q.map(qa => {
+      if (qa.a > 0) {
+        at++;
+        if (qa.a < 3) {
+          cm++;
+        }
+      }
+    });
+    q.a = at;
+    q.c = cm;
+
+    res.json(q);
+  });
+});
 app.post("/api/question", (req, res) => {
   let { n, cat } = req.body;
   if (dbconnect) {
@@ -157,6 +179,7 @@ app.post("/api/question", (req, res) => {
     });
   }
 });
+
 app.post("/api/faculty", (req, res) => {
   let { branch } = req.body;
   console.log("faculty requested");

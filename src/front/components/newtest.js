@@ -25,6 +25,7 @@ import makeAnimated from "react-select/lib/animated";
 import History from "./history";
 import _ from "lodash";
 import Preview from "./Preview";
+let f = false;
 class NewTest extends React.Component {
   constructor(props) {
     super(props);
@@ -36,10 +37,12 @@ class NewTest extends React.Component {
       topics: [],
       selTopic: null,
       value:
+        props.q[props.cat] != undefined &&
         props.q[props.cat].q[props.i] != undefined
           ? props.q[props.cat].q[props.i].v || ""
           : "",
       check:
+        props.q[props.cat] != undefined &&
         props.q[props.cat].q[props.i] != undefined
           ? props.q[props.cat].q[props.i].a != 0
           : false
@@ -52,6 +55,9 @@ class NewTest extends React.Component {
     this.handleSub = this.handleSub.bind(this);
     this.fetchQuestion = this.fetchQuestion.bind(this);
     this.reset = this.reset.bind(this);
+    if (props.q[props.cat] != undefined) {
+      f = true;
+    }
   }
   handleCategoryChange(e) {
     this.setState({
@@ -98,7 +104,17 @@ class NewTest extends React.Component {
       });
   }
   componentDidMount() {
-    if (this.props.cat != undefined) {
+    if (!f) {
+      setInterval(() => {
+        if (
+          this.props.cat != undefined &&
+          this.props.q[this.props.cat] != undefined
+        ) {
+          this.fetchQuestion();
+          f = true;
+        }
+      }, 400);
+    } else {
       this.fetchQuestion();
     }
   }
@@ -108,6 +124,9 @@ class NewTest extends React.Component {
 
   handleRadio(e, { value }) {
     let { i, q, stateSet, emit, cat } = this.props;
+
+    console.log(i);
+
     if (!this.state.check) {
       this.setState({ value });
       q[cat].q[i].a = 3;
@@ -118,239 +137,229 @@ class NewTest extends React.Component {
   }
   render() {
     let { topics, value, check, question: q } = this.state;
-    let { categories, i, q: qall, cat } = this.props;
+    let { categories, i, q: qall, cat, cid } = this.props;
     let qa = qall[cat];
 
     console.log(qa);
     return (
       <div>
-        <Segment basic>
-          {q != undefined ? (
-            <Segment>
-              <Preview q={q} without />
+        {qall[cat] != undefined ? (
+          <Segment basic>
+            {q != undefined ? (
+              <Segment>
+                <Preview q={q} without />
 
-              <Segment basic>
-                {" "}
-                <Grid columns={2} divided>
-                  <Grid.Row>
-                    <Grid.Column>
-                      <Grid column={2}>
-                        <Grid.Column className="radio-column">
-                          <Form.Radio
-                            value="a"
-                            checked={value == "a"}
-                            onChange={this.handleRadio}
-                            disabled={check}
-                          />
-                        </Grid.Column>
-                        <Grid.Column className="input-column">
-                          <Segment
-                            className="cursorpointer"
-                            onClick={e => this.handleRadio(e, { value: "a" })}
-                            inverted={
-                              value == "a" || (check && q.answer == "a")
-                            }
-                            color={
-                              value == "a" && check && q.answer != "a"
-                                ? "red"
-                                : (!check && value == "a") ||
-                                  (check && q.answer == "a")
-                                ? "green"
-                                : null
-                            }
-                          >
-                            {q.options.a.split(") ").pop()}
-                          </Segment>
-                        </Grid.Column>
-                      </Grid>
-                    </Grid.Column>
-                    <Grid.Column>
-                      <Grid column={2}>
-                        <Grid.Column className="radio-column">
-                          <Form.Radio
-                            value="b"
-                            checked={value == "b"}
-                            onChange={this.handleRadio}
-                            disabled={check}
-                          />
-                        </Grid.Column>
-                        <Grid.Column className="input-column">
-                          <Segment
-                            className="cursorpointer"
-                            onClick={e => this.handleRadio(e, { value: "b" })}
-                            inverted={
-                              value == "b" || (check && q.answer == "b")
-                            }
-                            color={
-                              value == "b" && check && q.answer != "b"
-                                ? "red"
-                                : (!check && value == "b") ||
-                                  (check && q.answer == "b")
-                                ? "green"
-                                : null
-                            }
-                          >
-                            {q.options.b.split(") ").pop()}
-                          </Segment>
-                        </Grid.Column>
-                      </Grid>
-                    </Grid.Column>
-                  </Grid.Row>
-                  <Grid.Row>
-                    <Grid.Column>
-                      <Grid column={2}>
-                        <Grid.Column className="radio-column">
-                          <Form.Radio
-                            value="c"
-                            checked={value == "c"}
-                            onChange={this.handleRadio}
-                            disabled={check}
-                          />
-                        </Grid.Column>
-                        <Grid.Column className="input-column">
-                          <Segment
-                            className="cursorpointer"
-                            onClick={e => this.handleRadio(e, { value: "c" })}
-                            inverted={
-                              value == "c" || (check && q.answer == "c")
-                            }
-                            color={
-                              value == "c" && check && q.answer != "c"
-                                ? "red"
-                                : (!check && value == "c") ||
-                                  (check && q.answer == "c")
-                                ? "green"
-                                : null
-                            }
-                          >
-                            {q.options.c.split(") ").pop()}
-                          </Segment>
-                        </Grid.Column>
-                      </Grid>
-                    </Grid.Column>
-                    <Grid.Column>
-                      <Grid column={2}>
-                        <Grid.Column className="radio-column">
-                          <Form.Radio
-                            value="d"
-                            checked={value == "d"}
-                            onChange={this.handleRadio}
-                            disabled={check}
-                          />
-                        </Grid.Column>
-                        <Grid.Column className="input-column">
-                          <Segment
-                            className="cursorpointer"
-                            onClick={e => this.handleRadio(e, { value: "d" })}
-                            inverted={
-                              value == "d" || (check && q.answer == "d")
-                            }
-                            color={
-                              value == "d" && check && q.answer != "d"
-                                ? "red"
-                                : (!check && value == "d") ||
-                                  (check && q.answer == "d")
-                                ? "green"
-                                : null
-                            }
-                          >
-                            {q.options.d.split(") ").pop()}
-                          </Segment>
-                        </Grid.Column>
-                      </Grid>
-                    </Grid.Column>
-                  </Grid.Row>
+                <Segment basic>
+                  {" "}
+                  <Grid columns={2} divided>
+                    <Grid.Row>
+                      <Grid.Column>
+                        <Grid column={2}>
+                          <Grid.Column className="radio-column">
+                            <Form.Radio
+                              value="a"
+                              checked={value == "a"}
+                              onChange={this.handleRadio}
+                              disabled={check}
+                            />
+                          </Grid.Column>
+                          <Grid.Column className="input-column">
+                            <Segment
+                              className="cursorpointer"
+                              onClick={e => this.handleRadio(e, { value: "a" })}
+                              inverted={
+                                value == "a" || (check && q.answer == "a")
+                              }
+                              color={
+                                value == "a" && check && q.answer != "a"
+                                  ? "red"
+                                  : (!check && value == "a") ||
+                                    (check && q.answer == "a")
+                                  ? "green"
+                                  : null
+                              }
+                            >
+                              {q.options.a.split(") ").pop()}
+                            </Segment>
+                          </Grid.Column>
+                        </Grid>
+                      </Grid.Column>
+                      <Grid.Column>
+                        <Grid column={2}>
+                          <Grid.Column className="radio-column">
+                            <Form.Radio
+                              value="b"
+                              checked={value == "b"}
+                              onChange={this.handleRadio}
+                              disabled={check}
+                            />
+                          </Grid.Column>
+                          <Grid.Column className="input-column">
+                            <Segment
+                              className="cursorpointer"
+                              onClick={e => this.handleRadio(e, { value: "b" })}
+                              inverted={
+                                value == "b" || (check && q.answer == "b")
+                              }
+                              color={
+                                value == "b" && check && q.answer != "b"
+                                  ? "red"
+                                  : (!check && value == "b") ||
+                                    (check && q.answer == "b")
+                                  ? "green"
+                                  : null
+                              }
+                            >
+                              {q.options.b.split(") ").pop()}
+                            </Segment>
+                          </Grid.Column>
+                        </Grid>
+                      </Grid.Column>
+                    </Grid.Row>
+                    <Grid.Row>
+                      <Grid.Column>
+                        <Grid column={2}>
+                          <Grid.Column className="radio-column">
+                            <Form.Radio
+                              value="c"
+                              checked={value == "c"}
+                              onChange={this.handleRadio}
+                              disabled={check}
+                            />
+                          </Grid.Column>
+                          <Grid.Column className="input-column">
+                            <Segment
+                              className="cursorpointer"
+                              onClick={e => this.handleRadio(e, { value: "c" })}
+                              inverted={
+                                value == "c" || (check && q.answer == "c")
+                              }
+                              color={
+                                value == "c" && check && q.answer != "c"
+                                  ? "red"
+                                  : (!check && value == "c") ||
+                                    (check && q.answer == "c")
+                                  ? "green"
+                                  : null
+                              }
+                            >
+                              {q.options.c.split(") ").pop()}
+                            </Segment>
+                          </Grid.Column>
+                        </Grid>
+                      </Grid.Column>
+                      <Grid.Column>
+                        <Grid column={2}>
+                          <Grid.Column className="radio-column">
+                            <Form.Radio
+                              value="d"
+                              checked={value == "d"}
+                              onChange={this.handleRadio}
+                              disabled={check}
+                            />
+                          </Grid.Column>
+                          <Grid.Column className="input-column">
+                            <Segment
+                              className="cursorpointer"
+                              onClick={e => this.handleRadio(e, { value: "d" })}
+                              inverted={
+                                value == "d" || (check && q.answer == "d")
+                              }
+                              color={
+                                value == "d" && check && q.answer != "d"
+                                  ? "red"
+                                  : (!check && value == "d") ||
+                                    (check && q.answer == "d")
+                                  ? "green"
+                                  : null
+                              }
+                            >
+                              {q.options.d.split(") ").pop()}
+                            </Segment>
+                          </Grid.Column>
+                        </Grid>
+                      </Grid.Column>
+                    </Grid.Row>
+                  </Grid>
+                </Segment>
+                <Form
+                  onSubmit={e => {
+                    e.preventDefault();
+                    console.log(this);
+                    if (![null, ""].includes(this.state.value)) {
+                      this.handleSub();
+                    }
+                  }}
+                >
+                  <Segment basic>
+                    <Button
+                      primary
+                      fluid
+                      disabled={check || [null, ""].includes(this.state.value)}
+                    >
+                      Submit
+                    </Button>
+                  </Segment>
+                  {check ? <Segment>{q.hints}</Segment> : null}
+                </Form>
+              </Segment>
+            ) : (
+              <Segment padded>
+                <Grid centered>
+                  <Spinner color="#1456ff" name="circle" />{" "}
                 </Grid>
               </Segment>
-              <Form
-                onSubmit={e => {
-                  e.preventDefault();
-                  console.log(this);
-                  if (![null, ""].includes(this.state.value)) {
-                    this.handleSub();
-                  }
-                }}
-              >
-                <Segment basic>
-                  <Button
-                    primary
-                    fluid
-                    disabled={check || [null, ""].includes(this.state.value)}
-                  >
-                    Submit
-                  </Button>
-                </Segment>
-                {check ? <Segment>{q.hints}</Segment> : null}
-              </Form>
-            </Segment>
-          ) : (
-            <Segment padded>
-              <Grid centered>
-                <Spinner color="#1456ff" name="circle" />{" "}
-              </Grid>
-            </Segment>
-          )}
-          <Segment>
-            <Segment basic>
-              <Grid columns={3}>
-                <Grid.Column>
-                  <Button
-                    primary
-                    fluid
-                    onClick={e => {
-                      if (i > 0) {
-                        history.push(`/question/${i - 1}`);
-                        this.reset();
-                      }
-                    }}
-                    disabled={!(i > 0)}
-                  >
-                    Previous Question
-                  </Button>
-                </Grid.Column>
-                <Grid.Column>
-                  <Button
-                    primary
-                    fluid
-                    onClick={e => {
-                      history.push(`/question/${this.props.cid}`);
-                    }}
-                    disabled={!(i > 0)}
-                  >
-                    Back
-                  </Button>
-                </Grid.Column>
-                <Grid.Column>
-                  <Button
-                    primary
-                    fluid
-                    onClick={e => {
-                      if (i < qa.length - 1) {
-                        this.reset();
-                        history.push(`/question/${parseInt(i) + 1}`);
-                      }
-                    }}
-                    disabled={!(i < qa.length - 1)}
-                  >
-                    Next Question
-                  </Button>
-                </Grid.Column>
-              </Grid>
+            )}
+            <Segment>
+              <Segment basic>
+                <Grid columns={3}>
+                  <Grid.Column>
+                    <Button
+                      primary
+                      fluid
+                      onClick={e => {
+                        if (i > 0) {
+                          history.push(`/question/${cid}/${i - 1}`);
+                          this.reset();
+                        }
+                      }}
+                      disabled={!(i > 0)}
+                    >
+                      Previous Question
+                    </Button>
+                  </Grid.Column>
+                  <Grid.Column>
+                    <Button
+                      primary
+                      fluid
+                      onClick={e => {
+                        history.push(`/question/${this.props.cid}`);
+                      }}
+                      disabled={!(i > 0)}
+                    >
+                      Back
+                    </Button>
+                  </Grid.Column>
+                  <Grid.Column>
+                    <Button
+                      primary
+                      fluid
+                      onClick={e => {
+                        if (i < 99) {
+                          this.reset();
+                          history.push(`/question/${cid}/${parseInt(i) + 1}`);
+                        }
+                      }}
+                      disabled={!(i < 99)}
+                    >
+                      Next Question
+                    </Button>
+                  </Grid.Column>
+                </Grid>
+              </Segment>
             </Segment>
           </Segment>
-        </Segment>
-
-        <Header
-          size="tiny"
-          style={{
-            position: "relative",
-            textAlign: "center",
-            width: "100%",
-            alignSelf: "flex-end"
-          }}
-        >
-          eSkill - SRM Center for Applied Research in Education
-        </Header>
+        ) : null}
       </div>
     );
   }

@@ -54,40 +54,19 @@ class CoordinatorDashboard extends React.Component {
     console.log(cl, tl, typeof topics, typeof categories);
     return (
       <div>
-        <Segment
-          basic
-          style={{
-            minHeight: "100%",
-            alignSelf: "flex-start",
-            width: "100%"
-          }}
-        >
-          <Grid padded stackable relaxed doubling divided="vertically">
-            <Grid.Row>
-              <Stats categories={cl} topics={tl} />
-            </Grid.Row>
-            <Grid.Row>
-              <AddQuestion
-                categories={this.props.categories}
-                tags={this.props.tags}
-                grouped={this.props.grouped}
-                emit={this.emit}
-              />
-            </Grid.Row>
-          </Grid>
-        </Segment>
-
-        <Header
-          size="tiny"
-          style={{
-            position: "relative",
-            textAlign: "center",
-            width: "100%",
-            alignSelf: "flex-end"
-          }}
-        >
-          eSkill - SRM Center for Applied Research in Education
-        </Header>
+        <Grid padded stackable relaxed doubling divided="vertically">
+          <Grid.Row>
+            <Stats categories={cl} topics={tl} />
+          </Grid.Row>
+          <Grid.Row>
+            <AddQuestion
+              categories={this.props.categories}
+              tags={this.props.tags}
+              grouped={this.props.grouped}
+              emit={this.emit}
+            />
+          </Grid.Row>
+        </Grid>
       </div>
     );
   }

@@ -178,109 +178,96 @@ class StudentDashboard extends React.Component {
 
     return (
       <div>
-        <Segment basic style={{ height: "700px" }}>
-          <Segment
-            style={{
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              justifyContent: "center"
-            }}
-          >
-            <svg
-              width={width}
-              height={height}
-              ref={ref => {
-                this.svg = ref;
-              }}
-            >
-              <GradientOrangeRed id="voronoi_orange_red" />
-              <LinearGradient from="#00ff21" to="#358937" id="voronoi_green" />
-              <LinearGradient from="#ffc1c1" to="#ff0000" id="voronoi_red" />
-              <LinearGradient from="#007bff" to="#2c00bc" id="voronoi_purple" />
-              <LinearGradient
-                from="rgba(255,255,255,0.5)"
-                to="rgba(255,255,255,0.1)"
-                id="voronoi_pink_red"
-              />
-              <rect
-                fill="url(#voronoi_purple)"
-                width={innerWidth}
-                height={innerHeight}
-                rx={14}
-              />
-              <RectClipPath
-                id="voronoi_clip"
-                width={innerWidth}
-                height={innerHeight}
-                rx={14}
-              />
-              <Group
-                top={margin.top}
-                left={margin.left}
-                clipPath="url(#voronoi_clip)"
-                onMouseMove={this.handleMouseMove}
-                onMouseLeave={() => {
-                  this.setState({ selected: null, neighbors: null });
-                }}
-              >
-                {polygons.map((polygon, ind) => (
-                  <a
-                    href={`/question/${polygon.data.ind}`}
-                    key={`polygon-${ind}`}
-                    onClick={e => {
-                      e.preventDefault();
-                      history.push(`/question/${polygon.data.ind}`);
-                    }}
-                  >
-                    <VoronoiPolygon
-                      polygon={polygon}
-                      stroke="#ffffff"
-                      strokeWidth={1}
-                      fill={
-                        selected && polygon.data.id === selected.data.id
-                          ? "url(#voronoi_pink_red)"
-                          : polygon.data.state == 0
-                          ? "url(#voronoi_purple)"
-                          : polygon.data.state == 1
-                          ? "url(#voronoi_red)"
-                          : polygon.data.state == 2
-                          ? "url(#voronoi_green)"
-                          : "url(#voronoi_orange_red)"
-                      }
-                      fillOpacity={1}
-                    />
-                  </a>
-                ))}
-              </Group>
-            </svg>
-            {tooltipData && (
-              <div>
-                <Tooltip
-                  top={tooltipTop - 18}
-                  left={tooltipLeft + 12}
-                  style={{
-                    backgroundColor: tooltipData.bgc,
-                    color: tooltipData.color
-                  }}
-                >
-                  {`${tooltipData.content}`}
-                </Tooltip>
-              </div>
-            )}
-          </Segment>
-        </Segment>
-        <Header
-          size="tiny"
+        <Segment
           style={{
-            position: "relative",
-            textAlign: "center",
             width: "100%",
-            alignSelf: "flex-end"
+            height: "100%",
+            display: "flex",
+            justifyContent: "center"
           }}
         >
-          eSkill - SRM Center for Applied Research in Education
-        </Header>
+          <svg
+            width={width}
+            height={height}
+            ref={ref => {
+              this.svg = ref;
+            }}
+          >
+            <GradientOrangeRed id="voronoi_orange_red" />
+            <LinearGradient from="#00ff21" to="#358937" id="voronoi_green" />
+            <LinearGradient from="#ffc1c1" to="#ff0000" id="voronoi_red" />
+            <LinearGradient from="#007bff" to="#2c00bc" id="voronoi_purple" />
+            <LinearGradient
+              from="rgba(255,255,255,0.5)"
+              to="rgba(255,255,255,0.1)"
+              id="voronoi_pink_red"
+            />
+            <rect
+              fill="url(#voronoi_purple)"
+              width={innerWidth}
+              height={innerHeight}
+              rx={14}
+            />
+            <RectClipPath
+              id="voronoi_clip"
+              width={innerWidth}
+              height={innerHeight}
+              rx={14}
+            />
+            <Group
+              top={margin.top}
+              left={margin.left}
+              clipPath="url(#voronoi_clip)"
+              onMouseMove={this.handleMouseMove}
+              onMouseLeave={() => {
+                this.setState({ selected: null, neighbors: null });
+              }}
+            >
+              {polygons.map((polygon, ind) => (
+                <a
+                  href={`/question/${polygon.data.ind}`}
+                  key={`polygon-${ind}`}
+                  onClick={e => {
+                    e.preventDefault();
+                    history.push(`/question/${polygon.data.ind}`);
+                  }}
+                >
+                  <VoronoiPolygon
+                    polygon={polygon}
+                    stroke="#ffffff"
+                    strokeWidth={1}
+                    fill={
+                      selected && polygon.data.id === selected.data.id
+                        ? "url(#voronoi_pink_red)"
+                        : polygon.data.state == 0
+                        ? "url(#voronoi_purple)"
+                        : polygon.data.state == 1
+                        ? "url(#voronoi_red)"
+                        : polygon.data.state == 2
+                        ? "url(#voronoi_green)"
+                        : "url(#voronoi_orange_red)"
+                    }
+                    fillOpacity={1}
+                  />
+                </a>
+              ))}
+            </Group>
+          </svg>
+          {tooltipData && (
+            <div>
+              <Tooltip
+                top={tooltipTop - 18}
+                left={tooltipLeft + 12}
+                style={{
+                  backgroundColor: tooltipData.bgc,
+                  color: tooltipData.color
+                }}
+              >
+                {`${tooltipData.content}`}
+              </Tooltip>
+            </div>
+          )}
+        </Segment>
       </div>
     );
   }

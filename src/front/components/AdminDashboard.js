@@ -57,54 +57,34 @@ class Dashboard extends React.Component {
     console.log(cl, tl, typeof topics, typeof categories);
     return (
       <div>
-        <Segment
-          basic
-          style={{
-            minHeight: "100%",
-            alignSelf: "flex-start",
-            width: "100%"
-          }}
-        >
-          <Grid padded stackable relaxed doubling divided="vertically">
-            <Grid.Row>
-              <Stats categories={cl} topics={tl} />
-            </Grid.Row>
-            <Grid.Row>
-              <Categories
-                categories={this.props.categories}
-                emit={this.emit}
-                catError={this.props.catError}
-                topError={this.props.topError}
-                topics={this.props.topics}
-                loading={this.props.setLoading}
-                catSuccess={this.props.catSuccess}
-                topSuccess={this.props.topSuccess}
-              />
-              <Department />
-              <Grid.Column width={8} />
-            </Grid.Row>
-            <Grid.Row>
-              <Tag
-                tagError={this.props.tagError}
-                tagSuccess={this.props.tagSuccess}
-                emit={this.emit}
-                tags={this.props.tags}
-              />
-              <Configuration emit={this.props.emit} mode={this.props.mode} />
-            </Grid.Row>
-          </Grid>
-        </Segment>
-        <Header
-          size="tiny"
-          style={{
-            position: "relative",
-            textAlign: "center",
-            width: "100%",
-            alignSelf: "flex-end"
-          }}
-        >
-          eSkill - SRM Center for Applied Research in Education
-        </Header>
+        <Grid padded stackable relaxed doubling divided="vertically">
+          <Grid.Row>
+            <Stats categories={cl} topics={tl} />
+          </Grid.Row>
+          <Grid.Row>
+            <Categories
+              categories={this.props.categories}
+              emit={this.emit}
+              catError={this.props.catError}
+              topError={this.props.topError}
+              topics={this.props.topics}
+              loading={this.props.setLoading}
+              catSuccess={this.props.catSuccess}
+              topSuccess={this.props.topSuccess}
+            />
+            <Department />
+            <Grid.Column width={8} />
+          </Grid.Row>
+          <Grid.Row>
+            <Tag
+              tagError={this.props.tagError}
+              tagSuccess={this.props.tagSuccess}
+              emit={this.emit}
+              tags={this.props.tags}
+            />
+            <Configuration emit={this.props.emit} mode={this.props.mode} />
+          </Grid.Row>
+        </Grid>
       </div>
     );
   }

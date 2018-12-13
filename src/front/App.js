@@ -44,14 +44,18 @@ class Root extends React.Component {
       topics: [],
       qstate: cookies.get("qstate") || [],
       mode: false,
-      selcatname: "",
-      visible: false
+      selcatname: cookies.get("selcat") || "",
+      visible: false,
+      width: 0,
+      height: 0
     };
     this.emit = this.emit.bind(this);
     this.logout = this.logout.bind(this);
     this.mainEmit = this.mainEmit.bind(this);
     this.setLoading = this.setLoading.bind(this);
     this.stateSet = this.stateSet.bind(this);
+    console.log(this.state.selcatname);
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
 
     this.handleClick = this.handleClick.bind(this);
   }
@@ -91,9 +95,19 @@ class Root extends React.Component {
   emit(name, data) {
     socket.emit(name, data);
   }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateWindowDimensions);
+  }
+
+  updateWindowDimensions() {
+    this.setState({ width: window.innerWidth, height: window.innerHeight });
+  }
   componentDidMount(props) {
     const { cookies } = this.props;
     const { categories } = this.state;
+    this.updateWindowDimensions();
+    window.addEventListener("resize", this.updateWindowDimensions);
     socket.on("connect", () => {
       if (cookies.get("email") != null && cookies.get("isLoggedIn")) {
         socket.emit("det", {
@@ -212,7 +226,9 @@ class Root extends React.Component {
       });
     });
     window.onbeforeunload = () => {
+      cookies.set("selcat", this.state.selcatname);
       socket.emit("disconnect");
+      console.log(cookies.get("selcat"));
     };
   }
   setLoading(type) {
@@ -320,156 +336,171 @@ class Root extends React.Component {
               >
                 {" "}
                 <Switch>
-                  {this.state.level == 0 ? (
+                  <Segment basic style={{ flexGrow: "1" }}>
+                    {this.state.level == 0 ? (
+                      <Route
+                        path="/question/:category/:id"
+                        exact
+                        render={props => (
+                          <NewTest
+                            stateSet={this.stateSet}
+                            q={this.state.qstate}
+                            logout={this.logout}
+                            topics={this.state.topics}
+                            grouped={this.state.grouped}
+                            categories={this.state.categories}
+                            emit={this.emit}
+                            i={props.match.params.id}
+                            cat={this.state.selcatname}
+                            cid={props.match.params.category}
+                          />
+                        )}
+                      />
+                    ) : null}
+                    {this.state.level == 0 ? (
+                      <Route
+                        path="/request"
+                        render={props => (
+                          <RequestCourse
+                            stateSet={this.stateSet}
+                            q={this.state.qstate}
+                            logout={this.logout}
+                            categories={this.state.categories}
+                            emit={this.emit}
+                            details={this.state.details}
+                          />
+                        )}
+                      />
+                    ) : null}
+                    {this.state.level == 0 ? (
+                      <Route
+                        exact
+                        path="/question/:category"
+                        render={props => (
+                          <QuestionPage
+                            md={this.state.details.details}
+                            level={this.state.level}
+                            emit={this.emit}
+                            faculties={this.state.details.faculties}
+                            categories={this.state.categories}
+                            history={this.props.history}
+                            logout={this.logout}
+                            details={this.state.details}
+                            catError={this.state.catError}
+                            topError={this.state.topError}
+                            topics={this.state.topics}
+                            catSuccess={this.state.catSuccess}
+                            setLoading={this.setLoading}
+                            topSuccess={this.state.topSuccess}
+                            tags={this.state.tags}
+                            grouped={this.state.grouped}
+                            tagError={this.state.tagError}
+                            tagSuccess={this.state.tagSuccess}
+                            qs={this.state.qstate}
+                            stateSet={this.stateSet}
+                            cat={this.state.selcatname}
+                            cid={props.match.params.category}
+                          />
+                        )}
+                      />
+                    ) : null}
                     <Route
-                      path="/question/:category/:id"
-                      render={props => (
-                        <NewTest
-                          stateSet={this.stateSet}
-                          q={this.state.qstate}
-                          logout={this.logout}
-                          topics={this.state.topics}
-                          grouped={this.state.grouped}
-                          categories={this.state.categories}
-                          emit={this.emit}
-                          i={props.match.params.id}
-                          cat={this.state.selcatname}
-                          cid={props.match.params.category}
-                        />
-                      )}
+                      path="/"
+                      exact
+                      render={() =>
+                        this.state.level == 2 ? (
+                          <AdminDashboard
+                            mode={this.state.mode}
+                            md={this.state.details.details}
+                            level={this.state.level}
+                            emit={this.emit}
+                            faculties={this.state.details.faculties}
+                            categories={this.state.categories}
+                            history={this.props.history}
+                            logout={this.logout}
+                            details={this.state.details}
+                            catError={this.state.catError}
+                            topError={this.state.topError}
+                            topics={this.state.topics}
+                            catSuccess={this.state.catSuccess}
+                            setLoading={this.setLoading}
+                            topSuccess={this.state.topSuccess}
+                            tags={this.state.tags}
+                            grouped={this.state.grouped}
+                            tagError={this.state.tagError}
+                            tagSuccess={this.state.tagSuccess}
+                          />
+                        ) : this.state.level == 4 ? (
+                          <FacultyDashboard
+                            md={this.state.details.details}
+                            emit={this.emit}
+                            history={this.props.history}
+                            logout={this.logout}
+                            setLoading={this.setLoading}
+                            stateSet={this.stateSet}
+                            emit={this.emit}
+                            {...this.state}
+                          />
+                        ) : this.state.level == 1 ? (
+                          <CoordinatorDashboard
+                            md={this.state.details.details}
+                            level={this.state.level}
+                            emit={this.emit}
+                            faculties={this.state.details.faculties}
+                            categories={this.state.categories}
+                            history={this.props.history}
+                            logout={this.logout}
+                            details={this.state.details}
+                            catError={this.state.catError}
+                            topError={this.state.topError}
+                            topics={this.state.topics}
+                            catSuccess={this.state.catSuccess}
+                            setLoading={this.setLoading}
+                            topSuccess={this.state.topSuccess}
+                            tags={this.state.tags}
+                            grouped={this.state.grouped}
+                            tagError={this.state.tagError}
+                            tagSuccess={this.state.tagSuccess}
+                          />
+                        ) : (
+                          <StudentDashboard
+                            md={this.state.details.details}
+                            level={this.state.level}
+                            emit={this.emit}
+                            faculties={this.state.details.faculties}
+                            categories={this.state.categories}
+                            history={this.props.history}
+                            logout={this.logout}
+                            details={this.state.details}
+                            catError={this.state.catError}
+                            topError={this.state.topError}
+                            topics={this.state.topics}
+                            catSuccess={this.state.catSuccess}
+                            setLoading={this.setLoading}
+                            topSuccess={this.state.topSuccess}
+                            tags={this.state.tags}
+                            grouped={this.state.grouped}
+                            tagError={this.state.tagError}
+                            tagSuccess={this.state.tagSuccess}
+                            qs={this.state.qstate}
+                            stateSet={this.stateSet}
+                          />
+                        )
+                      }
                     />
-                  ) : null}
-                  {this.state.level == 0 ? (
-                    <Route
-                      path="/request"
-                      render={props => (
-                        <RequestCourse
-                          stateSet={this.stateSet}
-                          q={this.state.qstate}
-                          logout={this.logout}
-                          categories={this.state.categories}
-                          emit={this.emit}
-                          details={this.state.details}
-                        />
-                      )}
-                    />
-                  ) : null}
-                  {this.state.level == 0 ? (
-                    <Route
-                      path="/question/:category"
-                      render={props => (
-                        <QuestionPage
-                          md={this.state.details.details}
-                          level={this.state.level}
-                          emit={this.emit}
-                          faculties={this.state.details.faculties}
-                          categories={this.state.categories}
-                          history={this.props.history}
-                          logout={this.logout}
-                          details={this.state.details}
-                          catError={this.state.catError}
-                          topError={this.state.topError}
-                          topics={this.state.topics}
-                          catSuccess={this.state.catSuccess}
-                          setLoading={this.setLoading}
-                          topSuccess={this.state.topSuccess}
-                          tags={this.state.tags}
-                          grouped={this.state.grouped}
-                          tagError={this.state.tagError}
-                          tagSuccess={this.state.tagSuccess}
-                          qs={this.state.qstate}
-                          stateSet={this.stateSet}
-                          cat={this.state.selcatname}
-                          cid={props.match.params.category}
-                        />
-                      )}
-                    />
-                  ) : null}
-                  <Route
-                    path="/"
-                    render={() =>
-                      this.state.level == 2 ? (
-                        <AdminDashboard
-                          mode={this.state.mode}
-                          md={this.state.details.details}
-                          level={this.state.level}
-                          emit={this.emit}
-                          faculties={this.state.details.faculties}
-                          categories={this.state.categories}
-                          history={this.props.history}
-                          logout={this.logout}
-                          details={this.state.details}
-                          catError={this.state.catError}
-                          topError={this.state.topError}
-                          topics={this.state.topics}
-                          catSuccess={this.state.catSuccess}
-                          setLoading={this.setLoading}
-                          topSuccess={this.state.topSuccess}
-                          tags={this.state.tags}
-                          grouped={this.state.grouped}
-                          tagError={this.state.tagError}
-                          tagSuccess={this.state.tagSuccess}
-                        />
-                      ) : this.state.level == 4 ? (
-                        <FacultyDashboard
-                          md={this.state.details.details}
-                          emit={this.emit}
-                          history={this.props.history}
-                          logout={this.logout}
-                          setLoading={this.setLoading}
-                          stateSet={this.stateSet}
-                          emit={this.emit}
-                          {...this.state}
-                        />
-                      ) : this.state.level == 1 ? (
-                        <CoordinatorDashboard
-                          md={this.state.details.details}
-                          level={this.state.level}
-                          emit={this.emit}
-                          faculties={this.state.details.faculties}
-                          categories={this.state.categories}
-                          history={this.props.history}
-                          logout={this.logout}
-                          details={this.state.details}
-                          catError={this.state.catError}
-                          topError={this.state.topError}
-                          topics={this.state.topics}
-                          catSuccess={this.state.catSuccess}
-                          setLoading={this.setLoading}
-                          topSuccess={this.state.topSuccess}
-                          tags={this.state.tags}
-                          grouped={this.state.grouped}
-                          tagError={this.state.tagError}
-                          tagSuccess={this.state.tagSuccess}
-                        />
-                      ) : (
-                        <StudentDashboard
-                          md={this.state.details.details}
-                          level={this.state.level}
-                          emit={this.emit}
-                          faculties={this.state.details.faculties}
-                          categories={this.state.categories}
-                          history={this.props.history}
-                          logout={this.logout}
-                          details={this.state.details}
-                          catError={this.state.catError}
-                          topError={this.state.topError}
-                          topics={this.state.topics}
-                          catSuccess={this.state.catSuccess}
-                          setLoading={this.setLoading}
-                          topSuccess={this.state.topSuccess}
-                          tags={this.state.tags}
-                          grouped={this.state.grouped}
-                          tagError={this.state.tagError}
-                          tagSuccess={this.state.tagSuccess}
-                          qs={this.state.qstate}
-                          stateSet={this.stateSet}
-                        />
-                      )
-                    }
-                  />
-                  } />
+                  </Segment>
                 </Switch>
+                <Header
+                  size="tiny"
+                  style={{
+                    position: "relative",
+                    textAlign: "center",
+                    width: "100%",
+                    alignSelf: "flex-end"
+                  }}
+                >
+                  eSkill - SRM Center for Applied Research in Education
+                </Header>
               </Sidebar.Pusher>
             </Sidebar.Pushable>
           </div>

@@ -3,22 +3,10 @@ import React from "react";
 export default class StudentTable extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { width: 0, height: 0 };
+    this.state = {};
     this.accept = this.accept.bind(this);
-    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
   }
-  componentDidMount() {
-    this.updateWindowDimensions();
-    window.addEventListener("resize", this.updateWindowDimensions);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("resize", this.updateWindowDimensions);
-  }
-
-  updateWindowDimensions() {
-    this.setState({ width: window.innerWidth, height: window.innerHeight });
-  }
+  componentDidMount() {}
   accept(s, action) {
     let { details, stateSet, emit } = this.props;
     console.log("clicked");
@@ -33,7 +21,7 @@ export default class StudentTable extends React.Component {
     emit("acceptCourse", [s._id, s.cat, action, details]);
   }
   render() {
-    let { width } = this.state;
+    let { width } = this.props;
     let { details } = this.props.details;
     return (
       <Table>

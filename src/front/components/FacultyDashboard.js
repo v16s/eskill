@@ -29,7 +29,8 @@ class FacultyDashboard extends React.Component {
     this.state = {
       visible: false,
       modalVisible: false,
-      filter: props.categories
+      filter: props.categories,
+      studentDetails: []
     };
     this.logout = this.logout.bind(this);
     this.emit = this.emit.bind(this);
@@ -38,20 +39,42 @@ class FacultyDashboard extends React.Component {
   handleClick() {
     this.setState({ visible: !this.state.visible });
   }
-
+  componentDidMount() {
+    let { studentDetails } = this.state;
+    let { details } = this.props;
+    let students = details.details.students;
+    console.log(students);
+    students.map(s => {
+      if (s.a === true) {
+        fetch("http://localhost:2000/api/student", {
+          method: "POST",
+          body: JSON.stringify({ sid: s._id, cat: s.cat }),
+          headers: { "Content-Type": "application/json" }
+        })
+          .then(res => res.json())
+          .then(res => {
+            let i = _.findIndex(studentDetails, { _id: s._id, cat: s.cat });
+            if (i > -1) {
+              studentDetails[i] = { ...studentDetails[i], ...res };
+            } else {
+              studentDetails.push({ ...s, ...res });
+            }
+            this.setState({ studentDetails: studentDetails });
+          });
+      }
+    });
+  }
   logout() {
     this.props.logout();
   }
-  componentDidMount() {}
   emit(name, obj) {
     this.props.emit(name, obj);
   }
   render() {
-    let { md: det, topics, categories } = this.props;
+    let { md: det, topics, categories, details } = this.props;
     let tl = _.toArray(topics).length;
 
     let cl = _.toArray(categories).length;
-    console.log(cl, tl, typeof topics, typeof categories);
     return (
       <div>
         <Segment
@@ -66,28 +89,12 @@ class FacultyDashboard extends React.Component {
             <Grid.Row>
               <Grid.Column width={13}>
                 <Segment>
-                  <StudentTable
-                    details={this.props.details}
-                    stateSet={this.props.stateSet}
-                    emit={this.props.emit}
-                  />
+                  <StudentTable {...this.props} />
                 </Segment>
               </Grid.Column>
             </Grid.Row>
           </Grid>
         </Segment>
-
-        <Header
-          size="tiny"
-          style={{
-            position: "relative",
-            textAlign: "center",
-            width: "100%",
-            alignSelf: "flex-end"
-          }}
-        >
-          eSkill - SRM Center for Applied Research in Education
-        </Header>
       </div>
     );
   }
