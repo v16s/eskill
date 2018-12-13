@@ -7,10 +7,6 @@ import {
   Menu,
   Image,
   Container,
-  Table,
-  Icon,
-  Header,
-  Input,
   Grid,
   Dropdown,
   Pagination,
@@ -140,18 +136,23 @@ class NewTest extends React.Component {
     let { categories, i, q: qall, cat, cid } = this.props;
     let qa = qall[cat];
 
-    console.log(qa);
     return (
       <div>
         {qall[cat] != undefined ? (
           <Segment basic>
             {q != undefined ? (
               <Segment>
-                <Preview q={q} without />
+                <Preview
+                  q={q}
+                  emit={this.emit}
+                  without
+                  pid={qa.pid}
+                  sid={this.props.id}
+                  name={this.props.sname}
+                />
 
                 <Segment basic>
-                  {" "}
-                  <Grid columns={2} divided>
+                  <Grid columns={2} divided stackable>
                     <Grid.Row>
                       <Grid.Column>
                         <Grid column={2}>
@@ -312,7 +313,7 @@ class NewTest extends React.Component {
             )}
             <Segment>
               <Segment basic>
-                <Grid columns={3}>
+                <Grid columns={3} stackable>
                   <Grid.Column>
                     <Button
                       primary

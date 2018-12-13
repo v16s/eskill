@@ -48,7 +48,10 @@ class StudentDashboard extends React.Component {
   render() {
     let { qs: qstate, categories } = this.props;
 
-    let questions = _.chunk(Object.keys(qstate), 4);
+    let questions = [];
+    if (qstate != undefined) {
+      questions = _.chunk(Object.keys(qstate), 4);
+    }
     return (
       <div>
         <Segment>

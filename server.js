@@ -115,7 +115,8 @@ let UserDetails = mongoose.model(
       dob: Date,
       gender: String,
       department: String,
-      students: Array
+      students: Array,
+      problems: Array
     }
   }),
   "UserDetails"
@@ -268,10 +269,14 @@ io.on("connection", socket => {
                 });
                 fac.markModified("details");
                 fac.save(err => {
+                  if (acc.questions == undefined) {
+                    acc.questions = {};
+                  }
                   acc.questions[cat] = {
                     a: false,
                     q: [],
-                    cid: cid
+                    cid: cid,
+                    pid: fac._id
                   };
                   acc.markModified("questions");
                   acc.save(err => {
@@ -285,12 +290,29 @@ io.on("connection", socket => {
           socket.on("changeQuestion", opts => {
             let [q, cat] = opts;
             acc.questions[cat] = q;
-            console.log("questions changed");
+            console.log(acc.questions[cat].pid);
             acc.markModified("questions");
             acc.save(err => {
               if (!err) {
                 socket.emit("q", acc.questions);
+                dbCheck.emit("change", [acc.questions[cat].pid]);
               }
+            });
+          });
+          socket.on("addProblem", report => {
+            let { cat, n, pid, sid, name, desc } = report;
+            UserDetails.findById(pid, (err, fac) => {
+              if (fac.details.problems == undefined) {
+                fac.details.problems = [];
+              }
+              fac.details.problems.push(report);
+              fac.markModified("details");
+              fac.save(err => {
+                if (!err) {
+                  console.log("problem added");
+                  dbCheck.emit("change", [pid]);
+                }
+              });
             });
           });
         }

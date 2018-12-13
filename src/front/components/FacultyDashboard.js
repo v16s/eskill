@@ -16,12 +16,16 @@ import {
   Grid,
   Dropdown,
   Pagination,
+  Tab,
   Modal,
   GridRow
 } from "semantic-ui-react";
 import Categories from "./categories";
 import AddQuestion from "./AddQuestion";
 import _ from "lodash";
+
+import CompletionTable from "./CompletionTable";
+import ReportProblem from "./ReportProblem";
 import StudentTable from "./StudentTable";
 class FacultyDashboard extends React.Component {
   constructor(props) {
@@ -64,6 +68,30 @@ class FacultyDashboard extends React.Component {
       }
     });
   }
+  componentWillReceiveProps(nextProps) {
+    let { studentDetails } = this.state;
+    let { details } = nextProps;
+    let students = details.details.students;
+    students.map(s => {
+      if (s.a === true) {
+        fetch("http://localhost:2000/api/student", {
+          method: "POST",
+          body: JSON.stringify({ sid: s._id, cat: s.cat }),
+          headers: { "Content-Type": "application/json" }
+        })
+          .then(res => res.json())
+          .then(res => {
+            let i = _.findIndex(studentDetails, { _id: s._id, cat: s.cat });
+            if (i > -1) {
+              studentDetails[i] = { ...studentDetails[i], ...res };
+            } else {
+              studentDetails.push({ ...s, ...res });
+            }
+            this.setState({ studentDetails: studentDetails });
+          });
+      }
+    });
+  }
   logout() {
     this.props.logout();
   }
@@ -73,7 +101,7 @@ class FacultyDashboard extends React.Component {
   render() {
     let { md: det, topics, categories, details } = this.props;
     let tl = _.toArray(topics).length;
-
+    let { studentDetails } = this.state;
     let cl = _.toArray(categories).length;
     return (
       <div>
@@ -88,9 +116,41 @@ class FacultyDashboard extends React.Component {
           <Grid padded stackable relaxed centered divided="vertically">
             <Grid.Row>
               <Grid.Column width={13}>
-                <Segment>
-                  <StudentTable {...this.props} />
-                </Segment>
+                <Tab
+                  menu={{ pointing: true }}
+                  panes={[
+                    {
+                      menuItem: "Approval List",
+                      render: () => (
+                        <Tab.Pane attached={false}>
+                          <StudentTable {...this.props} />
+                        </Tab.Pane>
+                      )
+                    },
+                    {
+                      menuItem: "Completion Level",
+                      render: () => (
+                        <Tab.Pane attached={false}>
+                          <CompletionTable
+                            {...this.props}
+                            studentDetails={studentDetails}
+                          />
+                        </Tab.Pane>
+                      )
+                    },
+                    {
+                      menuItem: "Problem Reports",
+                      render: () => (
+                        <Tab.Pane attached={false}>
+                          <ReportProblem
+                            {...this.props}
+                            studentDetails={studentDetails}
+                          />
+                        </Tab.Pane>
+                      )
+                    }
+                  ]}
+                />
               </Grid.Column>
             </Grid.Row>
           </Grid>

@@ -243,6 +243,7 @@ class Root extends React.Component {
     this.setState(newstate);
   }
   render() {
+    let { width } = this.state;
     return (
       <Router history={history}>
         {this.state.isLoggedIn ? (
@@ -255,15 +256,17 @@ class Root extends React.Component {
               }}
             >
               <Menu secondary fluid borderless>
-                <Menu.Item onClick={e => this.handleClick()}>
-                  <Icon
-                    name="bars"
-                    size="large"
-                    style={{
-                      color: "#1456ff"
-                    }}
-                  />
-                </Menu.Item>
+                {width < 768 ? (
+                  <Menu.Item onClick={e => this.handleClick()}>
+                    <Icon
+                      name="bars"
+                      size="large"
+                      style={{
+                        color: "#1456ff"
+                      }}
+                    />
+                  </Menu.Item>
+                ) : null}
                 <Menu.Item
                   onClick={e => {
                     history.push("/");
@@ -274,17 +277,27 @@ class Root extends React.Component {
                     eSkill
                   </Header>
                 </Menu.Item>
-                <Menu.Menu position="right">
-                  <Menu.Item
-                    onClick={e => {
-                      e.preventDefault();
-                      this.logout();
-                      window.location.href = "/";
-                    }}
-                  >
-                    <Icon name="sign out" size="large" />
-                  </Menu.Item>
-                </Menu.Menu>
+                {width >= 768 ? (
+                  <Menu.Menu position="right">
+                    <Menu.Item
+                      onClick={e => {
+                        e.preventDefault();
+                        history.push("/");
+                      }}
+                    >
+                      <Icon name="home" size="large" />
+                    </Menu.Item>
+                    <Menu.Item
+                      onClick={e => {
+                        e.preventDefault();
+                        this.logout();
+                        window.location.href = "/";
+                      }}
+                    >
+                      <Icon name="sign out" size="large" />
+                    </Menu.Item>
+                  </Menu.Menu>
+                ) : null}
               </Menu>
             </Segment>
 
@@ -334,7 +347,6 @@ class Root extends React.Component {
                   padding: "10px 0"
                 }}
               >
-                {" "}
                 <Switch>
                   <Segment basic style={{ flexGrow: "1" }}>
                     {this.state.level == 0 ? (
@@ -350,6 +362,8 @@ class Root extends React.Component {
                             grouped={this.state.grouped}
                             categories={this.state.categories}
                             emit={this.emit}
+                            id={this.state.details._id}
+                            sname={this.state.details.details.name}
                             i={props.match.params.id}
                             cat={this.state.selcatname}
                             cid={props.match.params.category}
@@ -400,6 +414,7 @@ class Root extends React.Component {
                             stateSet={this.stateSet}
                             cat={this.state.selcatname}
                             cid={props.match.params.category}
+                            width={width}
                           />
                         )}
                       />

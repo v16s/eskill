@@ -75,7 +75,16 @@ class QuestionPage extends React.Component {
 
     let height = 600;
     let margin = { top: 10, bottom: 10, right: 10, left: 10 };
-    let { md: det, topics, categories, hideTooltip, qs, cat, cid } = this.props;
+    let {
+      md: det,
+      topics,
+      categories,
+      hideTooltip,
+      qs,
+      cat,
+      cid,
+      width: w
+    } = this.props;
     let data = [];
 
     if (qs[cat] != undefined && cat != "") {
@@ -84,7 +93,7 @@ class QuestionPage extends React.Component {
         return {
           label: k.n,
           usage: 1,
-          name: `Question ${k.n}`,
+          name: `Question ${i}`,
           state: k.a,
           ind: i
         };
@@ -95,96 +104,146 @@ class QuestionPage extends React.Component {
     const centerY = height / 2;
     const centerX = width / 2;
 
-    return (
-      <div>
-        <Segment
-          style={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            justifyContent: "center"
-          }}
-        >
-          <svg height={height} width={width}>
-            <Group top={centerY - margin.top} left={centerX}>
-              <Pie
-                data={data}
-                pieValue={usage}
-                outerRadius={radius - radius / 3}
-                innerRadius={radius - radius / 6}
-                cornerRadius={0}
-                padAngle={0}
+    if (w > 768) {
+      return (
+        <div>
+          <Segment
+            style={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              justifyContent: "center"
+            }}
+          >
+            <svg height={height} width={width}>
+              <Group top={centerY - margin.top} left={centerX}>
+                <Pie
+                  data={data}
+                  pieValue={usage}
+                  outerRadius={radius - radius / 3}
+                  innerRadius={radius - radius / 6}
+                  cornerRadius={0}
+                  padAngle={0}
+                >
+                  {pie => {
+                    return pie.arcs.map((arc, i) => {
+                      const opacity = 1;
+                      const [centroidX, centroidY] = pie.path.centroid(arc);
+                      const { startAngle, endAngle } = arc;
+                      const hasSpaceForLabel = endAngle - startAngle >= 0.1;
+                      return (
+                        <g key={`browser-${arc.data.label}-${i}`}>
+                          <a
+                            href={`/question/${this.props.cid}/${arc.data.ind}`}
+                            onClick={e => {
+                              e.preventDefault();
+                              history.push(
+                                `/question/${this.props.cid}/${arc.data.ind}`
+                              );
+                            }}
+                          >
+                            <path
+                              d={pie.path(arc)}
+                              fill={
+                                arc.data.state == 0
+                                  ? "#1456ff"
+                                  : arc.data.state == 1
+                                  ? "#ff3262"
+                                  : arc.data.state == 2
+                                  ? "#00ef5f"
+                                  : "#ffe500"
+                              }
+                              stroke="#fff"
+                              strokeLinecap="square"
+                              strokeLinejoin="bevel"
+                              fillOpacity={opacity}
+                              onMouseMove={event =>
+                                this.handleTooltip({
+                                  event,
+                                  da: {
+                                    content: arc.data.name,
+                                    bgc:
+                                      arc.data.state == 0
+                                        ? "red"
+                                        : arc.data.state == 1
+                                        ? "yellow"
+                                        : "green",
+                                    color:
+                                      arc.data.state == 0 ? "white" : "black"
+                                  }
+                                })
+                              }
+                              onMouseLeave={event => hideTooltip()}
+                            />
+                          </a>
+                        </g>
+                      );
+                    });
+                  }}
+                </Pie>
+              </Group>
+              <Group
+                top={centerY - margin.top}
+                left={centerX}
+                width={200}
+                height={40}
               >
-                {pie => {
-                  return pie.arcs.map((arc, i) => {
-                    const opacity = 1;
-                    const [centroidX, centroidY] = pie.path.centroid(arc);
-                    const { startAngle, endAngle } = arc;
-                    const hasSpaceForLabel = endAngle - startAngle >= 0.1;
-                    return (
-                      <g key={`browser-${arc.data.label}-${i}`}>
-                        <a
-                          href={`/question/${this.props.cid}/${arc.data.ind}`}
-                          onClick={e => {
-                            e.preventDefault();
-                            history.push(
-                              `/question/${this.props.cid}/${arc.data.ind}`
-                            );
-                          }}
-                        >
-                          <path
-                            d={pie.path(arc)}
-                            fill={
-                              arc.data.state == 0
-                                ? "#1456ff"
-                                : arc.data.state == 1
-                                ? "#ff3262"
-                                : arc.data.state == 2
-                                ? "#00ef5f"
-                                : "#ffe500"
-                            }
-                            stroke="#fff"
-                            strokeLinecap="square"
-                            strokeLinejoin="bevel"
-                            fillOpacity={opacity}
-                            onMouseMove={event =>
-                              this.handleTooltip({
-                                event,
-                                da: {
-                                  content: arc.data.name,
-                                  bgc:
-                                    arc.data.state == 0
-                                      ? "red"
-                                      : arc.data.state == 1
-                                      ? "yellow"
-                                      : "green",
-                                  color: arc.data.state == 0 ? "white" : "black"
-                                }
-                              })
-                            }
-                            onMouseLeave={event => hideTooltip()}
-                          />
-                        </a>
-                      </g>
-                    );
-                  });
+                <text textAnchor="middle" className="center-label">
+                  {cat}
+                </text>
+              </Group>
+            </svg>
+          </Segment>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <Segment basic>
+            {data.map(k => (
+              <Segment
+                onClick={e => {
+                  e.preventDefault();
+                  history.push(`/question/${this.props.cid}/${k.ind}`);
                 }}
-              </Pie>
-            </Group>
-            <Group
-              top={centerY - margin.top}
-              left={centerX}
-              width={200}
-              height={40}
-            >
-              <text textAnchor="middle" className="center-label">
-                eSkill Sample
-              </text>
-            </Group>
-          </svg>
-        </Segment>
-      </div>
-    );
+                style={{
+                  color:
+                    k.state == 0
+                      ? "#1456ff"
+                      : k.state == 1
+                      ? "#ff3262"
+                      : k.state == 2
+                      ? "#00ef5f"
+                      : "#ffe500",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  flexDriection: "row"
+                }}
+                className="question"
+              >
+                <Header
+                  as="h3"
+                  style={{
+                    color:
+                      k.state == 0
+                        ? "#1456ff"
+                        : k.state == 1
+                        ? "#ff3262"
+                        : k.state == 2
+                        ? "#00ef5f"
+                        : "#ffe500"
+                  }}
+                  className="question-name"
+                >
+                  {k.name}
+                </Header>
+                <Icon name="angle right" />
+              </Segment>
+            ))}
+          </Segment>
+        </div>
+      );
+    }
   }
 }
 
