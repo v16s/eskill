@@ -183,8 +183,9 @@ app.post("/api/question", (req, res) => {
 
 app.post("/api/faculty", (req, res) => {
   let { branch } = req.body;
-  console.log("faculty requested");
-  UserDetails.find({ "details.branch": branch, level: 4 }, (err, fac) => {
+  console.log("faculty requested", branch);
+  UserDetails.find({ "details.department": `${branch}`, level: 4 }, (err, fac) => {
+    console.log(fac)
     res.json(fac);
   });
 });
@@ -405,6 +406,7 @@ io.on("connection", socket => {
         });
         details = new UserDetails({
           _id: r.regNo,
+          level: 0,
           details: {
             name: r.name,
             regNo: r.regNo,
@@ -423,6 +425,7 @@ io.on("connection", socket => {
         });
         details = new UserDetails({
           _id: r.regNo,
+          level: 4,
           details: {
             name: r.name,
             regNo: r.regNo,
