@@ -178,6 +178,9 @@ textarea {
   color: #333;
   border: none;
 }
+.ui.segment th .ui.input input {
+  background-color: #fff !important;
+}
 .ui.dropdown.selected,
 .ui.dropdown .menu .item {
   background-color: transparent;

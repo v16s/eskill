@@ -45,15 +45,11 @@ app.use((req, res, next) => {
   );
   next();
 });
-app.use(express.static(path.resolve(__dirname, "build")));
+app.use(express.static(path.resolve(__dirname, "dist")));
 
 const dburl = "mongodb://test:test@ds135537.mlab.com:35537/eapproval";
 
-const port_number = process.env.PORT || 2000;
 
-server.listen(port_number, () => {
-  console.log("Listening on 2000");
-});
 
 mongoose.connect(
   dburl,
@@ -190,7 +186,7 @@ app.post("/api/faculty", (req, res) => {
   });
 });
 app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "build", "index.html"));
+  res.sendFile(path.resolve(__dirname, "dist", "index.html"));
 });
 io.on("connection", socket => {
   let loggedIn = false,
@@ -592,4 +588,8 @@ io.on("connection", socket => {
       }
     });
   });
+});
+
+server.listen(5000, () => {
+  console.log("Listening on 5000");
 });

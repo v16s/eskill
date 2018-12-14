@@ -7,8 +7,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "@aragon/ui": "^0.16.0",
-    "@vx/vx": "^0.0.181",
+    "@aragon/ui": "^0.27.0",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "bcryptjs": "^2.4.3",
@@ -18,17 +17,27 @@
     "d3-time-format": "^2.1.1",
     "events": "^3.0.0",
     "express": "^4.16.3",
-    "history": "^4.7.2",
     "http": "^0.0.0",
     "lodash": "^4.17.10",
     "mongoose": "^5.2.5",
-    "parcel-bundler": "^1.9.7",
     "path": "^0.12.7",
-    "react": "^16.0.0",
+    "socket.io": "^2.1.1"
+  },
+  "devDependencies": {
+    "@vx/vx": "^0.0.181",
+    "babel-core": "^6.26.3",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "history": "^4.7.2",
+    "less": "^3.8.0",
+    "node-sass": "^4.10.0",
+    "parcel-bundler": "^1.9.7",
+    "react": "^16.3.1",
     "react-circular-progressbar": "^1.0.0",
     "react-cookie": "^2.2.0",
     "react-datepicker": "^2.0.0",
-    "react-dom": "^16.0.0",
+    "react-dom": "^16.3.1",
     "react-katex": "^2.0.2",
     "react-latex": "^1.2.0",
     "react-router-dom": "^4.3.1",
@@ -37,7 +46,6 @@
     "react-sweet-progress": "^1.1.2",
     "semantic-ui-css": "^2.3.3",
     "semantic-ui-react": "^0.82.1",
-    "socket.io": "^2.1.1",
     "socket.io-client": "^2.1.1",
     "styled-components": "^3.0.0"
   },
@@ -46,9 +54,5 @@
     "build": "parcel build ./public/index.html",
     "test": "nodemon -w server.js -x node server",
     "server": "node server"
-  },
-  "devDependencies": {
-    "less": "^3.8.0",
-    "node-sass": "^4.10.0"
   }
 }

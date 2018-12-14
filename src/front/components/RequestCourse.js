@@ -46,7 +46,7 @@ class StudentDashboard extends React.Component {
   }
   fetchFaculty () {
     let { details } = this.props.details
-    fetch('http://localhost:2000/api/faculty', {
+    fetch('/api/faculty', {
       body: JSON.stringify({ branch: details.department }),
       method: 'POST',
       headers: { 'Content-Type': 'application/json' }

@@ -87,7 +87,7 @@ class NewTest extends React.Component {
   }
   fetchQuestion() {
     let { q, i, cat } = this.props;
-    fetch("http://localhost:2000/api/question", {
+    fetch("/api/question", {
       body: JSON.stringify({ n: q[cat].q[i].n, cat: cat }),
       method: "POST",
       headers: { "Content-Type": "application/json" }
@@ -149,6 +149,7 @@ class NewTest extends React.Component {
                   pid={qa.pid}
                   sid={this.props.id}
                   name={this.props.sname}
+                  i={i}
                 />
 
                 <Segment basic>

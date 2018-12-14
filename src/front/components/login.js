@@ -68,7 +68,6 @@ class Login extends React.Component {
                 >
                   Login
                 </button>
-
               </div>
 
               <div
@@ -85,7 +84,11 @@ class Login extends React.Component {
             </form>
 
             <div className='ui message'>
-              New to us? <Link to='/register'>Register</Link>
+              <Link to='/register'>Register</Link>
+            </div>
+
+            <div className='ui message'>
+              <Link to='/register'>Forgot Password</Link>
             </div>
           </div>
         </div>

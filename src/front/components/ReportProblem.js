@@ -1,24 +1,35 @@
-import { Table, Grid, Button, Segment } from "semantic-ui-react";
-import { Progress } from "react-sweet-progress";
-import React from "react";
-export default class CompletionTable extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
+import { Table, Grid, Button, Segment, Input } from 'semantic-ui-react'
+import { Progress } from 'react-sweet-progress'
+import React from 'react'
+export default class RequestProblem extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = { searchValue: '' }
   }
-  componentDidMount() {}
-
-  render() {
-    let { details } = this.props.details;
-    let { width } = this.props;
-    let problems = [];
+  componentDidMount () {}
+  updateSearch (e) {
+    this.setState({ searchValue: e.value })
+  }
+  render () {
+    let { details } = this.props.details
+    let { width } = this.props
+    let problems = []
     if (details.problems != undefined) {
-      problems = details.problems;
+      problems = details.problems
     }
     return (
       <Table>
         {width > 768 ? (
           <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell colSpan='5'>
+                <Input
+                  fluid
+                  placeholder='Search'
+                  onChange={(e, syn) => this.updateSearch(syn)}
+                />
+              </Table.HeaderCell>
+            </Table.Row>
             <Table.Row>
               <Table.HeaderCell>Student ID</Table.HeaderCell>
               <Table.HeaderCell>Student Name</Table.HeaderCell>
@@ -30,18 +41,27 @@ export default class CompletionTable extends React.Component {
         ) : null}
         <Table.Body>
           {[...problems].reverse().map(s => {
-            return (
-              <Table.Row key={s.name + "-problem-" + s.n}>
-                <Table.Cell>{s.sid}</Table.Cell>
-                <Table.Cell>{s.name}</Table.Cell>
-                <Table.Cell>{s.cat.name}</Table.Cell>
-                <Table.Cell>{s.n}</Table.Cell>
-                <Table.Cell>{s.desc}</Table.Cell>
-              </Table.Row>
-            );
+            if (
+              Object.values(s).find(a => {
+                if (typeof a === 'string') {
+                  let reg = new RegExp(this.state.searchValue, 'gi')
+                  return a.match(reg)
+                }
+              }) != undefined
+            ) {
+              return (
+                <Table.Row key={s.name + '-problem-' + s.n}>
+                  <Table.Cell>{s.sid}</Table.Cell>
+                  <Table.Cell>{s.name}</Table.Cell>
+                  <Table.Cell>{s.cat.name}</Table.Cell>
+                  <Table.Cell>{s.n}</Table.Cell>
+                  <Table.Cell>{s.desc}</Table.Cell>
+                </Table.Row>
+              )
+            }
           })}
         </Table.Body>
       </Table>
-    );
+    )
   }
 }
