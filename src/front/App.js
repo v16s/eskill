@@ -14,7 +14,8 @@ import io from "socket.io-client";
 import CoordinatorDashboard from "./components/CoordinatorDashboard";
 import FacultyDashboard from "./components/FacultyDashboard";
 import QuestionPage from "./components/QuestionPage";
-let socket = io();
+import {socket as socUrl} from './enpoint'
+let socket = io(socUrl);
 import { Sidebar, Segment, Menu, Icon, Header } from "semantic-ui-react";
 import RequestCourse from "./components/RequestCourse";
 class Root extends React.Component {

@@ -23,7 +23,7 @@ import {
 import Categories from './categories'
 import AddQuestion from './AddQuestion'
 import _ from 'lodash'
-
+import endpoint from '../enpoint'
 import CompletionTable from './CompletionTable'
 import ReportProblem from './ReportProblem'
 import StudentTable from './StudentTable'
@@ -50,7 +50,7 @@ class FacultyDashboard extends React.Component {
     console.log(students)
     students.map(s => {
       if (s.a === true) {
-        fetch('/api/student', {
+        fetch(endpoint + '/api/student', {
           method: 'POST',
           body: JSON.stringify({ sid: s._id, cat: s.cat }),
           headers: { 'Content-Type': 'application/json' }
@@ -74,7 +74,7 @@ class FacultyDashboard extends React.Component {
     let students = details.details.students
     students.map(s => {
       if (s.a === true) {
-        fetch('/api/student', {
+        fetch(endpoint + '/api/student', {
           method: 'POST',
           body: JSON.stringify({ sid: s._id, cat: s.cat }),
           headers: { 'Content-Type': 'application/json' }

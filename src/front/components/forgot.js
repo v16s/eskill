@@ -14,6 +14,9 @@ import { Link } from 'react-router-dom'
 class ForgotPage extends React.Component {
   constructor (props) {
     super(props)
+    this.state = {
+      submitted: false
+    }
     this.sendToServer = this.sendToServer.bind(this)
   }
   sendToServer (e) {
@@ -22,18 +25,21 @@ class ForgotPage extends React.Component {
     }
     console.log(forgot)
     this.props.emit('forDetails', forgot)
-    return (
-      <div>
-        <Message
-          success
-          header='Success!'
-          content='A password reset link has been sent to your Email!'
-        />
-      </div>
-    )
+    this.setState({submitted: true})
   }
 
   render () {
+    if(this.state.submitted) {
+      return (
+        <div>
+          <Message
+            success
+            header='Success!'
+            content='A password reset link has been sent to your Email!'
+          />
+        </div>
+      )
+    }
     return (
       <Grid centered verticalAlign='middle'>
         <Container verticalAlign='middle'>
@@ -42,7 +48,7 @@ class ForgotPage extends React.Component {
               <div>
                 <Header size='large'>Reset Password</Header>
               </div>
-              <Form.Input label='Email' placeholder='joe@schmoe.com' />
+              <Form.Input label='Email' placeholder='Email' />
 
               <Button
                 type='submit'

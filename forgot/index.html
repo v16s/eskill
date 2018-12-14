@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>eSkill Password Reset</title>
+    <link rel="stylesheet" href="./style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body>
+    <div class="container-main">
+      <div class="header">eSkill Password Reset</div>
+      <div class="form-container">
+        <form id="form">
+          <div class="input-container">
+            <input
+              class="input"
+              type="password"
+              placeholder="New Password"
+              id="password"
+            />
+            <input
+              class="input"
+              type="password"
+              placeholder="Confrim Password"
+              id="confirm"
+            />
+          </div>
+          <button class="submit">Submit</button>
+          <div class="error"></div>
+        </form>
+      </div>
+      <script>
+        var f = document.getElementById("form");
+        f.onsubmit(e => {
+          var p = document.getElementById("password");
+          var c = document.getElementById("confirm");
+          if (p != c) {
+            document.querySelector(".error").innerHTML =
+              "Passwords don't Match";
+          } else {
+            fetch("/submit", {
+              body: JSON.stringify({ p: p }),
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+            });
+          }
+        });
+      </script>
+    </div>
+  </body>
+</html>

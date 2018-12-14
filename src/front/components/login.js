@@ -88,7 +88,7 @@ class Login extends React.Component {
             </div>
 
             <div className='ui message'>
-              <Link to='/register'>Forgot Password</Link>
+              <Link to='/forgot'>Forgot Password</Link>
             </div>
           </div>
         </div>

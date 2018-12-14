@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import History from './history'
 import Queries from './queries'
 import Attempted from './attempted'
+import endpoint from '../enpoint'
 import {
   Sidebar,
   Segment,
@@ -46,7 +47,7 @@ class StudentDashboard extends React.Component {
   }
   fetchFaculty () {
     let { details } = this.props.details
-    fetch('/api/faculty', {
+    fetch(endpoint + '/api/faculty', {
       body: JSON.stringify({ branch: details.department }),
       method: 'POST',
       headers: { 'Content-Type': 'application/json' }

@@ -47,7 +47,8 @@ app.use((req, res, next) => {
 });
 app.use(express.static(path.resolve(__dirname, "dist")));
 
-const dburl = "mongodb://elabuser:elabuserdbpassword@localhost:27017/elabdb";
+let config = require('./config.json')
+let {dburl} = config
 
 
 
