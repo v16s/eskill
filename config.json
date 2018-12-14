@@ -1,4 +1,6 @@
 {
   "dburl": "mongodb://test:test@ds135537.mlab.com:35537/eapproval",
-  "prodUrl": ""
+  "prodUrl": "",
+  "password": "srmeskillnoreply",
+  "email": "noreplysrmeskill@gmail.com"
 }

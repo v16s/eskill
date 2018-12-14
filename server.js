@@ -5,16 +5,29 @@ const server = http.Server(app);
 const path = require("path");
 const debug = process.env.NODE_ENV !== "production";
 const io = require("socket.io")(server);
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const EventEmitter = require("events");
+const nodemailer = require("nodemailer");
+
 const Schema = mongoose.Schema;
 const _ = require("lodash");
 class Event extends EventEmitter {}
 let mode = false;
+
 const dbCheck = new Event();
+function makeid() {
+  var text = "";
+  var possible =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (var i = 0; i < 16; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+  return text;
+}
 let validateEmail = email => {
   var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(email);
@@ -47,11 +60,15 @@ app.use((req, res, next) => {
 });
 app.use(express.static(path.resolve(__dirname, "dist")));
 
-let config = require('./config.json')
-let {dburl} = config
-
-
-
+let config = require("./config.json");
+let { dburl, email: emailid, password } = config;
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: emailid,
+    pass: password
+  }
+});
 mongoose.connect(
   dburl,
   { useNewUrlParser: true }
@@ -129,11 +146,13 @@ let Category = mongoose.model(
 );
 let validateLogin = (acc, content, e) => {
   if (acc != null) {
-    if (acc.password == content.pass) {
-      e.emit("success", acc);
-    } else {
-      e.emit("fail", "np");
-    }
+    bcrypt.compare(content.pass, acc.password, function(err, res) {
+      if (res) {
+        e.emit("success", acc);
+      } else {
+        e.emit("fail", "np");
+      }
+    });
   } else {
     e.emit("fail", "nu");
   }
@@ -143,52 +162,7 @@ db.on("open", () => {
 
   dbconnect = true;
 });
-app.post("/api/student", (req, res) => {
-  let { sid, cat } = req.body;
-  Users.findById(sid, (err, student) => {
-    let { questions } = student;
-    let q = {};
-
-    let at = 0,
-      cm = 0;
-    questions[cat].q.map(qa => {
-      if (qa.a > 0) {
-        at++;
-        if (qa.a < 3) {
-          cm++;
-        }
-      }
-    });
-    q.a = at;
-    q.c = cm;
-
-    res.json(q);
-  });
-});
-app.post("/api/question", (req, res) => {
-  let { n, cat } = req.body;
-  if (dbconnect) {
-    Questions.findOne({ "category.name": cat, number: n }, (err, q) => {
-      if (!err) {
-        res.json({ question: q, err: false });
-      } else {
-        res.json({ err: true });
-      }
-    });
-  }
-});
-
-app.post("/api/faculty", (req, res) => {
-  let { branch } = req.body;
-  console.log("faculty requested", branch);
-  UserDetails.find({ "details.department": `${branch}`, level: 4 }, (err, fac) => {
-    console.log(fac)
-    res.json(fac);
-  });
-});
-app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "dist", "index.html"));
-});
+let resetArray = [];
 io.on("connection", socket => {
   let loggedIn = false,
     level = 0;
@@ -392,50 +366,47 @@ io.on("connection", socket => {
     });
     loginCheck.on("canRegister", () => {
       let user, details;
-      if (!mode) {
-        user = new Users({
-          _id: r.regNo,
-          email: r.email,
-          password: r.password,
-          type: "Student",
-          questions: {},
-          level: 0
-        });
-        details = new UserDetails({
-          _id: r.regNo,
-          level: 0,
-          details: {
-            name: r.name,
-            regNo: r.regNo,
-            dob: r.dob,
-            gender: r.gender,
-            department: r.branch
-          }
-        });
-      } else {
-        user = new Users({
-          _id: r.regNo,
-          email: r.email,
-          password: r.password,
-          type: "Faculty",
-          level: 4
-        });
-        details = new UserDetails({
-          _id: r.regNo,
-          level: 4,
-          details: {
-            name: r.name,
-            regNo: r.regNo,
-            dob: r.dob,
-            gender: r.gender,
-            department: r.branch,
-            students: []
-          }
-        });
-      }
-
-      details.save();
-      user.save();
+      bcrypt.hash(r.password, 10, function(err, hash) {
+        if (!mode) {
+          user = new Users({
+            _id: r.regNo,
+            email: r.email,
+            password: hash,
+            type: "Student",
+            questions: {},
+            level: 0
+          });
+          details = new UserDetails({
+            _id: r.regNo,
+            level: 0,
+            details: {
+              name: r.name,
+              regNo: r.regNo,
+              department: r.branch
+            }
+          });
+        } else {
+          user = new Users({
+            _id: r.regNo,
+            email: r.email,
+            password: hash,
+            type: "Faculty",
+            level: 4
+          });
+          details = new UserDetails({
+            _id: r.regNo,
+            level: 4,
+            details: {
+              name: r.name,
+              regNo: r.regNo,
+              department: r.branch,
+              students: []
+            }
+          });
+        }
+        details.save();
+        user.save();
+      });
     });
   });
   socket.on("addCategory", cat => {
@@ -589,8 +560,91 @@ io.on("connection", socket => {
       }
     });
   });
+  socket.on("forgot", details => {
+    console.log(details);
+    let fid = "/reset/" + makeid();
+    resetArray.push(fid);
+    let email = details.email;
+    transporter.sendMail({
+      from: emailid,
+      to: email,
+      subject: "eSkill Password Reset",
+      html: `<p>In Order to reset the password, please click the link below: </p><p><a href="http://localhost:5000${fid}">Reset Password</a></p>`
+    });
+    console.log(fid);
+    setTimeout(() => {
+      resetArray = resetArray.filter(k => k != fid);
+    }, 1800000);
+    app.get(fid, (req, res) => {
+      res.sendFile(path.resolve(__dirname, "forgot", "index.html"));
+    });
+    app.post(fid, (req, res) => {
+      console.log(req.body.p);
+      Users.findOne({ email: email }, (err, resetacc) => {
+        bcrypt.hash(req.body.p, 10, function(err, hash) {
+          resetacc.password = hash;
+          resetArray = resetArray.filter(k => k != fid);
+          resetacc.save();
+        });
+      });
+    });
+  });
+});
+app.post("/api/student", (req, res) => {
+  let { sid, cat } = req.body;
+  Users.findById(sid, (err, student) => {
+    let { questions } = student;
+    let q = {};
+
+    let at = 0,
+      cm = 0;
+    questions[cat].q.map(qa => {
+      if (qa.a > 0) {
+        at++;
+        if (qa.a < 3) {
+          cm++;
+        }
+      }
+    });
+    q.a = at;
+    q.c = cm;
+
+    res.json(q);
+  });
 });
 
+app.use(express.static("forgot"));
+app.post("/api/question", (req, res) => {
+  let { n, cat } = req.body;
+  if (dbconnect) {
+    Questions.findOne({ "category.name": cat, number: n }, (err, q) => {
+      if (!err) {
+        res.json({ question: q, err: false });
+      } else {
+        res.json({ err: true });
+      }
+    });
+  }
+});
+
+app.post("/api/faculty", (req, res) => {
+  let { branch } = req.body;
+  console.log("faculty requested", branch);
+  UserDetails.find(
+    { "details.department": `${branch}`, level: 4 },
+    (err, fac) => {
+      console.log(fac);
+      res.json(fac);
+    }
+  );
+});
+app.get("*", (req, res, next) => {
+  if (resetArray.includes(req.url)) {
+    next();
+  } else {
+    res.sendFile(path.resolve(__dirname, "dist", "index.html"));
+  }
+});
 server.listen(5000, () => {
   console.log("Listening on 5000");
 });
