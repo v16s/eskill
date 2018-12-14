@@ -47,7 +47,7 @@ app.use((req, res, next) => {
 });
 app.use(express.static(path.resolve(__dirname, "dist")));
 
-const dburl = "mongodb://test:test@ds135537.mlab.com:35537/eapproval";
+const dburl = "mongodb://elabuser:elabuserdbpassword@localhost:27017/elabdb";
 
 
 

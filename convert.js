@@ -117,7 +117,7 @@ db.on("open", () => {
         let obj = {
           category: {
             _id: 1,
-            name: "Category 1"
+            name: "C Programming"
           },
           label: [],
           topic: {
@@ -145,5 +145,42 @@ db.on("open", () => {
        * 	{a:"4", b:"5". c:"6"}
        * ]
        */
-    });
+    })
+    csv()
+    .fromFile("./cloud-computing.csv")
+    .then(jsonObj => {
+      jsonObj.map((k, i) => {
+        console.log(i);
+        let obj = {
+          category: {
+            _id: 2,
+            name: "Cloud Computing"
+          },
+          label: [],
+          topic: {
+            _id: "101",
+            name: "asd"
+          },
+          number: i,
+          answer: k.Answer,
+          options: {
+            a: k["Option A"],
+            b: k["Option B"],
+            c: k["Option C"],
+            d: k["Option D"]
+          },
+          qname: k["Question Name"],
+          qdef: k.Question,
+          hints: k["Explanation"]
+        };
+        let q = new Questions(obj);
+        q.save();
+      });
+      /**
+       * [
+       * 	{a:"1", b:"2", c:"3"},
+       * 	{a:"4", b:"5". c:"6"}
+       * ]
+       */
+    })
 });
