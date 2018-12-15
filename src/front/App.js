@@ -14,9 +14,16 @@ import io from "socket.io-client";
 import CoordinatorDashboard from "./components/CoordinatorDashboard";
 import FacultyDashboard from "./components/FacultyDashboard";
 import QuestionPage from "./components/QuestionPage";
-import {socket as socUrl} from './enpoint'
+import { socket as socUrl } from "./enpoint";
 let socket = io(socUrl);
-import { Sidebar, Segment, Menu, Icon, Header } from "semantic-ui-react";
+import {
+  Sidebar,
+  Segment,
+  Menu,
+  Icon,
+  Header,
+  Dropdown
+} from "semantic-ui-react";
 import RequestCourse from "./components/RequestCourse";
 class Root extends React.Component {
   static propTypes = {
@@ -32,7 +39,7 @@ class Root extends React.Component {
       details: cookies.get("details") || {},
       email: cookies.get("email") || null,
       documents: cookies.get("documents") || null,
-      categories: cookies.get("categories") || null,
+      categories: cookies.get("categories") || [],
       tags: cookies.get("categories") || null,
       level: cookies.get("level") || null,
       fail: "",
@@ -48,7 +55,8 @@ class Root extends React.Component {
       selcatname: cookies.get("selcat") || "",
       visible: false,
       width: 0,
-      height: 0
+      height: 0,
+      notified: true
     };
     this.emit = this.emit.bind(this);
     this.logout = this.logout.bind(this);
@@ -136,6 +144,9 @@ class Root extends React.Component {
       cookies.set("isLoggedIn", content.validate);
       cookies.set("details", content.details);
       cookies.set("level", content.level);
+      if (content.details.notifications.filter(k => k.unread).length > 0) {
+        this.setState({ notified: false });
+      }
       this.setState({
         level: content.level,
         isLoggedIn: content.validate,
@@ -147,6 +158,9 @@ class Root extends React.Component {
     socket.on("changeDetails", ({ details }) => {
       console.log("details updated");
       cookies.set("details", details);
+      if (details.notifications.filter(k => k.unread).length > 0) {
+        this.setState({ notified: false });
+      }
       this.setState({ details: details });
     });
     socket.on("fail", reason => {
@@ -154,6 +168,9 @@ class Root extends React.Component {
     });
     socket.on("details", content => {
       cookies.set("details", content);
+      if (content.notifications.filter(k => k.unread).length > 0) {
+        this.setState({ notified: false });
+      }
       this.setState({ details: content });
     });
     socket.on("documents", content => {
@@ -232,6 +249,23 @@ class Root extends React.Component {
       console.log(cookies.get("selcat"));
     };
   }
+  notificationSeen() {
+    setTimeout(() => {
+      let { details } = this.state;
+      let flag = false;
+      details.notifications = details.notifications.map(k => {
+        if (k.unread) {
+          k.unread = false;
+          flag = true;
+        }
+        return k;
+      });
+      if (flag) {
+        socket.emit("updateNoti", details);
+      }
+      this.setState({ notified: true, details: details });
+    }, 1000);
+  }
   setLoading(type) {
     let newState = this.state;
     console.log(newState);
@@ -278,8 +312,9 @@ class Root extends React.Component {
                     eSkill
                   </Header>
                 </Menu.Item>
-                {width >= 768 ? (
-                  <Menu.Menu position="right">
+
+                <Menu.Menu position="right">
+                  {width >= 768 ? (
                     <Menu.Item
                       onClick={e => {
                         e.preventDefault();
@@ -288,6 +323,49 @@ class Root extends React.Component {
                     >
                       <Icon name="home" size="large" />
                     </Menu.Item>
+                  ) : null}
+                  {this.state.details.level == 0 ? (
+                    <Dropdown
+                      icon={
+                        <Icon.Group size="large">
+                          <Icon name="bell" />
+                          {this.state.notified ? null : (
+                            <Icon
+                              className="corner top right"
+                              name="circle"
+                              size="mini"
+                              color="red"
+                            />
+                          )}
+                        </Icon.Group>
+                      }
+                      onClick={e => this.notificationSeen()}
+                      floating
+                      className="item"
+                    >
+                      {this.state.details.notifications.length > 0 ? (
+                        <Dropdown.Menu className="notifications">
+                          <Dropdown.Header
+                            style={{ fontWeight: "bold" }}
+                            content="Notifcations"
+                          />
+                          {[...this.state.details.notifications]
+                            .reverse()
+                            .map(n => {
+                              console.log(n);
+                              return (
+                                <Dropdown.Item>
+                                  <Segment inverted={n.unread}>
+                                    <span>{n.name} has been added!</span>
+                                  </Segment>
+                                </Dropdown.Item>
+                              );
+                            })}
+                        </Dropdown.Menu>
+                      ) : null}
+                    </Dropdown>
+                  ) : null}
+                  {width >= 768 ? (
                     <Menu.Item
                       onClick={e => {
                         e.preventDefault();
@@ -297,8 +375,8 @@ class Root extends React.Component {
                     >
                       <Icon name="sign out" size="large" />
                     </Menu.Item>
-                  </Menu.Menu>
-                ) : null}
+                  ) : null}
+                </Menu.Menu>
               </Menu>
             </Segment>
 
@@ -372,7 +450,7 @@ class Root extends React.Component {
                         )}
                       />
                     ) : null}
-                    {this.state.level == 0 ? (
+                    {this.state.level == 0 || this.state.level == 1 ? (
                       <Route
                         path="/request"
                         render={props => (
@@ -428,6 +506,7 @@ class Root extends React.Component {
                           <AdminDashboard
                             mode={this.state.mode}
                             md={this.state.details.details}
+                            stateSet={this.stateSet}
                             level={this.state.level}
                             emit={this.emit}
                             faculties={this.state.details.faculties}

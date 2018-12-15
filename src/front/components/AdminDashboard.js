@@ -71,6 +71,7 @@ class Dashboard extends React.Component {
               loading={this.props.setLoading}
               catSuccess={this.props.catSuccess}
               topSuccess={this.props.topSuccess}
+              stateSet={this.props.stateSet}
             />
             <Department />
             <Grid.Column width={8} />

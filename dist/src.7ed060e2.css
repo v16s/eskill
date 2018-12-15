@@ -18,9 +18,6 @@ html,
   width: calc(100vw);
   margin: 0; }
 
-.ui.menu .ui.dropdown .menu > .item {
-  padding: 0 !important; }
-
 .ui.header.login-heading {
   letter-spacing: 1.5px;
   font-size: 22px;
@@ -69,11 +66,6 @@ textarea {
 
 .visible.menu {
   z-index: 99; }
-
-.field button.ui.primary.button {
-  height: 36px !important; }
-  .field button.ui.primary.button:hover {
-    background-color: #003fe0; }
 
 .ui.segment .ui.primary.button {
   background-color: #1456ff;
@@ -288,6 +280,38 @@ code {
   border-radius: 100px;
   transition: width 0.3s ease; }
 
+.ui.menu .dropdown.item .menu.notifications {
+  left: -300px;
+  width: 300px;
+  margin-top: 20px !important;
+  height: 500px;
+  overflow-y: auto;
+  background-color: rgba(230, 230, 230, 0.5); }
+  .ui.menu .dropdown.item .menu.notifications > .item {
+    background-color: transparent; }
+    .ui.menu .dropdown.item .menu.notifications > .item .segment {
+      background-color: rgba(255, 255, 255, 0.8) !important;
+      word-break: normal;
+      white-space: normal;
+      min-width: 100%;
+      height: auto;
+      display: inline-block; }
+    .ui.menu .dropdown.item .menu.notifications > .item .segment.inverted {
+      background-color: rgba(0, 0, 0, 0.8) !important; }
+
+@media (min-width: 768px) {
+  .ui.menu .dropdown.item .menu.notifications {
+    left: -200px; } }
+
+.ui.menu .ui.dropdown .menu.notifications > .item {
+  height: auto !important; }
+  .ui.menu .ui.dropdown .menu.notifications > .item:hover {
+    background-color: transparent !important; }
+    .ui.menu .ui.dropdown .menu.notifications > .item:hover .segment {
+      background-color: #fff !important; }
+    .ui.menu .ui.dropdown .menu.notifications > .item:hover .segment.inverted {
+      background-color: rgba(0, 0, 0, 0.8) !important; }
+
 .react-sweet-progress-line-inner-status-active:before {
   position: absolute;
   top: 0;
@@ -319,6 +343,9 @@ code {
 
 .question:hover {
   cursor: pointer; }
+
+div.ui.input .field .ui.primary.button {
+  height: 50px !important; }
 body {
   margin: 0;
   padding: 0;

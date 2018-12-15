@@ -18,6 +18,7 @@ class Event extends EventEmitter {}
 let mode = false;
 
 const dbCheck = new Event();
+dbCheck.setMaxListeners(2000000);
 function makeid() {
   var text = "";
   var possible =
@@ -43,6 +44,7 @@ let getAcademicYear = () => {
   }
   return academicYear;
 };
+let notifications = [];
 let dbconnect = false;
 academicYear = getAcademicYear();
 console.log(academicYear);
@@ -123,6 +125,7 @@ let UserDetails = mongoose.model(
   new Schema({
     _id: String,
     level: Number,
+    notifications: Array,
     details: {
       name: String,
       regNo: String,
@@ -140,10 +143,38 @@ let Category = mongoose.model(
   new Schema({
     _id: Number,
     name: String,
-    topics: Array
+    topics: Array,
+    notified: Boolean
   }),
   "Category"
 );
+db.on("notify", name => {
+  UserDetails.find((err, accounts) => {
+    accounts.map(account => {
+      if ([0, 4].includes(account.level)) {
+        if (
+          account.notifications == undefined ||
+          account.notifications.length == 0
+        ) {
+          account.notifications = notifications;
+        }
+        if (_.find(account.notifications, { name: name }) == undefined) {
+          account.notifications.push({ name: name, unread: true });
+        }
+        if (_.find(notifications, { name: name }) == undefined) {
+          notifications.push({ name: name, unread: true });
+        }
+        console.log(account.notifications);
+        account.markModified("notifications");
+        account.save(err => {
+          if (!err) {
+            dbCheck.emit("change", account._id);
+          }
+        });
+      }
+    });
+  });
+});
 let validateLogin = (acc, content, e) => {
   if (acc != null) {
     bcrypt.compare(content.pass, acc.password, function(err, res) {
@@ -165,8 +196,25 @@ db.on("open", () => {
 let resetArray = [];
 io.on("connection", socket => {
   let loggedIn = false,
-    level = 0;
+    level = 0,
+    account = { _id: "" };
   socket.emit("mode", mode);
+
+  dbCheck.on("change", idlist => {
+    if (idlist.includes(account._id)) {
+      UserDetails.findById(account._id, (err, details) => {
+        socket.emit("changeDetails", {
+          details: details
+        });
+        if (account.level == 0) {
+          Users.findById(account._id, (err, newacc) => {
+            socket.emit("q", newacc.questions);
+          });
+        }
+      });
+    }
+  });
+
   console.log("user connected");
   const loginCheck = new Event();
   let isLoggedIn = false;
@@ -182,22 +230,9 @@ io.on("connection", socket => {
       });
     }
     loginCheck.on("success", acc => {
+      account = acc;
       console.log("login success");
-      dbCheck.on("change", idlist => {
-        console.log("reemit");
-        if (idlist.includes(acc._id)) {
-          UserDetails.findById(acc._id, (err, details) => {
-            socket.emit("changeDetails", {
-              details: details
-            });
-            if (acc.level == 0) {
-              Users.findById(acc._id, (err, newacc) => {
-                socket.emit("q", newacc.questions);
-              });
-            }
-          });
-        }
-      });
+
       loggedIn = true;
       UserDetails.findById(acc._id, (err, details) => {
         socket.emit("validateLogin", {
@@ -214,6 +249,21 @@ io.on("connection", socket => {
             console.log("mode changed");
             socket.emit("mode", mode);
           });
+          socket.on("categoryNotify", c => {
+            console.log(c);
+            Category.findById(c._id, (err, cate) => {
+              console.log(cate);
+              cate.notified = true;
+              cate.save(err => {
+                Category.find()
+                  .sort({ $natural: 1 })
+                  .exec((err, cats) => {
+                    socket.emit("categories", cats);
+                    db.emit("notify", cate.name);
+                  });
+              });
+            });
+          });
         }
         Category.find()
           .sort({ $natural: 1 })
@@ -225,6 +275,13 @@ io.on("connection", socket => {
         });
 
         if (level == 0) {
+          socket.on("updateNoti", det => {
+            details.notifications = det.notifications;
+            details.markModified("notifications");
+            details.save(err => {
+              dbCheck.emit("change", acc._id);
+            });
+          });
           socket.emit("q", acc.questions);
           socket.on("requestCourse", det => {
             let { cat, faculty: pid, student: sid, cid } = det;
@@ -306,9 +363,11 @@ io.on("connection", socket => {
                       { "category.name": cat },
                       (err, c) => {
                         count = c;
-                        while (q.length < 100) {
-                          var r = Math.floor(Math.random() * count);
-                          if (q.indexOf(r) === -1) q.push(r);
+                        if (count > 100) {
+                          while (q.length < 100) {
+                            var r = Math.floor(Math.random() * count);
+                            if (q.indexOf(r) === -1) q.push(r);
+                          }
                         }
 
                         student.questions[cat].q = q.map(k => {
@@ -431,7 +490,8 @@ io.on("connection", socket => {
                   let newCat = new Category({
                     _id: 1,
                     name: `${cat}`,
-                    topics: []
+                    topics: [],
+                    notified: false
                   });
                   newCat.save(err => {
                     if (err == null) {
@@ -451,7 +511,8 @@ io.on("connection", socket => {
                   let newCat = new Category({
                     _id: id,
                     name: `${cat}`,
-                    topics: []
+                    topics: [],
+                    notified: false
                   });
                   console.log(newCat);
                   newCat.save(err => {
@@ -582,6 +643,7 @@ io.on("connection", socket => {
       console.log(req.body.p);
       Users.findOne({ email: email }, (err, resetacc) => {
         bcrypt.hash(req.body.p, 10, function(err, hash) {
+          console.log(req.body.p);
           resetacc.password = hash;
           resetArray = resetArray.filter(k => k != fid);
           resetacc.save();
@@ -629,11 +691,9 @@ app.post("/api/question", (req, res) => {
 
 app.post("/api/faculty", (req, res) => {
   let { branch } = req.body;
-  console.log("faculty requested", branch);
   UserDetails.find(
     { "details.department": `${branch}`, level: 4 },
     (err, fac) => {
-      console.log(fac);
       res.json(fac);
     }
   );
