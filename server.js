@@ -751,10 +751,10 @@ io.on("connection", socket => {
     setTimeout(() => {
       resetArray = resetArray.filter(k => k != fid);
     }, 1800000);
-    app.get('/eskill' + fid, (req, res) => {
+    app.get(fid, (req, res) => {
       res.sendFile(path.resolve(__dirname, "forgot", "index.html"));
     });
-    app.post('/eskill' + fid, (req, res) => {
+    app.post(fid, (req, res) => {
       Users.findOne({ email: email }, (err, resetacc) => {
         bcrypt.hash(req.body.p, 10, function(err, hash) {
           resetacc.password = hash;
@@ -765,7 +765,7 @@ io.on("connection", socket => {
     });
   });
 });
-app.post("eskill/api/student", (req, res) => {
+app.post("/api/student", (req, res) => {
   let { sid, cat, topic } = req.body;
   Users.findById(sid, (err, student) => {
     let { questions } = student;
@@ -789,7 +789,7 @@ app.post("eskill/api/student", (req, res) => {
 });
 
 app.use('/eskill', express.static(path.resolve(__dirname, "forgot")));
-app.post("eskill/api/question", (req, res) => {
+app.post("/api/question", (req, res) => {
   let { n, cat, topic } = req.body;
   if (dbconnect) {
     Questions.findOne(
@@ -805,7 +805,7 @@ app.post("eskill/api/question", (req, res) => {
   }
 });
 
-app.post("eskill/api/faculty", (req, res) => {
+app.post("/api/faculty", (req, res) => {
   let { branch } = req.body;
   UserDetails.find(
     { "details.department": `${branch}`, level: 4 },
