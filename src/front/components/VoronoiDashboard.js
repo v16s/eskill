@@ -228,7 +228,7 @@ class StudentDashboard extends React.Component {
                   key={`polygon-${ind}`}
                   onClick={e => {
                     e.preventDefault();
-                    history.push(`/question/${polygon.data.ind}`);
+                    history.push(`/eskill/question/${polygon.data.ind}`);
                   }}
                 >
                   <VoronoiPolygon

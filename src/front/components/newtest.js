@@ -336,7 +336,7 @@ class NewTest extends React.Component {
                       fluid
                       onClick={e => {
                         if (i > 0) {
-                          history.push(`/question/${ac}/${top}/${i - 1}`);
+                          history.push(`/eskill/question/${ac}/${top}/${i - 1}`);
                           this.reset();
                         }
                       }}
@@ -350,7 +350,7 @@ class NewTest extends React.Component {
                       primary
                       fluid
                       onClick={e => {
-                        history.push(`/question/${ac}/${top}`);
+                        history.push(`/eskill/question/${ac}/${top}`);
                       }}
                     >
                       Back
@@ -364,7 +364,7 @@ class NewTest extends React.Component {
                         if (i < 99) {
                           this.reset();
                           history.push(
-                            `/question/${ac}/${top}/${parseInt(i) + 1}`
+                            `/eskill/question/${ac}/${top}/${parseInt(i) + 1}`
                           );
                         }
                       }}

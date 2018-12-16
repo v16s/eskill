@@ -1,27 +1,49 @@
 import React, { Component } from 'react'
-import { Sidebar, Segment, Button, Menu, Image, Icon, Header, Input } from 'semantic-ui-react'
+import {
+  Sidebar,
+  Segment,
+  Button,
+  Menu,
+  Image,
+  Icon,
+  Header,
+  Input
+} from 'semantic-ui-react'
 
 class XYZ extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
-    this.state = { Visibility: false , activeItem: 'home' }
+    this.state = { Visibility: false, activeItem: 'home' }
     this.toggleVisibility = this.toggleVisibility.bind(this)
-    this.handleItemClick = this.handleItemClick.bind(this) }
+    this.handleItemClick = this.handleItemClick.bind(this)
+  }
 
-  toggleVisibility(){
+  toggleVisibility () {
     this.setState({ Visibility: !this.state.visible })
   }
 
+  render () {
+    const { Visibility, activeItem } = this.state
 
-  render() {
-
-    const {Visibility, activeItem} = this.state
-
-    return (<div>
+    return (
+      <div>
         <Button onClick={this.toggleVisibility}>Toggle Visibility</Button>
         <Sidebar.Pushable as={Segment}>
-          <Sidebar as={Menu} animation='overlay' width='thin' visible={visible} icon='labeled' vertical inverted>
-            <Menu.Item name='home' onClick={e => {history.push('/')}}>
+          <Sidebar
+            as={Menu}
+            animation='overlay'
+            width='thin'
+            visible={visible}
+            icon='labeled'
+            vertical
+            inverted
+          >
+            <Menu.Item
+              name='home'
+              onClick={e => {
+                history.push('/eskill/')
+              }}
+            >
               <Icon name='home' />
               Home
             </Menu.Item>
@@ -41,7 +63,6 @@ class XYZ extends React.Component {
             </Segment>
           </Sidebar.Pusher>
         </Sidebar.Pushable>
-
       </div>
     )
   }

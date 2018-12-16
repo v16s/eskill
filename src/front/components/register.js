@@ -84,7 +84,7 @@ class RegisterPage extends Component {
     }
     if (obj.password == obj.confirm) {
       this.props.emit('reg', obj)
-      history.push('/')
+      history.push('/eskill/')
     } else {
       this.setState({ passError: "Passwords don't match! " })
     }
@@ -201,7 +201,7 @@ class RegisterPage extends Component {
                   type='cancel'
                   onClick={e => {
                     e.preventDefault()
-                    history.push('/')
+                    history.push('/eskill/')
                   }}
                 >
                   Cancel
