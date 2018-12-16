@@ -69,7 +69,10 @@ class QuestionPage extends React.Component {
   emit(name, obj) {
     this.props.emit(name, obj);
   }
-
+  reset(e, cat, top) {
+    e.preventDefault();
+    this.emit("reset", { topic: top, cat: cat });
+  }
   render() {
     let width = 600;
 
@@ -86,6 +89,7 @@ class QuestionPage extends React.Component {
       width: w
     } = this.props;
     let data = [];
+    let allcomplete = false;
     let actualcat = cat.replace("+", " ");
     let actualtop = topic.replace("+", " ");
     if (qs[actualcat] != undefined) {
@@ -98,6 +102,9 @@ class QuestionPage extends React.Component {
           ind: i
         };
       });
+      if (data.filter(k => k.state == 1 || k.state == 2).length == 100) {
+        allcomplete = true;
+      }
     }
 
     const radius = Math.min(width, height) / 2;
@@ -193,9 +200,32 @@ class QuestionPage extends React.Component {
                 height={40}
               >
                 <text textAnchor="middle" className="center-label">
-                  {cat}
+                  {actualtop}
                 </text>
               </Group>
+              {allcomplete ? (
+                <a
+                  className="link-label"
+                  href="reset"
+                  onClick={e => this.reset(e, actualcat, actualtop)}
+                >
+                  <Group
+                    top={centerY + margin.top + 20}
+                    left={centerX}
+                    width={200}
+                    height={40}
+                    fill={"white"}
+                  >
+                    <text
+                      textAnchor="middle"
+                      className="center-label"
+                      style={{ border: "1px solid #000" }}
+                    >
+                      {"Reset"}
+                    </text>
+                  </Group>
+                </a>
+              ) : null}
             </svg>
           </Segment>
         </div>

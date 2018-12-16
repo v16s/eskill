@@ -69,7 +69,6 @@ class NewTest extends React.Component {
 
   reset() {
     this.setState({ check: false, value: null, question: undefined });
-    this.fetchQuestion();
   }
   handleSub(e) {
     let { question: qu } = this.state;
@@ -89,6 +88,7 @@ class NewTest extends React.Component {
   }
   fetchQuestion() {
     let { q, i, cat, topic } = this.props;
+    let { props } = this;
     if (q[cat] !== undefined) {
       fetch(endpoint + "/api/question", {
         body: JSON.stringify({
@@ -102,7 +102,24 @@ class NewTest extends React.Component {
         .then(res => res.json())
         .then(question => {
           if (!question.err) {
-            this.setState({ question: question.question });
+            this.setState({
+              question: question.question,
+              value:
+                props.q[props.cat] != undefined
+                  ? props.q[props.cat][props.topic] != undefined &&
+                    props.q[props.cat][props.topic].q[props.i] != undefined
+                    ? props.q[props.cat][props.topic].q[props.i].v || ""
+                    : ""
+                  : "",
+              check:
+                props.q[props.cat] != undefined
+                  ? props.q[props.cat][props.topic] != undefined &&
+                    props.q[props.cat][props.topic].q[props.i] != undefined
+                    ? props.q[props.cat][props.topic].q[props.i].a != 0 &&
+                      props.q[props.cat][props.topic].q[props.i].a != 3
+                    : false
+                  : false
+            });
           }
         });
     }
@@ -128,12 +145,13 @@ class NewTest extends React.Component {
   render() {
     let { topics, value, check, question: q } = this.state;
     let { categories, i, q: qall, cat, cid, topic } = this.props;
-    let qa = qall[cat];
+
+    let ac = cat.replace(" ", "+"),
+      top = topic.replace(" ", "+");
+    let qa = qall[ac];
     if (qa != undefined && q == undefined) {
       this.fetchQuestion();
     }
-    let ac = cat.replace(" ", "+"),
-      top = topic.replace(" ", "+");
     return (
       <div>
         {qall[cat] != undefined ? (
@@ -304,7 +322,7 @@ class NewTest extends React.Component {
               </Segment>
             ) : (
               <Segment padded>
-                <Grid centered>
+                <Grid centered style={{ minHeight: "500px" }}>
                   <Spinner color="#1456ff" name="circle" />{" "}
                 </Grid>
               </Segment>

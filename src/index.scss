@@ -228,6 +228,19 @@ textarea {
   font-size: 25px;
   font-weight: bold;
   fill: $primarycolor;
+  & .link-label {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+.link-label {
+  background-color: $primarycolor;
+  & .center-label {
+    font-size: 25px;
+    font-weight: bold;
+    fill: $primarycolor;
+  }
 }
 .queries .ten.wide.column {
   display: flex;

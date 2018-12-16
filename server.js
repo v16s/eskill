@@ -62,7 +62,7 @@ app.use((req, res, next) => {
 app.use(express.static(path.resolve(__dirname, "dist")));
 
 let config = require("./config.json");
-let { dburl, email: emailid, password, reset: resetURL } = config;
+let { dburl, email: emailid, password, reset: resetURL, stagingurl } = config;
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -299,6 +299,46 @@ io.on("connection", socket => {
             details.save(err => {
               dbCheck.emit("change", acc._id);
             });
+          });
+          socket.on("reset", ({ topic, cat }) => {
+            if (acc.questions[cat][topic].qo == undefined) {
+              acc.questions[cat][topic].qo = [];
+            }
+            acc.questions[cat][topic].qo.concat(acc.questions[cat][topic].q);
+            Questions.countDocuments(
+              { "category.name": cat, "topic.name": topic },
+              (err, c) => {
+                count = parseInt(c);
+                let q = [];
+                console.log(acc.questions[cat][topic].qo.length - count);
+                if (
+                  count > 100 &&
+                  count - acc.questions[cat][topic].qo.length > 100
+                ) {
+                  console.log("looping");
+                  while (q.length < 100) {
+                    var r = Math.floor(Math.random() * count);
+                    if (
+                      q.indexOf(r) === -1 &&
+                      !acc.questions[cat][topic].qo.includes(r)
+                    )
+                      q.push(r);
+                  }
+                }
+
+                acc.questions[cat][topic].q = q.map(k => {
+                  return { n: k, a: 0 };
+                });
+                console.log("resetr");
+                acc.markModified("questions");
+                acc.save(err => {
+                  if (err) {
+                  } else {
+                    dbCheck.emit("change", [acc._id]);
+                  }
+                });
+              }
+            );
           });
           socket.emit("q", acc.questions);
           socket.on("requestCourse", det => {
@@ -781,7 +821,6 @@ app.get("*", (req, res, next) => {
 server.listen(5000, () => {
   console.log("Listening on 5000");
   setInterval(() => {
-    console.clear();
     console.log("Current User Count:", concurrentUsers);
   }, 5000);
 });

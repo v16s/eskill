@@ -1,6 +1,6 @@
 {
   "name": "eskill-parcel",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "main": "server.js",
   "repository": "https://github.com/v16s/eskill.git",
   "author": "Vignesh Shankar",
