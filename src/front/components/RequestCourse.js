@@ -22,7 +22,7 @@ import CircularProgressbar from "react-circular-progressbar";
 import Select from "react-select";
 import _ from "lodash";
 
-class StudentDashboard extends React.Component {
+class RequestCourse extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,7 +31,8 @@ class StudentDashboard extends React.Component {
       filter: props.categories,
       faculty: [],
       selfac: null,
-      selcat: null
+      selcat: null,
+      seltop: null
     };
     this.logout = this.logout.bind(this);
     this.emit = this.emit.bind(this);
@@ -44,6 +45,9 @@ class StudentDashboard extends React.Component {
   }
   handleClick() {
     this.setState({ visible: !this.state.visible });
+  }
+  topchange(e) {
+    this.setState({ seltop: e });
   }
   fetchFaculty() {
     let { details } = this.props.details;
@@ -78,23 +82,27 @@ class StudentDashboard extends React.Component {
     this.props.emit(name, obj);
   }
   handleSubmit() {
-    let { selcat, selfac } = this.state;
+    let { selcat, selfac, seltop } = this.state;
     let { details } = this.props;
-    console.log("submit", ![selcat, selfac].includes(null));
     if (![selcat, selfac].includes(null)) {
-      console.log(selcat);
       this.props.emit("requestCourse", {
         cat: selcat.label,
         faculty: selfac.value,
         student: details._id,
-        cid: selcat.value
+        cid: selcat.value,
+        topic: seltop.label
       });
       history.push("/");
     }
   }
   render() {
-    let { faculty } = this.state;
-    let { categories } = this.props;
+    let { faculty, selcat } = this.state;
+    let { categories, topics } = this.props;
+    if (selcat != null) {
+      topics = topics.filter(t => t.cid == selcat.value);
+    } else {
+      topics = [];
+    }
     return (
       <div>
         <Segment basic style={{ flexGrow: "1" }}>
@@ -102,24 +110,40 @@ class StudentDashboard extends React.Component {
             <Segment basic>
               <Header as={"h3"}>Request Course</Header>
               <Form onSubmit={this.handleSubmit}>
-                <Form.Field label="Choose Course" />
-                <Form.Group>
-                  <Select
-                    value={this.state.selcat}
-                    onChange={this.handleCatChange}
-                    options={
-                      categories == null
-                        ? []
-                        : categories.map(c => ({
-                            label: c.name,
-                            value: c._id
-                          }))
-                    }
-                    styles={{
-                      container: style => ({ ...style, width: "100%" })
-                    }}
-                  />
-                </Form.Group>
+                <Form.Field inline>
+                  <Form.Field label="Choose Branch" />
+                  <Form.Group>
+                    <Select
+                      value={this.state.selcat}
+                      onChange={this.handleCatChange}
+                      options={
+                        categories == null
+                          ? []
+                          : categories.map(c => ({
+                              label: c.name,
+                              value: c._id
+                            }))
+                      }
+                      styles={{
+                        container: style => ({ ...style, width: "100%" })
+                      }}
+                    />
+                  </Form.Group>
+                  <Form.Field label="Choose Branch" />
+                  <Form.Group>
+                    <Select
+                      value={this.state.seltop}
+                      onChange={e => this.topchange(e)}
+                      options={topics.map(c => ({
+                        label: c.name,
+                        value: c.tid
+                      }))}
+                      styles={{
+                        container: style => ({ ...style, width: "100%" })
+                      }}
+                    />
+                  </Form.Group>
+                </Form.Field>
                 <Form.Field label="Choose Faculty" />
                 <Form.Group>
                   <Select
@@ -155,19 +179,10 @@ class StudentDashboard extends React.Component {
               </Form>
             </Segment>
           </Segment>
-          <Segment
-            basic
-            style={{
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              justifyContent: "center"
-            }}
-          />
         </Segment>
       </div>
     );
   }
 }
 
-export default StudentDashboard;
+export default RequestCourse;

@@ -16,7 +16,7 @@ const Schema = mongoose.Schema;
 const _ = require("lodash");
 class Event extends EventEmitter {}
 let mode = false;
-
+let concurrentUsers = 0;
 const dbCheck = new Event();
 dbCheck.setMaxListeners(2000000);
 function makeid() {
@@ -47,7 +47,6 @@ let getAcademicYear = () => {
 let notifications = [];
 let dbconnect = false;
 academicYear = getAcademicYear();
-console.log(academicYear);
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -63,7 +62,7 @@ app.use((req, res, next) => {
 app.use(express.static(path.resolve(__dirname, "dist")));
 
 let config = require("./config.json");
-let { dburl, email: emailid, password } = config;
+let { dburl, email: emailid, password, reset: resetURL } = config;
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -148,7 +147,7 @@ let Category = mongoose.model(
   }),
   "Category"
 );
-db.on("notify", name => {
+dbCheck.on("notify", name => {
   UserDetails.find((err, accounts) => {
     accounts.map(account => {
       if ([0, 4].includes(account.level)) {
@@ -164,13 +163,31 @@ db.on("notify", name => {
         if (_.find(notifications, { name: name }) == undefined) {
           notifications.push({ name: name, unread: true });
         }
-        console.log(account.notifications);
         account.markModified("notifications");
         account.save(err => {
           if (!err) {
-            dbCheck.emit("change", account._id);
+            dbCheck.emit("change", [account._id]);
           }
         });
+      }
+    });
+  });
+});
+dbCheck.on("singlenotify", ({ name, id: sid }) => {
+  UserDetails.findById(sid, (err, account) => {
+    if (
+      account.notifications == undefined ||
+      account.notifications.length == 0
+    ) {
+      account.notifications = notifications;
+    }
+    if (_.find(account.notifications, { name: name }) == undefined) {
+      account.notifications.push({ name: name, unread: true });
+    }
+    account.markModified("notifications");
+    account.save(err => {
+      if (!err) {
+        dbCheck.emit("change", [account._id]);
       }
     });
   });
@@ -189,8 +206,6 @@ let validateLogin = (acc, content, e) => {
   }
 };
 db.on("open", () => {
-  console.log("connected to database");
-
   dbconnect = true;
 });
 let resetArray = [];
@@ -216,10 +231,9 @@ io.on("connection", socket => {
   });
 
   console.log("user connected");
+  concurrentUsers++;
   const loginCheck = new Event();
-  let isLoggedIn = false;
   socket.on("det", content => {
-    console.log("details recieved");
     if (validateEmail(content.email)) {
       Users.findOne({ email: content.email }, (err, acc) => {
         validateLogin(acc, content, loginCheck);
@@ -231,7 +245,6 @@ io.on("connection", socket => {
     }
     loginCheck.on("success", acc => {
       account = acc;
-      console.log("login success");
 
       loggedIn = true;
       UserDetails.findById(acc._id, (err, details) => {
@@ -243,23 +256,28 @@ io.on("connection", socket => {
         });
 
         level = acc.level;
+        Questions.countDocuments((err, c) => {
+          socket.emit("questionnumber", c);
+        });
         if (level == 2) {
           socket.on("changeMode", checked => {
             mode = !mode;
-            console.log("mode changed");
             socket.emit("mode", mode);
           });
           socket.on("categoryNotify", c => {
-            console.log(c);
-            Category.findById(c._id, (err, cate) => {
-              console.log(cate);
-              cate.notified = true;
+            Category.findById(c.cid, (err, cate) => {
+              let index = _.findIndex(cate.topics, { name: c.name });
+              cate.topics[index].notified = true;
+              cate.markModified("topics");
               cate.save(err => {
                 Category.find()
                   .sort({ $natural: 1 })
                   .exec((err, cats) => {
                     socket.emit("categories", cats);
-                    db.emit("notify", cate.name);
+                    dbCheck.emit(
+                      "notify",
+                      `${c.name} has been added to ${cate.name}`
+                    );
                   });
               });
             });
@@ -284,14 +302,18 @@ io.on("connection", socket => {
           });
           socket.emit("q", acc.questions);
           socket.on("requestCourse", det => {
-            let { cat, faculty: pid, student: sid, cid } = det;
+            let { cat, faculty: pid, student: sid, cid, topic } = det;
             UserDetails.findOne({ _id: pid }, (err, fac) => {
               if (
-                _.find(fac.details.students, { _id: sid, cat: cat }) ==
-                undefined
+                _.find(fac.details.students, {
+                  _id: sid,
+                  cat: cat,
+                  topic: topic
+                }) == undefined
               ) {
                 fac.details.students.push({
                   cat: cat,
+                  topic: topic,
                   _id: sid,
                   a: false,
                   name: details.details.name
@@ -300,12 +322,17 @@ io.on("connection", socket => {
                 fac.save(err => {
                   if (acc.questions == undefined) {
                     acc.questions = {};
+                    acc.questions[cat] = {};
                   }
-                  acc.questions[cat] = {
+                  if (acc.questions[cat] == undefined) {
+                    acc.questions[cat] = {};
+                  }
+                  acc.questions[cat][topic] = {
                     a: false,
                     q: [],
-                    cid: cid,
-                    pid: fac._id
+                    cat: cat,
+                    pid: fac._id,
+                    topic: topic
                   };
                   acc.markModified("questions");
                   acc.save(err => {
@@ -317,20 +344,20 @@ io.on("connection", socket => {
             });
           });
           socket.on("changeQuestion", opts => {
-            let [q, cat] = opts;
-            acc.questions[cat] = q;
-            console.log(acc.questions[cat].pid);
+            let [q, cat, topic] = opts;
+            acc.questions[cat][topic] = q;
             acc.markModified("questions");
             acc.save(err => {
               if (!err) {
                 socket.emit("q", acc.questions);
-                dbCheck.emit("change", [acc.questions[cat].pid]);
+                dbCheck.emit("change", [acc.questions[cat][topic].pid]);
               }
             });
           });
           socket.on("addProblem", report => {
-            let { cat, n, pid, sid, name, desc } = report;
+            let { pid } = report;
             UserDetails.findById(pid, (err, fac) => {
+              report.resolution = false;
               if (fac.details.problems == undefined) {
                 fac.details.problems = [];
               }
@@ -338,29 +365,110 @@ io.on("connection", socket => {
               fac.markModified("details");
               fac.save(err => {
                 if (!err) {
-                  console.log("problem added");
                   dbCheck.emit("change", [pid]);
+                  UserDetails.findOne({ level: 1 }, (err, coord) => {
+                    if (coord.details.problems == undefined) {
+                      coord.details.problems = [];
+                    }
+                    coord.details.problems.push(report);
+                    coord.markModified("details");
+                    coord.save(err => {
+                      if (!err) {
+                        dbCheck.emit("change", [coord._id]);
+                      }
+                    });
+                  });
                 }
               });
             });
           });
         }
+        if (level == 1) {
+          socket.on("resolve", ({ problem, action }) => {
+            let ind = _.findIndex(details.details.problems, problem);
+            if (ind != -1) {
+              details.details.problems[ind].resolution = action
+                ? true
+                : "rejected";
+              details.markModified("details");
+              details.save(err => {
+                UserDetails.findById(problem.pid, (err, prof) => {
+                  let inde = _.findIndex(prof.details.problems, problem);
+                  if (inde != -1) {
+                    prof.details.problems[inde] = details.details.problems[ind];
+                    prof.markModified("details");
+                    prof.save(err => {
+                      dbCheck.emit("singlenotify", {
+                        name: `Your reported problem with a question in ${
+                          problem.topic.name
+                        } has been ${action ? "Resolved" : "Rejected"}`,
+                        id: problem.sid
+                      });
+                      dbCheck.emit("change", [problem.pid, acc._id]);
+                    });
+                  }
+                });
+              });
+            }
+          });
+          socket.on("questionChange", ({ changed, cat, n, topic }) => {
+            Questions.findOne(
+              { "category.name": cat, "topic.name": topic, number: n },
+              (err, question) => {
+                question.qname = changed.qname;
+                question.markModified("qname");
+                question.qdef = changed.qdef;
+                question.markModified("qdef");
+                question.options = changed.options;
+                question.markModified("options");
+                question.answer = changed.answer;
+                question.markModified("answer");
+                question.hints = changed.hints;
+                question.markModified("hints");
+
+                question.save(err => {});
+              }
+            );
+          });
+          socket.on("addQuestion", q => {
+            Questions.countDocuments(
+              { category: q.category, topic: q.topic },
+              (err, count) => {
+                let question = new Questions({
+                  category: q.category,
+                  qname: q.qname,
+                  qdef: q.qdef,
+                  options: q.options,
+                  answer: q.answer,
+                  hints: q.hints,
+                  topic: q.topic,
+                  number: count
+                });
+                question.save(err => {
+                  if (err == null) {
+                    socket.emit("added", "success");
+                  } else {
+                    socket.emit("added", "error");
+                  }
+                });
+              }
+            );
+          });
+        }
         if (level == 4) {
-          socket.on("acceptCourse", ([user, cat, action, d]) => {
-            console.log(user, action, d, cat);
+          socket.on("acceptCourse", ([user, cat, action, d, topic]) => {
             details.details = d.details;
             details.markModified("details");
             details.save(err => {
               if (!err) {
                 dbCheck.emit("change", [acc._id]);
-                console.log("details saved");
                 Users.findOne({ _id: user }, (err, student) => {
                   if (!err && action === true && student != null) {
-                    student.questions[cat].a = true;
+                    student.questions[cat][topic].a = true;
                     let q = [],
                       count = 0;
                     Questions.countDocuments(
-                      { "category.name": cat },
+                      { "category.name": cat, "topic.name": topic },
                       (err, c) => {
                         count = c;
                         if (count > 100) {
@@ -370,36 +478,30 @@ io.on("connection", socket => {
                           }
                         }
 
-                        student.questions[cat].q = q.map(k => {
+                        student.questions[cat][topic].q = q.map(k => {
                           return { n: k, a: 0 };
                         });
                         student.markModified("questions");
                         student.save(err => {
                           if (err) {
-                            console.log(err);
                           } else {
-                            console.log("saved");
-
                             dbCheck.emit("change", [student._id]);
                           }
                         });
                       }
                     );
                   } else if (!err && student != null) {
-                    student.questions[cat].a = "rejected";
+                    student.questions[cat][topic].a = "rejected";
                     student.markModified("questions");
                     student.save(err => {
                       if (err) {
-                        console.log(err);
                       } else {
-                        console.log("saved");
                         dbCheck.emit("change", [student._id]);
                       }
                     });
                   }
                 });
               } else {
-                console.log(err);
               }
             });
           });
@@ -407,13 +509,11 @@ io.on("connection", socket => {
       });
     });
     loginCheck.on("fail", reason => {
-      console.log(reason);
       socket.emit("fail", reason);
     });
   });
 
   socket.on("reg", r => {
-    console.log(r);
     Users.findOne({ email: r.email }, (err, acc) => {
       if (acc == null) {
         Users.findById(r.email, (err, accid) => {
@@ -470,7 +570,6 @@ io.on("connection", socket => {
   });
   socket.on("addCategory", cat => {
     if (loggedIn && level == 2) {
-      console.log("new category details:", cat);
       Category.findOne(
         {
           name: {
@@ -478,14 +577,12 @@ io.on("connection", socket => {
           }
         },
         (err, presentCat) => {
-          console.log(presentCat);
           if (presentCat == null) {
             socket.emit("catError", "");
             Category.find()
               .sort({ $natural: -1 })
               .limit(1)
               .exec((err, el) => {
-                console.log(el);
                 if (el.length == 0) {
                   let newCat = new Category({
                     _id: 1,
@@ -502,7 +599,6 @@ io.on("connection", socket => {
                           socket.emit("categories", cats);
                         });
                     } else {
-                      console.log(err);
                     }
                   });
                 } else {
@@ -514,7 +610,6 @@ io.on("connection", socket => {
                     topics: [],
                     notified: false
                   });
-                  console.log(newCat);
                   newCat.save(err => {
                     if (err == null) {
                       socket.emit("success", "category");
@@ -524,14 +619,12 @@ io.on("connection", socket => {
                           socket.emit("categories", cats);
                         });
                     } else {
-                      console.log(err);
                     }
                   });
                 }
               });
           } else {
-            socket.emit("catError", "Category already exists!");
-            console.log("exists");
+            socket.emit("catError", "Branch already exists!");
           }
         }
       );
@@ -579,11 +672,11 @@ io.on("connection", socket => {
           if (_.findIndex(cat.topics, { name: info.topic }) == -1) {
             cat.topics.push({
               id: `${cat._id * 100 + cat.topics.length + 1}`,
-              name: info.topic
+              name: info.topic,
+              notified: false
             });
             cat.markModified("topics");
             cat.save((err, sct) => {
-              console.log(sct);
               socket.emit("success", "topic");
               Category.find()
                 .sort({ $natural: 1 })
@@ -592,37 +685,17 @@ io.on("connection", socket => {
                 });
             });
           } else {
-            socket.emit("topError", "Topic already exists!");
-            console.log("exists");
+            socket.emit("topError", "Course already exists!");
           }
         }
       );
     }
   });
   socket.on("disconnect", () => {
-    console.log("disconnected");
+    concurrentUsers--;
   });
-  socket.on("addQuestion", q => {
-    console.log(q);
-    let question = new Questions({
-      category: q.category,
-      qname: q.qname,
-      qdef: q.qdef,
-      options: q.options,
-      answer: q.answer,
-      hints: q.hints,
-      topic: q.topic
-    });
-    question.save(err => {
-      if (err == null) {
-        socket.emit("added", "success");
-      } else {
-        socket.emit("added", "error");
-      }
-    });
-  });
+
   socket.on("forgot", details => {
-    console.log(details);
     let fid = "/reset/" + makeid();
     resetArray.push(fid);
     let email = details.email;
@@ -630,9 +703,8 @@ io.on("connection", socket => {
       from: emailid,
       to: email,
       subject: "eSkill Password Reset",
-      html: `<p>In Order to reset the password, please click the link below: </p><p><a href="http://localhost:5000${fid}">Reset Password</a></p>`
+      html: `<p>In Order to reset the password, please click the link below: </p><p><a href="${resetURL}${fid}">Reset Password</a></p>`
     });
-    console.log(fid);
     setTimeout(() => {
       resetArray = resetArray.filter(k => k != fid);
     }, 1800000);
@@ -640,10 +712,8 @@ io.on("connection", socket => {
       res.sendFile(path.resolve(__dirname, "forgot", "index.html"));
     });
     app.post(fid, (req, res) => {
-      console.log(req.body.p);
       Users.findOne({ email: email }, (err, resetacc) => {
         bcrypt.hash(req.body.p, 10, function(err, hash) {
-          console.log(req.body.p);
           resetacc.password = hash;
           resetArray = resetArray.filter(k => k != fid);
           resetacc.save();
@@ -653,14 +723,14 @@ io.on("connection", socket => {
   });
 });
 app.post("/api/student", (req, res) => {
-  let { sid, cat } = req.body;
+  let { sid, cat, topic } = req.body;
   Users.findById(sid, (err, student) => {
     let { questions } = student;
     let q = {};
 
     let at = 0,
       cm = 0;
-    questions[cat].q.map(qa => {
+    questions[cat][topic].q.map(qa => {
       if (qa.a > 0) {
         at++;
         if (qa.a < 3) {
@@ -677,15 +747,18 @@ app.post("/api/student", (req, res) => {
 
 app.use(express.static("forgot"));
 app.post("/api/question", (req, res) => {
-  let { n, cat } = req.body;
+  let { n, cat, topic } = req.body;
   if (dbconnect) {
-    Questions.findOne({ "category.name": cat, number: n }, (err, q) => {
-      if (!err) {
-        res.json({ question: q, err: false });
-      } else {
-        res.json({ err: true });
+    Questions.findOne(
+      { "category.name": cat, number: n, "topic.name": topic },
+      (err, q) => {
+        if (!err) {
+          res.json({ question: q, err: false });
+        } else {
+          res.json({ err: true });
+        }
       }
-    });
+    );
   }
 });
 
@@ -707,4 +780,8 @@ app.get("*", (req, res, next) => {
 });
 server.listen(5000, () => {
   console.log("Listening on 5000");
+  setInterval(() => {
+    console.clear();
+    console.log("Current User Count:", concurrentUsers);
+  }, 5000);
 });

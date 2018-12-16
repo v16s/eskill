@@ -20,7 +20,6 @@ class ForgotPage extends React.Component {
     const forgot = {
       email: document.querySelector("input").value
     };
-    console.log(forgot);
     this.props.emit("forgot", forgot);
   }
 

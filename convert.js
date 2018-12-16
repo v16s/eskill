@@ -111,19 +111,19 @@ db.on("open", () => {
   console.log("connected to database");
 
   csv()
-    .fromFile("./cloud_computing.csv")
+    .fromFile("./qsimport-template.csv")
     .then(jsonObj => {
       jsonObj.map((k, i) => {
         console.log(i);
         let obj = {
           category: {
-            _id: 2,
-            name: "Cloud Computing"
+            _id: 1,
+            name: "CSE"
           },
           label: [],
           topic: {
             _id: "101",
-            name: "asd"
+            name: "C Programming"
           },
           number: i,
           answer: k.Answer,

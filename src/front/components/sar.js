@@ -54,7 +54,6 @@ class StudentDashboard extends React.Component {
     let { md: det, topics, categories } = this.props;
     let tl = _.toArray(topics).length,
       cl = _.toArray(categories).length;
-    console.log(cl, tl, typeof topics, typeof categories);
     return (
       <div>
         <Segment

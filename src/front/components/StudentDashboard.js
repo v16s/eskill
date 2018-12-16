@@ -50,7 +50,7 @@ class StudentDashboard extends React.Component {
 
     let questions = [];
     if (qstate != undefined) {
-      questions = _.chunk(Object.keys(qstate), 4);
+      questions = Object.keys(qstate);
     }
     return (
       <div>
@@ -70,8 +70,8 @@ class StudentDashboard extends React.Component {
             {questions.map((q, qi) => {
               return (
                 <Grid.Row key={"row-" + qi}>
-                  {q.map((qu, i) => {
-                    let qd = qstate[qu];
+                  {Object.keys(qstate[q]).map((qu, i) => {
+                    let qd = qstate[q][qu];
                     let attempted = 0,
                       complete = 0;
                     if (qd.a === true) {
@@ -85,12 +85,17 @@ class StudentDashboard extends React.Component {
                       });
                     }
                     return (
-                      <Grid.Column key={"col-" + qi + "-" + i}>
+                      <Grid.Column width={4} key={"col-" + qi + "-" + i}>
                         <Card
                           className="courseCard"
                           onClick={e => {
                             if (qd.a === true) {
-                              history.push(`/question/${qd.cid}`);
+                              history.push(
+                                `/question/${qd.cat.replace(
+                                  " ",
+                                  "+"
+                                )}/${qd.topic.replace(" ", "+")}`
+                              );
                               this.props.stateSet("selcatname", qu);
                             }
                           }}

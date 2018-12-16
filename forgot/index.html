@@ -36,7 +36,6 @@
           e.preventDefault();
           var p = document.getElementById("password").value;
           var c = document.getElementById("confirm").value;
-          console.log(p, c);
           if (p != c) {
             document.querySelector(".error").innerHTML =
               "Passwords don't Match";
@@ -47,7 +46,7 @@
               method: "POST",
               headers: { "Content-Type": "application/json" }
             });
-            window.location.href = "http://localhost:5000";
+            window.location.href = "/";
           }
         };
       </script>

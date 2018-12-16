@@ -44,7 +44,6 @@ class Categories extends React.Component {
     }
   }
   handleTopic(e) {
-    console.log();
     if (this.topicSelect.current.state.value > 0) {
       let topic = this.topic.current.inputRef.value;
       if (topic.match(/[a-z]\w/gi) !== null && topic !== null) {
@@ -70,25 +69,22 @@ class Categories extends React.Component {
       nextState.catError = nextProps.catError;
       nextState.catSuccess = nextProps.catSuccess;
     } else {
-      console.log(nextState.catError);
     }
     if (this.props.topError !== nextProps.topError) {
       nextState.topError = nextProps.topError;
     } else {
-      console.log(nextState.topError);
     }
     return true;
   }
   render() {
     let { categories, catSuccess, topSuccess } = this.props;
     let { catError, topError } = this.state;
-    console.log(catSuccess);
     return (
       <Grid.Column width={8}>
         <Segment>
           <Segment basic>
             <Header size="large" textAlign="center">
-              Add New Category/Topic
+              Add New Branch/Course
             </Header>
             <Form onSubmit={this.handleCategory}>
               <Form.Field inline>
@@ -144,7 +140,7 @@ class Categories extends React.Component {
                 margin: "0 3.5%"
               }}
             >
-              Category Successfully Added!
+              Branch Successfully Added!
             </div>
           ) : null}
           <div
@@ -157,7 +153,52 @@ class Categories extends React.Component {
           >
             {catError}
           </div>
-
+          <Segment basic>
+            <Form onSubmit={this.handleTopic}>
+              <Form.Field inline>
+                <Input
+                  fluid
+                  size="large"
+                  placeholder="Add Topic"
+                  ref={this.topic}
+                >
+                  <Dropdown
+                    placeholder="Select Category"
+                    selection
+                    ref={this.topicSelect}
+                    className="category-select"
+                    options={_.map(categories, k => {
+                      return { text: k.name, value: k._id };
+                    })}
+                    style={{
+                      borderTopRightRadius: "0px",
+                      borderBottomRightRadius: "0px"
+                    }}
+                  />
+                  <input
+                    style={{
+                      borderRadius: "0px"
+                    }}
+                  />
+                  <Button
+                    primary
+                    style={{
+                      borderTopLeftRadius: "0px",
+                      borderBottomLeftRadius: "0px"
+                    }}
+                  >
+                    <Icon
+                      name="add"
+                      style={{
+                        margin: "0",
+                        opacity: "1"
+                      }}
+                    />
+                  </Button>
+                </Input>
+              </Form.Field>
+            </Form>
+          </Segment>
           {
             <div
               className="ui"
@@ -178,7 +219,7 @@ class Categories extends React.Component {
                 margin: "0 3.5%"
               }}
             >
-              Topic Successfully Added!
+              Course Successfully Added!
             </div>
           ) : null}
           <div
@@ -195,16 +236,16 @@ class Categories extends React.Component {
             <Table>
               <Table.Header>
                 <Table.Row>
-                  <Table.HeaderCell>Category ID</Table.HeaderCell>
-                  <Table.HeaderCell>Category Name</Table.HeaderCell>
+                  <Table.HeaderCell>Course ID</Table.HeaderCell>
+                  <Table.HeaderCell>Course Name</Table.HeaderCell>
                   <Table.HeaderCell>Notify</Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                {this.props.categories.map((t, i) => {
+                {this.props.topics.map((t, i) => {
                   return (
                     <Table.Row key={i}>
-                      <Table.Cell>{t._id}</Table.Cell>
+                      <Table.Cell>{t.tid}</Table.Cell>
                       <Table.Cell>{t.name}</Table.Cell>
                       <Table.Cell>
                         {t.notified ? (

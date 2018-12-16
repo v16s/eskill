@@ -14,6 +14,7 @@ import io from "socket.io-client";
 import CoordinatorDashboard from "./components/CoordinatorDashboard";
 import FacultyDashboard from "./components/FacultyDashboard";
 import QuestionPage from "./components/QuestionPage";
+import ChangeQuestion from "./components/ChangeQuestion";
 import { socket as socUrl } from "./enpoint";
 let socket = io(socUrl);
 import {
@@ -63,7 +64,6 @@ class Root extends React.Component {
     this.mainEmit = this.mainEmit.bind(this);
     this.setLoading = this.setLoading.bind(this);
     this.stateSet = this.stateSet.bind(this);
-    console.log(this.state.selcatname);
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
 
     this.handleClick = this.handleClick.bind(this);
@@ -123,7 +123,6 @@ class Root extends React.Component {
           email: cookies.get("email"),
           pass: cookies.get("pass")
         });
-        console.log("emitted details");
       }
     });
     let topics = [];
@@ -133,13 +132,14 @@ class Root extends React.Component {
       });
     });
     topics = _.sortBy(topics, "tid", "asc");
-    console.log(topics, categories);
     this.setState({ topics: topics });
     socket.on("mode", mode => {
       this.setState({ mode: mode });
     });
+    socket.on("questionnumber", c => {
+      this.setState({ qnumber: c });
+    });
     socket.on("validateLogin", content => {
-      // console.log(content)
       cookies.set("err", content.condition);
       cookies.set("isLoggedIn", content.validate);
       cookies.set("details", content.details);
@@ -156,7 +156,6 @@ class Root extends React.Component {
       });
     });
     socket.on("changeDetails", ({ details }) => {
-      console.log("details updated");
       cookies.set("details", details);
       if (details.notifications.filter(k => k.unread).length > 0) {
         this.setState({ notified: false });
@@ -182,17 +181,14 @@ class Root extends React.Component {
       this.setState({ qstate: q });
     });
     socket.on("catError", error => {
-      console.log("error", error);
       this.setState({ catError: error });
       error != "" ? this.setState({ catSuccess: "none" }) : null;
     });
     socket.on("topError", error => {
-      console.log(error);
       this.setState({ topError: error });
       error != "" ? this.setState({ topSuccess: "none" }) : null;
     });
     socket.on("tagError", error => {
-      console.log(error);
       this.setState({ tagError: error });
       error != "" ? this.setState({ tagError: "none" }) : null;
     });
@@ -202,7 +198,6 @@ class Root extends React.Component {
       type == "tag" ? this.setState({ tagSuccess: "success" }) : null;
     });
     socket.on("categories", cats => {
-      console.log(cats);
       topics = [];
       _.map(cats, c => {
         c.topics.map(t => {
@@ -246,7 +241,6 @@ class Root extends React.Component {
     window.onbeforeunload = () => {
       cookies.set("selcat", this.state.selcatname);
       socket.emit("disconnect");
-      console.log(cookies.get("selcat"));
     };
   }
   notificationSeen() {
@@ -268,7 +262,6 @@ class Root extends React.Component {
   }
   setLoading(type) {
     let newState = this.state;
-    console.log(newState);
     newState[type] = "load";
     this.setState(newState);
   }
@@ -352,11 +345,10 @@ class Root extends React.Component {
                           {[...this.state.details.notifications]
                             .reverse()
                             .map(n => {
-                              console.log(n);
                               return (
                                 <Dropdown.Item>
                                   <Segment inverted={n.unread}>
-                                    <span>{n.name} has been added!</span>
+                                    <span>{n.name}</span>
                                   </Segment>
                                 </Dropdown.Item>
                               );
@@ -428,9 +420,25 @@ class Root extends React.Component {
               >
                 <Switch>
                   <Segment basic style={{ flexGrow: "1" }}>
+                    {this.state.level == 1 ? (
+                      <Route
+                        path="/change/:category/:topic/:number"
+                        exact
+                        render={props => (
+                          <ChangeQuestion
+                            {...this.state}
+                            stateSet={this.stateSet}
+                            emit={this.emit}
+                            category={props.match.params.category}
+                            n={props.match.params.number}
+                            topic={props.match.params.topic}
+                          />
+                        )}
+                      />
+                    ) : null}
                     {this.state.level == 0 ? (
                       <Route
-                        path="/question/:category/:id"
+                        path="/question/:category/:topic/:id"
                         exact
                         render={props => (
                           <NewTest
@@ -444,8 +452,8 @@ class Root extends React.Component {
                             id={this.state.details._id}
                             sname={this.state.details.details.name}
                             i={props.match.params.id}
-                            cat={this.state.selcatname}
-                            cid={props.match.params.category}
+                            cat={props.match.params.category.replace("+", " ")}
+                            topic={props.match.params.topic.replace("+", " ")}
                           />
                         )}
                       />
@@ -461,6 +469,7 @@ class Root extends React.Component {
                             categories={this.state.categories}
                             emit={this.emit}
                             details={this.state.details}
+                            topics={this.state.topics}
                           />
                         )}
                       />
@@ -468,7 +477,7 @@ class Root extends React.Component {
                     {this.state.level == 0 ? (
                       <Route
                         exact
-                        path="/question/:category"
+                        path="/question/:category/:topic"
                         render={props => (
                           <QuestionPage
                             md={this.state.details.details}
@@ -491,8 +500,8 @@ class Root extends React.Component {
                             tagSuccess={this.state.tagSuccess}
                             qs={this.state.qstate}
                             stateSet={this.stateSet}
-                            cat={this.state.selcatname}
-                            cid={props.match.params.category}
+                            topic={props.match.params.topic}
+                            cat={props.match.params.category}
                             width={width}
                           />
                         )}
@@ -524,6 +533,7 @@ class Root extends React.Component {
                             grouped={this.state.grouped}
                             tagError={this.state.tagError}
                             tagSuccess={this.state.tagSuccess}
+                            qnumber={this.state.qnumber}
                           />
                         ) : this.state.level == 4 ? (
                           <FacultyDashboard
@@ -547,6 +557,8 @@ class Root extends React.Component {
                             logout={this.logout}
                             details={this.state.details}
                             catError={this.state.catError}
+                            qnumber={this.state.qnumber}
+                            width={this.state.width}
                             topError={this.state.topError}
                             topics={this.state.topics}
                             catSuccess={this.state.catSuccess}

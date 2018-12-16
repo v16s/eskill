@@ -129,7 +129,6 @@ class StudentDashboard extends React.Component {
     this.props.logout();
   }
   componentDidMount() {
-    console.log(this.props);
     setTimeout(() => {
       this.setState(
         ...this.state,

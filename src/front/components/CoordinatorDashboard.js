@@ -16,10 +16,12 @@ import {
   Grid,
   Dropdown,
   Pagination,
+  Tab,
   Modal,
   GridRow
 } from "semantic-ui-react";
-import Categories from "./categories";
+import CoordinatorProblems from "./CoordinatorProblems";
+import ChangeSearch from "./ChangeSearch";
 import AddQuestion from "./AddQuestion";
 import _ from "lodash";
 
@@ -51,20 +53,54 @@ class CoordinatorDashboard extends React.Component {
     let tl = _.toArray(topics).length;
 
     let cl = _.toArray(categories).length;
-    console.log(cl, tl, typeof topics, typeof categories);
     return (
       <div>
-        <Grid padded stackable relaxed doubling divided="vertically">
+        <Grid padded stackable relaxed centered doubling divided="vertically">
           <Grid.Row>
-            <Stats categories={cl} topics={tl} />
+            <Stats categories={cl} topics={tl} qn={this.props.qnumber} />
           </Grid.Row>
           <Grid.Row>
-            <AddQuestion
-              categories={this.props.categories}
-              tags={this.props.tags}
-              grouped={this.props.grouped}
-              emit={this.emit}
-            />
+            <Grid.Column width={13}>
+              <Tab
+                menu={{ pointing: true }}
+                panes={[
+                  {
+                    menuItem: "Problem Reports",
+                    render: () => (
+                      <Tab.Pane attached={false}>
+                        <CoordinatorProblems {...this.props} />
+                      </Tab.Pane>
+                    )
+                  },
+                  {
+                    menuItem: "Add Question",
+                    render: () => (
+                      <Tab.Pane attached={false}>
+                        <AddQuestion
+                          categories={this.props.categories}
+                          tags={this.props.tags}
+                          grouped={this.props.grouped}
+                          emit={this.emit}
+                          topics={this.props}
+                        />
+                      </Tab.Pane>
+                    )
+                  },
+                  {
+                    menuItem: "Change Question",
+                    render: () => (
+                      <Tab.Pane attached={false}>
+                        <ChangeSearch
+                          categories={this.props.categories}
+                          stateSet={this.props.stateSet}
+                          emit={this.emit}
+                        />
+                      </Tab.Pane>
+                    )
+                  }
+                ]}
+              />
+            </Grid.Column>
           </Grid.Row>
         </Grid>
       </div>

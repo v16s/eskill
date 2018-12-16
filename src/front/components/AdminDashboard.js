@@ -54,12 +54,11 @@ class Dashboard extends React.Component {
     let { md: det, topics, categories } = this.props;
     let tl = _.toArray(topics).length,
       cl = _.toArray(categories).length;
-    console.log(cl, tl, typeof topics, typeof categories);
     return (
       <div>
         <Grid padded stackable relaxed doubling divided="vertically">
           <Grid.Row>
-            <Stats categories={cl} topics={tl} />
+            <Stats categories={cl} topics={tl} qn={this.props.qnumber} />
           </Grid.Row>
           <Grid.Row>
             <Categories

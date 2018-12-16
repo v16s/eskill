@@ -82,14 +82,14 @@ class QuestionPage extends React.Component {
       hideTooltip,
       qs,
       cat,
-      cid,
+      topic,
       width: w
     } = this.props;
     let data = [];
-
-    if (qs[cat] != undefined && cat != "") {
-      console.log(qs);
-      data = qs[cat].q.map((k, i) => {
+    let actualcat = cat.replace("+", " ");
+    let actualtop = topic.replace("+", " ");
+    if (qs[actualcat] != undefined) {
+      data = qs[actualcat][actualtop].q.map((k, i) => {
         return {
           label: k.n,
           usage: 1,
@@ -134,11 +134,15 @@ class QuestionPage extends React.Component {
                       return (
                         <g key={`browser-${arc.data.label}-${i}`}>
                           <a
-                            href={`/question/${this.props.cid}/${arc.data.ind}`}
+                            href={`/question/${this.props.cat}/${topic}/${
+                              arc.data.ind
+                            }`}
                             onClick={e => {
                               e.preventDefault();
                               history.push(
-                                `/question/${this.props.cid}/${arc.data.ind}`
+                                `/question/${this.props.cat}/${
+                                  this.props.topic
+                                }/${arc.data.ind}`
                               );
                             }}
                           >
@@ -204,7 +208,7 @@ class QuestionPage extends React.Component {
               <Segment
                 onClick={e => {
                   e.preventDefault();
-                  history.push(`/question/${this.props.cid}/${k.ind}`);
+                  history.push(`/question/${this.props.cat}/${topic}/${k.ind}`);
                 }}
                 style={{
                   color:

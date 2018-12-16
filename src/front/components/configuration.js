@@ -29,7 +29,6 @@ class Configuration extends React.Component {
     let { emit } = this.props;
 
     emit("changeMode", checked);
-    console.log("hello");
   }
   componentDidMount() {
     let { mode } = this.props;
