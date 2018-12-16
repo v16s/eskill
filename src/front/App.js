@@ -16,7 +16,7 @@ import FacultyDashboard from "./components/FacultyDashboard";
 import QuestionPage from "./components/QuestionPage";
 import ChangeQuestion from "./components/ChangeQuestion";
 import { socket as socUrl } from "./enpoint";
-let socket = io.connect(window.location.origin, {path: '/eskill/socket.io/'});
+let socket = io.connect('http://care.srmuniv.ac.in', {path: '/eskill/socket.io/'});
 console.log(window.location.origin + '/eskill')
 import {
   Sidebar,
@@ -363,7 +363,7 @@ class Root extends React.Component {
                       onClick={e => {
                         e.preventDefault();
                         this.logout();
-                        window.location.href = "/";
+                        window.location.href = "/eskill";
                       }}
                     >
                       <Icon name="sign out" size="large" />
@@ -404,7 +404,7 @@ class Root extends React.Component {
                   onClick={e => {
                     e.preventDefault();
                     this.logout();
-                    window.location.href = "/";
+                    window.location.href = "/eskill";
                   }}
                 >
                   <Icon name="sign out" />
