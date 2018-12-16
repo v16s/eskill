@@ -59,7 +59,7 @@ app.use((req, res, next) => {
   );
   next();
 });
-app.use(express.static(path.resolve(__dirname, "dist")));
+app.use('/eskill', express.static(path.resolve(__dirname, "dist")));
 
 let config = require("./config.json");
 let { dburl, email: emailid, password, reset: resetURL, stagingurl } = config;
@@ -785,7 +785,7 @@ app.post("/api/student", (req, res) => {
   });
 });
 
-app.use(express.static("forgot"));
+app.use('/eskill', express.static("forgot"));
 app.post("/api/question", (req, res) => {
   let { n, cat, topic } = req.body;
   if (dbconnect) {
