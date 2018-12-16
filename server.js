@@ -5,7 +5,8 @@ const server = http.Server(app);
 const path = require("path");
 const debug = process.env.NODE_ENV !== "production";
 const io = require("socket.io")(server, {
-  path: '/eskill/socket.io'
+  path: '/eskill/socket.io',
+  transports: ['websocket']
 });
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
