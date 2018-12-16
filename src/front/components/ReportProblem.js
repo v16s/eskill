@@ -22,7 +22,7 @@ export default class RequestProblem extends React.Component {
         {width > 768 ? (
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell colSpan="6">
+              <Table.HeaderCell colSpan="7">
                 <Input
                   fluid
                   placeholder="Search"
