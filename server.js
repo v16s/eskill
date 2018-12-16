@@ -531,7 +531,7 @@ io.on("connection", socket => {
             _id: r.regNo,
             email: r.email,
             password: hash,
-            type: "Student",
+            type: "Coordinator",
             questions: {},
             level: 0
           });

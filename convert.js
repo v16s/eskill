@@ -11,7 +11,7 @@ const mongoose = require("mongoose");
 const EventEmitter = require("events");
 const Schema = mongoose.Schema;
 const _ = require("lodash");
-const dburl = "mongodb://test:test@ds135537.mlab.com:35537/eapproval";
+const dburl = require('./config.json').dburl;
 const csv = require("csvtojson");
 mongoose.connect(
   dburl,
@@ -111,7 +111,7 @@ db.on("open", () => {
   console.log("connected to database");
 
   csv()
-    .fromFile("./qsimport-template.csv")
+    .fromFile("./cloud_computing.csv")
     .then(jsonObj => {
       jsonObj.map((k, i) => {
         console.log(i);
@@ -122,8 +122,8 @@ db.on("open", () => {
           },
           label: [],
           topic: {
-            _id: "101",
-            name: "C Programming"
+            _id: "102",
+            name: "Cloud Computing"
           },
           number: i,
           answer: k.Answer,
