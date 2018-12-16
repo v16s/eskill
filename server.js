@@ -785,7 +785,7 @@ app.post("/api/student", (req, res) => {
   });
 });
 
-app.use('/eskill', express.static("forgot"));
+app.use('/eskill', express.static(path.resolve(__dirname, "forgot")));
 app.post("/api/question", (req, res) => {
   let { n, cat, topic } = req.body;
   if (dbconnect) {
