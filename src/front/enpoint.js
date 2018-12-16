@@ -1,3 +1,3 @@
-export default "";
-let socket = "";
-export { socket };
+export default '/eskill'
+let socket = '/eskill'
+export { socket }
