@@ -16,7 +16,7 @@ import FacultyDashboard from "./components/FacultyDashboard";
 import QuestionPage from "./components/QuestionPage";
 import ChangeQuestion from "./components/ChangeQuestion";
 import { socket as socUrl } from "./enpoint";
-let socket = io.connect('', {path: '/eskill'});
+let socket = io.connect('', {path: '/eskill/socket.io/'});
 console.log(window.location.origin + '/eskill')
 import {
   Sidebar,
