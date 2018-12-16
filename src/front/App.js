@@ -274,7 +274,7 @@ class Root extends React.Component {
   render() {
     let { width } = this.state;
     return (
-      <Router history={history} basename={window.location.origin + '/eskill'}>
+      <Router history={history} basename={'/eskill'}>
         {this.state.isLoggedIn ? (
           <div>
             <Segment
