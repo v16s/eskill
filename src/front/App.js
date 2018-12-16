@@ -274,7 +274,7 @@ class Root extends React.Component {
   render() {
     let { width } = this.state;
     return (
-      <Router history={history} basename={'/eskill'}>
+      <Router history={history}>
         {this.state.isLoggedIn ? (
           <div>
             <Segment
@@ -298,7 +298,7 @@ class Root extends React.Component {
                 ) : null}
                 <Menu.Item
                   onClick={e => {
-                    history.push("/");
+                    history.push("/eskill/");
                   }}
                   className="brand-menu"
                 >
@@ -312,7 +312,7 @@ class Root extends React.Component {
                     <Menu.Item
                       onClick={e => {
                         e.preventDefault();
-                        history.push("/");
+                        history.push("/eskill/");
                       }}
                     >
                       <Icon name="home" size="large" />
@@ -386,10 +386,10 @@ class Root extends React.Component {
                 <Menu.Item
                   name="home"
                   onClick={e => {
-                    history.push("/");
+                    history.push("/eskill/");
                   }}
                   onClick={e => {
-                    history.push("/");
+                    history.push("/eskill/");
                   }}
                 >
                   <Icon name="home" />
@@ -423,7 +423,7 @@ class Root extends React.Component {
                   <Segment basic style={{ flexGrow: "1" }}>
                     {this.state.level == 1 ? (
                       <Route
-                        path="/change/:category/:topic/:number"
+                        path="/eskill/change/:category/:topic/:number"
                         exact
                         render={props => (
                           <ChangeQuestion
@@ -439,7 +439,7 @@ class Root extends React.Component {
                     ) : null}
                     {this.state.level == 0 ? (
                       <Route
-                        path="/question/:category/:topic/:id"
+                        path="/eskill/question/:category/:topic/:id"
                         exact
                         render={props => (
                           <NewTest
@@ -461,7 +461,7 @@ class Root extends React.Component {
                     ) : null}
                     {this.state.level == 0 || this.state.level == 1 ? (
                       <Route
-                        path="/request"
+                        path="/eskill/request"
                         render={props => (
                           <RequestCourse
                             stateSet={this.stateSet}
@@ -478,7 +478,7 @@ class Root extends React.Component {
                     {this.state.level == 0 ? (
                       <Route
                         exact
-                        path="/question/:category/:topic"
+                        path="/eskill/question/:category/:topic"
                         render={props => (
                           <QuestionPage
                             md={this.state.details.details}
@@ -509,7 +509,7 @@ class Root extends React.Component {
                       />
                     ) : null}
                     <Route
-                      path="/"
+                      path="/eskill/"
                       exact
                       render={() =>
                         this.state.level == 2 ? (
@@ -615,17 +615,17 @@ class Root extends React.Component {
         ) : (
           <Switch>
             <Route
-              path="/register"
+              path="/eskill/register"
               render={() => (
                 <RegisterPage mode={this.state.mode} emit={this.emit} />
               )}
             />
             <Route
-              path="/forgot"
+              path="/eskill/forgot"
               render={() => <ForgotPage emit={this.emit} />}
             />
             <Route
-              path="/"
+              path="/eskill/"
               render={() => (
                 <Login fail={this.state.fail} emit={this.mainEmit} />
               )}

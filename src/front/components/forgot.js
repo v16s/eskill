@@ -57,7 +57,7 @@ class ForgotPage extends React.Component {
                 onClick={e => {
                   e.preventDefault();
                   this.sendToServer(e);
-                  history.push("/");
+                  history.push("/eskill/");
                 }}
               >
                 Submit

@@ -146,7 +146,7 @@ class StudentDashboard extends React.Component {
                   style={{ height: "100%" }}
                   className="courseCard request-course"
                   onClick={e => {
-                    history.push("/request");
+                    history.push("/eskill/request");
                   }}
                 >
                   <Card.Content

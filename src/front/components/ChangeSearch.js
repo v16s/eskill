@@ -96,7 +96,7 @@ export default class ChangeSearch extends React.Component {
                 type="cancel"
                 onClick={e => {
                   e.preventDefault();
-                  history.push("/");
+                  history.push("/eskill/");
                 }}
               >
                 Cancel

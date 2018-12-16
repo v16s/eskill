@@ -92,7 +92,7 @@ class RequestCourse extends React.Component {
         cid: selcat.value,
         topic: seltop.label
       });
-      history.push("/");
+      history.push("/eskill/");
     }
   }
   render() {
@@ -162,7 +162,7 @@ class RequestCourse extends React.Component {
                     type="cancel"
                     onClick={e => {
                       e.preventDefault();
-                      history.push("/");
+                      history.push("/eskill/");
                     }}
                   >
                     Cancel
