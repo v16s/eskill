@@ -17,6 +17,7 @@ import QuestionPage from "./components/QuestionPage";
 import ChangeQuestion from "./components/ChangeQuestion";
 import { socket as socUrl } from "./enpoint";
 let socket = io(window.location.origin + '/eskill');
+console.log(window.location.origin + '/eskill')
 import {
   Sidebar,
   Segment,
