@@ -274,7 +274,7 @@ class Root extends React.Component {
   render() {
     let { width } = this.state;
     return (
-      <Router basename={window.location.origin + '/eskill'} history={history}>
+      <Router history={history} basename={window.location.origin + '/eskill'}>
         {this.state.isLoggedIn ? (
           <div>
             <Segment
@@ -424,7 +424,7 @@ class Root extends React.Component {
                     {this.state.level == 1 ? (
                       <Route
                         path="/change/:category/:topic/:number"
-                        
+                        exact
                         render={props => (
                           <ChangeQuestion
                             {...this.state}
@@ -440,7 +440,7 @@ class Root extends React.Component {
                     {this.state.level == 0 ? (
                       <Route
                         path="/question/:category/:topic/:id"
-                        
+                        exact
                         render={props => (
                           <NewTest
                             stateSet={this.stateSet}
@@ -477,7 +477,7 @@ class Root extends React.Component {
                     ) : null}
                     {this.state.level == 0 ? (
                       <Route
-                        
+                        exact
                         path="/question/:category/:topic"
                         render={props => (
                           <QuestionPage
@@ -510,7 +510,7 @@ class Root extends React.Component {
                     ) : null}
                     <Route
                       path="/"
-                      
+                      exact
                       render={() =>
                         this.state.level == 2 ? (
                           <AdminDashboard
