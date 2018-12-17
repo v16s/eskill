@@ -396,7 +396,13 @@ class Root extends React.Component {
                       {this.state.details.notifications.length > 0 ? (
                         <Dropdown.Menu className="notifications">
                           <Dropdown.Header
-                            style={{ fontWeight: "bold" }}
+                            inverted={this.state.dark}
+                            style={{
+                              fontWeight: "bold",
+                              backgroundColor: this.state.dark
+                                ? rgba(230, 230, 230, 0.5)
+                                : rgba(20, 20, 20, 0.5)
+                            }}
                             content="Notifcations"
                           />
                           {[...this.state.details.notifications]
@@ -415,12 +421,16 @@ class Root extends React.Component {
                     </Dropdown>
                   ) : null}
 
-                  <Menu.Item onClick={e => this.handleDarkSwitch()}>
-                    <Icon
-                      name={this.state.dark ? "lightbulb outline" : "lightbulb"}
-                      size="large"
-                    />
-                  </Menu.Item>
+                  {width < 768 ? (
+                    <Menu.Item onClick={e => this.handleDarkSwitch()}>
+                      <Icon
+                        name={
+                          this.state.dark ? "lightbulb outline" : "lightbulb"
+                        }
+                        size="large"
+                      />
+                    </Menu.Item>
+                  ) : null}
 
                   {width >= 768 ? (
                     <Menu.Item
@@ -462,6 +472,12 @@ class Root extends React.Component {
                 <Menu.Item name="user">
                   <Icon name="user" />
                   Edit Profile
+                </Menu.Item>
+                <Menu.Item onClick={e => this.handleDarkSwitch()}>
+                  <Icon
+                    name={this.state.dark ? "lightbulb outline" : "lightbulb"}
+                  />
+                  {this.state.dark ? "Light Mode" : "Dark Mode"}
                 </Menu.Item>
                 <Menu.Item
                   name="logout"
