@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import {
   Form,
   Input,
@@ -13,211 +13,209 @@ import {
   Grid,
   Modal,
   Header
-} from 'semantic-ui-react'
-import history from './history'
-import 'react-datepicker/dist/react-datepicker.css'
-
+} from "semantic-ui-react";
+import history from "./history";
 class RegisterPage extends Component {
-  constructor (props) {
-    super(props)
+  constructor(props) {
+    super(props);
     this.state = {
-      passError: ''
-    }
-    this.submit = this.submit.bind(this)
+      passError: ""
+    };
+    this.submit = this.submit.bind(this);
   }
-  submit (e) {
-    this.setState({ passError: '' })
-    let regNo = document.querySelector('#reg').value
+  submit(e) {
+    this.setState({ passError: "" });
+    let regNo = document.querySelector("#reg").value;
     let getCurrentYear = () => {
       if (new Date().getMonth() + 1 <= 7) {
-        let currentYear
+        let currentYear;
         switch (
           parseInt(new Date().getFullYear()) -
             parseInt(`20${regNo.slice(2, 4)}`)
         ) {
           case 1:
-            currentYear = 'First Year'
-            break
+            currentYear = "First Year";
+            break;
           case 2:
-            currentYear = 'Second Year'
-            break
+            currentYear = "Second Year";
+            break;
           case 3:
-            currentYear = 'Third Year'
-            break
+            currentYear = "Third Year";
+            break;
           case 4:
-            currentYear = 'Fourth Year'
+            currentYear = "Fourth Year";
         }
-        return currentYear
+        return currentYear;
       } else {
-        let currentYear
+        let currentYear;
         switch (
           parseInt(new Date().getFullYear()) -
             parseInt(`20${regNo.slice(2, 4)}`)
         ) {
           case 0:
-            currentYear = 'First Year'
-            break
+            currentYear = "First Year";
+            break;
           case 1:
-            currentYear = 'Second Year'
-            break
+            currentYear = "Second Year";
+            break;
           case 2:
-            currentYear = 'Third Year'
-            break
+            currentYear = "Third Year";
+            break;
           case 3:
-            currentYear = 'Fourth Year'
+            currentYear = "Fourth Year";
         }
-        return currentYear
+        return currentYear;
       }
-    }
-    function getBranch () {
-      let branch
+    };
+    function getBranch() {
+      let branch;
 
-      return branch
+      return branch;
     }
     let obj = {
-      name: document.querySelector('#name').value,
-      regNo: document.querySelector('#reg').value,
-      branch: document.querySelector('#branch').innerText,
-      password: document.querySelector('#password').value,
-      confirm: document.querySelector('#confirm').value,
-      email: document.querySelector('#email').value
-    }
+      name: document.querySelector("#name").value,
+      regNo: document.querySelector("#reg").value,
+      branch: document.querySelector("#branch").innerText,
+      password: document.querySelector("#password").value,
+      confirm: document.querySelector("#confirm").value,
+      email: document.querySelector("#email").value
+    };
     if (obj.password == obj.confirm) {
-      this.props.emit('reg', obj)
-      history.push('/eskill/')
+      this.props.emit("reg", obj);
+      history.push("/eskill/");
     } else {
-      this.setState({ passError: "Passwords don't match! " })
+      this.setState({ passError: "Passwords don't match! " });
     }
   }
 
-  render () {
+  render() {
     const options = [
-      { key: 'm', text: 'Male', value: 'male' },
-      { key: 'f', text: 'Female', value: 'female' }
-    ]
+      { key: "m", text: "Male", value: "male" },
+      { key: "f", text: "Female", value: "female" }
+    ];
     const branches = [
-      { key: 'b', text: 'BioTechnology', value: 'biotech' },
-      { key: 'a', text: 'Automobile Engineering', value: 'auto' },
-      { key: 'i', text: 'Information Technology', value: 'it' },
-      { key: 'c', text: 'Chemical Engineering', value: 'ce' },
+      { key: "b", text: "BioTechnology", value: "biotech" },
+      { key: "a", text: "Automobile Engineering", value: "auto" },
+      { key: "i", text: "Information Technology", value: "it" },
+      { key: "c", text: "Chemical Engineering", value: "ce" },
       {
-        key: 'ee',
-        text: 'Electrical and Electronics Engineering',
-        value: 'eee'
+        key: "ee",
+        text: "Electrical and Electronics Engineering",
+        value: "eee"
       },
-      { key: 'ce', text: 'Civil Engineering', value: 'ce' },
-      { key: 'me', text: 'Mechanical Engineering', value: 'me' },
-      { key: 'cs', text: 'Computer Science and Engineering', value: 'cse' },
+      { key: "ce", text: "Civil Engineering", value: "ce" },
+      { key: "me", text: "Mechanical Engineering", value: "me" },
+      { key: "cs", text: "Computer Science and Engineering", value: "cse" },
       {
-        key: 'ec',
-        text: 'Electronics and Communications Engineering',
-        value: 'ece'
+        key: "ec",
+        text: "Electronics and Communications Engineering",
+        value: "ece"
       }
-    ]
+    ];
     return (
       <Grid
         centered
-        verticalAlign='middle'
+        verticalAlign="middle"
         style={{
-          height: '100vh',
-          paddingTop: '14px',
-          width: '100vw'
+          height: "100vh",
+          paddingTop: "14px",
+          width: "100vw"
         }}
       >
-        <Grid.Row verticalAlign='middle'>
-          <Grid.Column width={13} textAlign='center'>
-            <Segment padded size='big'>
+        <Grid.Row verticalAlign="middle">
+          <Grid.Column width={13} textAlign="center">
+            <Segment padded size="big">
               <Header
-                as='h2'
+                as="h2"
                 style={{
-                  marginBottom: '0'
+                  marginBottom: "0"
                 }}
               >
-                eSkill {this.props.mode ? 'Faculty' : 'Student'} Registration
+                eSkill {this.props.mode ? "Faculty" : "Student"} Registration
               </Header>
               <p
                 style={{
-                  fontSize: '14px'
+                  fontSize: "14px"
                 }}
               >
-                {' '}
+                {" "}
                 Please fill in the details in order to continue
               </p>
               <Form
                 onSubmit={e => {
-                  e.preventDefault()
-                  this.submit(e)
+                  e.preventDefault();
+                  this.submit(e);
                 }}
               >
                 <Form.Field>
                   <label>Full Name</label>
-                  <input id='name' required placeholder='Name' />
+                  <input id="name" required placeholder="Name" />
                 </Form.Field>
                 <Form.Field>
                   <label>Reg Number</label>
                   <input
-                    id='reg'
+                    id="reg"
                     required
-                    placeholder={this.props.mode ? 'Id' : 'Reg No.'}
+                    placeholder={this.props.mode ? "Id" : "Reg No."}
                   />
                 </Form.Field>
                 <Form.Field
                   width={16}
                   control={Select}
                   required
-                  label='Branch'
+                  label="Branch"
                   options={branches}
-                  placeholder='Branch'
-                  id='branch'
+                  placeholder="Branch"
+                  id="branch"
                 />
 
-                <Form.Group widths='equal'>
+                <Form.Group widths="equal">
                   <Form.Input
                     required
                     fluid
-                    id='email'
-                    label='Email'
-                    placeholder='Email ID'
+                    id="email"
+                    label="Email"
+                    placeholder="Email ID"
                   />
                   <Form.Input
-                    type='password'
+                    type="password"
                     required
                     fluid
-                    id='password'
-                    label='Password'
-                    placeholder='Password'
+                    id="password"
+                    label="Password"
+                    placeholder="Password"
                   />
                   <Form.Input
-                    type='password'
+                    type="password"
                     required
                     fluid
-                    id='confirm'
-                    label='Confirm Password'
-                    placeholder='Confirm Password'
+                    id="confirm"
+                    label="Confirm Password"
+                    placeholder="Confirm Password"
                   />
                 </Form.Group>
 
                 <Button
-                  type='cancel'
+                  type="cancel"
                   onClick={e => {
-                    e.preventDefault()
-                    history.push('/eskill/')
+                    e.preventDefault();
+                    history.push("/eskill/");
                   }}
                 >
                   Cancel
                 </Button>
-                <Button positive type='submit'>
+                <Button positive type="submit">
                   Register
                 </Button>
               </Form>
-              {this.state.passError !== '' ? (
+              {this.state.passError !== "" ? (
                 <div
-                  className='ui error message'
+                  className="ui error message"
                   style={{
-                    display: 'block',
-                    border: 'none',
-                    height: '38px',
-                    fontSize: '1rem'
+                    display: "block",
+                    border: "none",
+                    height: "38px",
+                    fontSize: "1rem"
                   }}
                 >
                   {this.state.passError}
@@ -227,23 +225,23 @@ class RegisterPage extends Component {
           </Grid.Column>
         </Grid.Row>
       </Grid>
-    )
+    );
   }
 }
 class CustomInput extends React.Component {
-  render () {
+  render() {
     return (
       <Button
         primary
         fluid
         onClick={e => {
-          e.preventDefault()
-          this.props.onClick(e)
+          e.preventDefault();
+          this.props.onClick(e);
         }}
       >
         {this.props.value}
       </Button>
-    )
+    );
   }
 }
-export default RegisterPage
+export default RegisterPage;

@@ -562,7 +562,17 @@ io.on("connection", socket => {
         Users.findById(r.email, (err, accid) => {
           if (accid == null) {
             loginCheck.emit("canRegister");
+          } else {
+            socket.emit("registerResponse", {
+              fail: true,
+              message: "Registration Failed"
+            });
           }
+        });
+      } else {
+        socket.emit("registerResponse", {
+          fail: true,
+          message: "Registration Failed"
         });
       }
     });
@@ -607,7 +617,12 @@ io.on("connection", socket => {
           });
         }
         details.save();
-        user.save();
+        user.save(err => {
+          socket.emit("registerResponse", {
+            fail: false,
+            message: "Registration Successful"
+          });
+        });
       });
     });
   });

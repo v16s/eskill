@@ -61,7 +61,8 @@ class Root extends React.Component {
       visible: false,
       width: 0,
       height: 0,
-      notified: true
+      notified: true,
+      success: ""
     };
     this.emit = this.emit.bind(this);
     this.logout = this.logout.bind(this);
@@ -184,6 +185,13 @@ class Root extends React.Component {
     socket.on("documents", content => {
       cookies.set("documents", content);
       this.setState({ documents: content });
+    });
+    socket.on("registerResponse", res => {
+      if (res.fail) {
+        this.setState({ fail: res.message });
+      } else {
+        this.setState({ success: res.message });
+      }
     });
     socket.on("q", q => {
       cookies.set("qstate", q);
@@ -316,7 +324,7 @@ class Root extends React.Component {
                   className="brand-menu"
                 >
                   <Header as="h2" className="brand">
-                    eSkill
+                    SRM CARE eSkill
                   </Header>
                 </Menu.Item>
 
@@ -640,7 +648,11 @@ class Root extends React.Component {
             <Route
               path="/eskill/"
               render={() => (
-                <Login fail={this.state.fail} emit={this.mainEmit} />
+                <Login
+                  fail={this.state.fail}
+                  success={this.state.success}
+                  emit={this.mainEmit}
+                />
               )}
             />
           </Switch>

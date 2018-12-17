@@ -1,99 +1,110 @@
-import React from 'react'
-import { Button } from '@aragon/ui'
-import { Link } from 'react-router-dom'
-import { Image, Form, Segment, Header } from 'semantic-ui-react'
+import React from "react";
+import { Button } from "@aragon/ui";
+import { Link } from "react-router-dom";
+import { Image, Form, Segment, Header } from "semantic-ui-react";
 
 class Login extends React.Component {
-  constructor (props) {
-    super(props)
-    this.sendToServer = this.sendToServer.bind(this)
+  constructor(props) {
+    super(props);
+    this.sendToServer = this.sendToServer.bind(this);
   }
-  sendToServer (e) {
+  sendToServer(e) {
     const accDetails = {
-      email: e.target.querySelectorAll('input')[0].value,
-      pass: e.target.querySelectorAll('input')[1].value
-    }
+      email: e.target.querySelectorAll("input")[0].value,
+      pass: e.target.querySelectorAll("input")[1].value
+    };
 
-    this.props.emit('det', accDetails)
+    this.props.emit("det", accDetails);
   }
-  render () {
+  render() {
     return (
       <div
-        className='container'
+        className="container"
         style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          width: '100vw',
-          minHeight: '100vh'
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          width: "100vw",
+          minHeight: "100vh"
         }}
       >
         <div
-          className='ui middle aligned center aligned grid'
+          className="ui middle aligned center aligned grid"
           style={{
-            width: '60%',
-            margin: '0 auto',
-            minWidth: '400px',
-            maxWidth: '500px'
+            width: "60%",
+            margin: "0 auto",
+            minWidth: "400px",
+            maxWidth: "500px"
           }}
         >
-          <div className='column'>
-            <Image src={require('../logo.png')} size='small' centered />
+          <div className="column">
+            <Image src={require("../logo.png")} size="small" centered />
 
             <form
-              className='ui large form'
+              className="ui large form"
               onSubmit={e => {
-                e.preventDefault()
-                this.sendToServer(e)
+                e.preventDefault();
+                this.sendToServer(e);
               }}
             >
-              <div className='ui secondary segment basic minimal'>
-                <Header as='h2' className='login-heading'>
-                  eSkill
+              <div className="ui secondary segment basic minimal">
+                <Header as="h2" className="login-heading">
+                  SRM CARE eSkill
                 </Header>
-                <div className='field'>
-                  <div className='ui left input'>
-                    <input type='text' placeholder='Register/Employee Number' />
+                <div className="field">
+                  <div className="ui left input">
+                    <input type="text" placeholder="Register/Employee Number" />
                   </div>
                 </div>
-                <div className='field'>
-                  <div className='ui left input'>
-                    <input type='password' placeholder='Password' />
+                <div className="field">
+                  <div className="ui left input">
+                    <input type="password" placeholder="Password" />
                   </div>
                 </div>
                 <button
-                  className='ui fluid large primary submit button'
-                  type='submit'
+                  className="ui fluid large primary submit button"
+                  type="submit"
                 >
                   Login
                 </button>
               </div>
 
               <div
-                className='ui error message'
+                className="ui error message"
                 style={{
-                  display: this.props.fail == '' ? 'none' : 'block',
-                  border: 'none'
+                  display: this.props.fail == "" ? "none" : "block",
+                  border: "none"
                 }}
               >
-                {this.props.fail == 'np'
-                  ? 'Wrong Password'
-                  : `Account doesn't exist`}
+                {this.props.fail == "np"
+                  ? "Wrong Password"
+                  : this.props.fail == "nu"
+                  ? `Account doesn't exist`
+                  : "Registration failed"}
+              </div>
+              <div
+                className="ui success message"
+                style={{
+                  display: this.props.success == "" ? "none" : "block",
+                  border: "none"
+                }}
+              >
+                {this.props.success == "r" ? "Successfully Registered" : null}
               </div>
             </form>
 
-            <div className='ui message'>
-              <Link to='/eskill/register'>Register</Link>
+            <div className="ui message">
+              <Link to="/eskill/register">Register</Link>
             </div>
 
-            <div className='ui message'>
-              <Link to='/eskill/forgot'>Forgot Password</Link>
+            <div className="ui message">
+              <Link to="/eskill/forgot">Forgot Password</Link>
             </div>
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 
-export default Login
+export default Login;
