@@ -93,9 +93,11 @@ class Login extends React.Component {
               </div>
             </form>
 
-            <div className="ui message">
-              <Link to="/eskill/register">Register</Link>
-            </div>
+            {this.props.canReg ? (
+              <div className="ui message">
+                <Link to="/eskill/register">Register</Link>
+              </div>
+            ) : null}
 
             <div className="ui message">
               <Link to="/eskill/forgot">Forgot Password</Link>

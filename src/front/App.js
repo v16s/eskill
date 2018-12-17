@@ -59,6 +59,7 @@ class Root extends React.Component {
       chSuccess: "",
       qstate: cookies.get("qstate") || [],
       mode: false,
+      canReg: false,
       selcatname: cookies.get("selcat") || "",
       visible: false,
       width: 0,
@@ -66,7 +67,9 @@ class Root extends React.Component {
       notified: true,
       success: "",
       addSuccess: "",
-      addError: ""
+      addError: "",
+      studentCount: 0,
+      facultyCount: 0
     };
     this.emit = this.emit.bind(this);
     this.logout = this.logout.bind(this);
@@ -150,8 +153,14 @@ class Root extends React.Component {
     socket.on("mode", mode => {
       this.setState({ mode: mode });
     });
+    socket.on("canReg", mode => {
+      this.setState({ canReg: mode });
+    });
     socket.on("questionnumber", c => {
       this.setState({ qnumber: c });
+    });
+    socket.on("count", ([sc, fc]) => {
+      this.setState({ studentCount: sc, facultyCount: fc });
     });
     socket.on("validateLogin", content => {
       cookies.set("err", content.condition);
@@ -555,6 +564,9 @@ class Root extends React.Component {
                       render={() =>
                         this.state.level == 2 ? (
                           <AdminDashboard
+                            canReg={this.state.canReg}
+                            facultyCount={this.state.facultyCount}
+                            studentCount={this.state.studentCount}
                             mode={this.state.mode}
                             md={this.state.details.details}
                             stateSet={this.stateSet}
@@ -590,6 +602,8 @@ class Root extends React.Component {
                           />
                         ) : this.state.level == 1 ? (
                           <CoordinatorDashboard
+                            facultyCount={this.state.facultyCount}
+                            studentCount={this.state.studentCount}
                             md={this.state.details.details}
                             level={this.state.level}
                             emit={this.emit}
@@ -659,12 +673,14 @@ class Root extends React.Component {
           </div>
         ) : (
           <Switch>
-            <Route
-              path="/eskill/register"
-              render={() => (
-                <RegisterPage mode={this.state.mode} emit={this.emit} />
-              )}
-            />
+            {this.state.canReg ? (
+              <Route
+                path="/eskill/register"
+                render={() => (
+                  <RegisterPage mode={this.state.mode} emit={this.emit} />
+                )}
+              />
+            ) : null}
             <Route
               path="/eskill/forgot"
               render={() => <ForgotPage emit={this.emit} />}
@@ -676,6 +692,7 @@ class Root extends React.Component {
                   fail={this.state.fail}
                   success={this.state.success}
                   emit={this.mainEmit}
+                  canReg={this.state.canReg}
                 />
               )}
             />

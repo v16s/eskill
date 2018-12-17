@@ -57,7 +57,13 @@ class CoordinatorDashboard extends React.Component {
       <div>
         <Grid padded stackable relaxed centered doubling divided="vertically">
           <Grid.Row>
-            <Stats categories={cl} topics={tl} qn={this.props.qnumber} />
+            <Stats
+              categories={cl}
+              topics={tl}
+              qn={this.props.qnumber}
+              students={this.props.studentCount}
+              faculty={this.props.facultyCount}
+            />
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={13}>

@@ -58,7 +58,13 @@ class Dashboard extends React.Component {
       <div>
         <Grid padded stackable relaxed doubling divided="vertically">
           <Grid.Row>
-            <Stats categories={cl} topics={tl} qn={this.props.qnumber} />
+            <Stats
+              categories={cl}
+              topics={tl}
+              qn={this.props.qnumber}
+              students={this.props.studentCount}
+              faculty={this.props.facultyCount}
+            />
           </Grid.Row>
           <Grid.Row>
             <Categories
@@ -82,7 +88,11 @@ class Dashboard extends React.Component {
               emit={this.emit}
               tags={this.props.tags}
             />
-            <Configuration emit={this.props.emit} mode={this.props.mode} />
+            <Configuration
+              emit={this.props.emit}
+              mode={this.props.mode}
+              canReg={this.props.canReg}
+            />
           </Grid.Row>
         </Grid>
       </div>

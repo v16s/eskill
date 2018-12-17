@@ -215,9 +215,12 @@ let resetArray = [];
 io.on("connection", socket => {
   let loggedIn = false,
     level = 0,
-    account = { _id: "" };
+    account = { _id: "" },
+    facCount = 0,
+    studentCount = 0,
+    canReg = true;
   socket.emit("mode", mode);
-
+  socket.emit("canReg", canReg);
   dbCheck.on("change", idlist => {
     if (idlist.includes(account._id)) {
       UserDetails.findById(account._id, (err, details) => {
@@ -248,7 +251,16 @@ io.on("connection", socket => {
     }
     loginCheck.on("success", acc => {
       account = acc;
-
+      dbCheck.emit("count");
+      dbCheck.on("count", () => {
+        Users.countDocuments({ level: 0 }, (err, c) => {
+          studentCount = c;
+          Users.facCount({ level: 0 }, (err, c) => {
+            facCount = c;
+            socket.emit("count", [studentCount, facCount]);
+          });
+        });
+      });
       loggedIn = true;
       UserDetails.findById(acc._id, (err, details) => {
         socket.emit("validateLogin", {
@@ -263,6 +275,10 @@ io.on("connection", socket => {
           socket.emit("questionnumber", c);
         });
         if (level == 2) {
+          socket.on("toggleReg", () => {
+            canReg = !canReg;
+            socket.emit("canReg", canReg);
+          });
           socket.on("changeMode", checked => {
             mode = !mode;
             socket.emit("mode", mode);
@@ -650,74 +666,77 @@ io.on("connection", socket => {
   });
 
   socket.on("reg", r => {
-    Users.findOne({ email: r.email }, (err, acc) => {
-      if (acc == null) {
-        Users.findById(r.email, (err, accid) => {
-          if (accid == null) {
-            loginCheck.emit("canRegister");
-          } else {
-            socket.emit("registerResponse", {
-              fail: true,
-              message: "Registration Failed"
-            });
-          }
-        });
-      } else {
-        socket.emit("registerResponse", {
-          fail: true,
-          message: "Registration Failed"
-        });
-      }
-    });
-    loginCheck.on("canRegister", () => {
-      let user, details;
-      bcrypt.hash(r.password, 10, function(err, hash) {
-        if (!mode) {
-          user = new Users({
-            _id: r.regNo,
-            email: r.email,
-            password: hash,
-            type: "Coordinator",
-            questions: {},
-            level: 0
-          });
-          details = new UserDetails({
-            _id: r.regNo,
-            level: 0,
-            details: {
-              name: r.name,
-              regNo: r.regNo,
-              department: r.branch
+    if (canReg) {
+      Users.findOne({ email: r.email }, (err, acc) => {
+        if (acc == null) {
+          Users.findById(r.email, (err, accid) => {
+            if (accid == null) {
+              loginCheck.emit("canRegister");
+            } else {
+              socket.emit("registerResponse", {
+                fail: true,
+                message: "Registration Failed"
+              });
             }
           });
         } else {
-          user = new Users({
-            _id: r.regNo,
-            email: r.email,
-            password: hash,
-            type: "Faculty",
-            level: 4
-          });
-          details = new UserDetails({
-            _id: r.regNo,
-            level: 4,
-            details: {
-              name: r.name,
-              regNo: r.regNo,
-              department: r.branch,
-              students: []
-            }
+          socket.emit("registerResponse", {
+            fail: true,
+            message: "Registration Failed"
           });
         }
-        details.save();
-        user.save(err => {
-          socket.emit("registerResponse", {
-            fail: false,
-            message: "Registration Successful"
+      });
+      loginCheck.on("canRegister", () => {
+        let user, details;
+        bcrypt.hash(r.password, 10, function(err, hash) {
+          if (!mode) {
+            user = new Users({
+              _id: r.regNo,
+              email: r.email,
+              password: hash,
+              type: "Coordinator",
+              questions: {},
+              level: 0
+            });
+            details = new UserDetails({
+              _id: r.regNo,
+              level: 0,
+              details: {
+                name: r.name,
+                regNo: r.regNo,
+                department: r.branch
+              }
+            });
+          } else {
+            user = new Users({
+              _id: r.regNo,
+              email: r.email,
+              password: hash,
+              type: "Faculty",
+              level: 4
+            });
+            details = new UserDetails({
+              _id: r.regNo,
+              level: 4,
+              details: {
+                name: r.name,
+                regNo: r.regNo,
+                department: r.branch,
+                students: []
+              }
+            });
+          }
+          details.save();
+          user.save(err => {
+            socket.emit("registerResponse", {
+              fail: false,
+              message: "Registration Successful"
+            });
+            dbCheck.emit("count");
           });
         });
       });
-    });
+    }
   });
 
   socket.on("addTag", info => {

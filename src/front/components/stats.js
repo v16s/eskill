@@ -27,7 +27,7 @@ class Categories extends React.Component {
             width: "100%"
           }}
         >
-          <Grid stackable columns={3}>
+          <Grid stackable columns={5}>
             <Grid.Column>
               <Segment
                 raised
@@ -86,6 +86,46 @@ class Categories extends React.Component {
                 <Grid.Column width={5} floated="right">
                   <Header size="medium" textAlign="right">
                     {this.props.qn}
+                  </Header>
+                </Grid.Column>
+              </Segment>
+            </Grid.Column>
+            <Grid.Column>
+              <Segment
+                raised
+                style={{
+                  minHeight: "100%",
+                  width: "100%"
+                }}
+              >
+                <Grid.Column width={10}>
+                  <Header size="medium" textAlign="left">
+                    Registered Students
+                  </Header>
+                </Grid.Column>
+                <Grid.Column width={5} floated="right">
+                  <Header size="medium" textAlign="right">
+                    {this.props.students}
+                  </Header>
+                </Grid.Column>
+              </Segment>
+            </Grid.Column>
+            <Grid.Column>
+              <Segment
+                raised
+                style={{
+                  minHeight: "100%",
+                  width: "100%"
+                }}
+              >
+                <Grid.Column width={10}>
+                  <Header size="medium" textAlign="left">
+                    Registered Faculty
+                  </Header>
+                </Grid.Column>
+                <Grid.Column width={5} floated="right">
+                  <Header size="medium" textAlign="right">
+                    {this.props.faculty}
                   </Header>
                 </Grid.Column>
               </Segment>
