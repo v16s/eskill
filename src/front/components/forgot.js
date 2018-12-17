@@ -44,9 +44,11 @@ class ForgotPage extends React.Component {
             maxWidth: "800px"
           }}
         >
-          <Form success>
+          <Form inverted={this.props.dark} success>
             <div>
-              <Header size="large">Reset Password</Header>
+              <Header inverted={this.props.dark} size="large">
+                Reset Password
+              </Header>
             </div>
             <Form.Input label="Email" placeholder="joe@schmoe.com" />
             <div style={{ display: "flex", justifyContent: "center" }}>
