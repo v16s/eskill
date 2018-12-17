@@ -129,7 +129,7 @@ class RequestCourse extends React.Component {
                       }}
                     />
                   </Form.Group>
-                  <Form.Field label="Choose Branch" />
+                  <Form.Field label="Choose Course" />
                   <Form.Group>
                     <Select
                       value={this.state.seltop}

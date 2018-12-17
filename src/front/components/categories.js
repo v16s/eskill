@@ -91,7 +91,7 @@ class Categories extends React.Component {
                 <Input
                   fluid
                   size="large"
-                  placeholder="Add Category"
+                  placeholder="Add Branch"
                   ref={this.category}
                 >
                   <input
@@ -159,11 +159,11 @@ class Categories extends React.Component {
                 <Input
                   fluid
                   size="large"
-                  placeholder="Add Topic"
+                  placeholder="Add Course"
                   ref={this.topic}
                 >
                   <Dropdown
-                    placeholder="Select Category"
+                    placeholder="Select Branch"
                     selection
                     ref={this.topicSelect}
                     className="category-select"

@@ -64,6 +64,7 @@ class FacultyDashboard extends React.Component {
             }
             this.setState({ studentDetails: studentDetails });
           });
+        console.log(studentDetails);
       }
     });
   }
@@ -127,7 +128,7 @@ class FacultyDashboard extends React.Component {
                       )
                     },
                     {
-                      menuItem: "Completion Level",
+                      menuItem: "Student Progress",
                       render: () => (
                         <Tab.Pane attached={false}>
                           <CompletionTable
