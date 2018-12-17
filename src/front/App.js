@@ -398,8 +398,8 @@ class Root extends React.Component {
                           className="notifications"
                           style={{
                             backgroundColor: !this.state.dark
-                              ? "rgba(230, 230, 230, 0.5)"
-                              : "rgba(20, 20, 20, 0.5)"
+                              ? "rgba(230, 230, 230, 0.8)"
+                              : "rgba(20, 20, 20, 0.8)"
                           }}
                         >
                           <Dropdown.Header
@@ -470,10 +470,10 @@ class Root extends React.Component {
                   <Icon name="home" />
                   Home
                 </Menu.Item>
-                <Menu.Item name="user">
+                {/* <Menu.Item name="user">
                   <Icon name="user" />
                   Edit Profile
-                </Menu.Item>
+                </Menu.Item> */}
                 <Menu.Item onClick={e => this.handleDarkSwitch()}>
                   <Icon
                     name={this.state.dark ? "lightbulb outline" : "lightbulb"}
