@@ -133,16 +133,16 @@ class StudentDashboard extends React.Component {
                             </Card.Description>
                           </Card.Content>
                           {qd.a === true ? (
-                            <div>
-                              <Card.Content extra>
-                                <Icon name="tasks" />
-                                {attempted} Questions Attempted
-                              </Card.Content>
-                              <Card.Content extra>
-                                <Icon name="checkmark" />
-                                {correct} Questions Correct
-                              </Card.Content>
-                            </div>
+                            <Card.Content extra>
+                              <Icon name="tasks" />
+                              {attempted} Questions Attempted
+                            </Card.Content>
+                          ) : null}
+                          {qd.a === true ? (
+                            <Card.Content extra>
+                              <Icon name="checkmark" />
+                              {correct} Questions Correct
+                            </Card.Content>
                           ) : null}
                         </Card>
                       </Grid.Column>
