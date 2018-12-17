@@ -70,7 +70,7 @@ class Root extends React.Component {
       addError: "",
       studentCount: 0,
       facultyCount: 0,
-      dark: false
+      dark: cookies.get("dark") || false
     };
     this.emit = this.emit.bind(this);
     this.logout = this.logout.bind(this);
@@ -83,6 +83,10 @@ class Root extends React.Component {
   }
   handleClick() {
     this.setState({ visible: !this.state.visible });
+  }
+  handleDarkSwitch() {
+    cookies.set("darl", !this.state.dark);
+    this.setState({ dark: !this.state.dark });
   }
   logout(props) {
     const { cookies } = this.props;
@@ -408,6 +412,14 @@ class Root extends React.Component {
                       ) : null}
                     </Dropdown>
                   ) : null}
+
+                  <Menu.Item onClick={e => this.handleDarkSwitch()}>
+                    <Icon
+                      name={this.state.dark ? "lightbulb outline" : "lightbulb"}
+                      size="large"
+                    />
+                  </Menu.Item>
+
                   {width >= 768 ? (
                     <Menu.Item
                       onClick={e => {
