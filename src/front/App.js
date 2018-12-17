@@ -338,6 +338,10 @@ class Root extends React.Component {
                 padding: "0.5em 1em"
               }}
               className="sticky"
+              style={{
+                position: "fixed",
+                width: "100vw"
+              }}
               inverted={this.state.dark}
             >
               <Menu secondary fluid borderless inverted={this.state.dark}>
