@@ -211,14 +211,12 @@ let validateLogin = (acc, content, e) => {
 db.on("open", () => {
   dbconnect = true;
 });
+let canReg = true;
 let resetArray = [];
 io.on("connection", socket => {
   let loggedIn = false,
     level = 0,
-    account = { _id: "" },
-    facCount = 0,
-    studentCount = 0,
-    canReg = true;
+    account = { _id: "" };
   socket.emit("mode", mode);
   socket.emit("canReg", canReg);
   dbCheck.on("change", idlist => {
@@ -254,10 +252,8 @@ io.on("connection", socket => {
       dbCheck.emit("count");
       dbCheck.on("count", () => {
         Users.countDocuments({ level: 0 }, (err, c) => {
-          studentCount = c;
-          Users.countDocuments({ level: 0 }, (err, c2) => {
-            facCount = c2;
-            socket.emit("count", [studentCount, facCount]);
+          Users.countDocuments({ level: 4 }, (err, c2) => {
+            socket.emit("count", [c, c2]);
           });
         });
       });
