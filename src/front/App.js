@@ -351,7 +351,7 @@ class Root extends React.Component {
                       name="bars"
                       size="large"
                       style={{
-                        color: "#1456ff"
+                        color: "#3281ff"
                       }}
                     />
                   </Menu.Item>

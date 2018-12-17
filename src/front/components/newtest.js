@@ -343,7 +343,7 @@ class NewTest extends React.Component {
             ) : (
               <Segment padded inverted={this.props.dark}>
                 <Grid centered style={{ minHeight: "500px" }}>
-                  <Spinner color="#1456ff" name="circle" />{" "}
+                  <Spinner color="#3281ff" name="circle" />{" "}
                 </Grid>
               </Segment>
             )}

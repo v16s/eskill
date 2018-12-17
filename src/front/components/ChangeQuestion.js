@@ -171,7 +171,7 @@ class ChangeQuestion extends React.Component {
     if (loading) {
       return (
         <Segment inverted={this.props.dark} basic>
-          <Spinner color="#1456ff" name="circle" />
+          <Spinner color="#3281ff" name="circle" />
         </Segment>
       );
     }
