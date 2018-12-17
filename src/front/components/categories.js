@@ -84,9 +84,9 @@ class Categories extends React.Component {
     let { catError, topError } = this.state;
     return (
       <Grid.Column width={8}>
-        <Segment>
+        <Segment inverted={this.props.dark}>
           <Segment basic>
-            <Header size="large" textAlign="center">
+            <Header inverted={this.props.dark} size="large" textAlign="center">
               Add New Branch/Course
             </Header>
             <Form onSubmit={this.handleCategory}>
@@ -236,7 +236,7 @@ class Categories extends React.Component {
             {topError}
           </div>
           <Segment basic>
-            <Table>
+            <Table inverted={this.props.dark}>
               <Table.Header>
                 <Table.Row>
                   <Table.HeaderCell>Course ID</Table.HeaderCell>

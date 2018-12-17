@@ -42,15 +42,15 @@ class Configuration extends React.Component {
   render() {
     return (
       <Grid.Column width={8}>
-        <Segment>
+        <Segment inverted={this.props.dark}>
           <Segment basic>
             <Header size="large" textAlign="center">
               Configuration
             </Header>
           </Segment>
 
-          <Segment basic>
-            <Header as="h4">
+          <Segment inverted={this.props.dark} basic>
+            <Header as="h4" inverted={this.props.dark}>
               Faculty Registration
               <Radio
                 toggle
@@ -61,8 +61,8 @@ class Configuration extends React.Component {
               {this.props.mode ? "On" : "Off"}
             </Header>
           </Segment>
-          <Segment basic>
-            <Header as="h4">
+          <Segment inverted={this.props.dark} basic>
+            <Header as="h4" inverted={this.props.dark}>
               Registration
               <Radio
                 toggle

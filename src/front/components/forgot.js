@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import {
   Button,
   Form,
@@ -7,57 +7,59 @@ import {
   Container,
   Grid,
   Header
-} from 'semantic-ui-react'
-import history from './history'
-import { Link } from 'react-router-dom'
+} from "semantic-ui-react";
+import history from "./history";
+import { Link } from "react-router-dom";
 
 class ForgotPage extends React.Component {
-  constructor (props) {
-    super(props)
-    this.sendToServer = this.sendToServer.bind(this)
+  constructor(props) {
+    super(props);
+    this.sendToServer = this.sendToServer.bind(this);
   }
-  sendToServer (e) {
+  sendToServer(e) {
     const forgot = {
-      email: document.querySelector('input').value
-    }
-    this.props.emit('forgot', forgot)
+      email: document.querySelector("input").value
+    };
+    this.props.emit("forgot", forgot);
   }
 
-  render () {
+  render() {
     return (
       <Segment
         basic
         style={{
-          flexGrow: '1',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center'
+          flexGrow: "1",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: this.props.dark ? "#222" : "#fff"
         }}
       >
         <Segment
+          inverted={this.props.dark}
           padded
           style={{
-            width: '80%',
-            maxWidth: '800px'
+            width: "80%",
+            maxWidth: "800px"
           }}
         >
           <Form success>
             <div>
-              <Header size='large'>Reset Password</Header>
+              <Header size="large">Reset Password</Header>
             </div>
-            <Form.Input label='Email' placeholder='joe@schmoe.com' />
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-              <Link to='/eskill/'>
-                <Button type='cancel'>Cancel</Button>
+            <Form.Input label="Email" placeholder="joe@schmoe.com" />
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <Link to="/eskill/">
+                <Button type="cancel">Cancel</Button>
               </Link>
               <Button
-                type='submit'
+                type="submit"
                 positive
                 onClick={e => {
-                  e.preventDefault()
-                  this.sendToServer(e)
-                  history.push('/eskill/')
+                  e.preventDefault();
+                  this.sendToServer(e);
+                  history.push("/eskill/");
                 }}
               >
                 Submit
@@ -66,8 +68,8 @@ class ForgotPage extends React.Component {
           </Form>
         </Segment>
       </Segment>
-    )
+    );
   }
 }
 
-export default ForgotPage
+export default ForgotPage;

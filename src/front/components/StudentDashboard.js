@@ -54,7 +54,7 @@ class StudentDashboard extends React.Component {
     }
     return (
       <div>
-        <Segment>
+        <Segment inverted={this.props.dark}>
           <Header as="h3">Assigned Courses</Header>
         </Segment>
         <Segment
@@ -93,6 +93,12 @@ class StudentDashboard extends React.Component {
                       <Grid.Column width={4} key={"col-" + qi + "-" + i}>
                         <Card
                           className="courseCard"
+                          style={{
+                            backgroundColor: this.props.dark
+                              ? "#1b1c1d"
+                              : "#fff",
+                            borderColor: this.props.dark ? "#1b1c1d" : "#fff"
+                          }}
                           onClick={e => {
                             if (qd.a === true) {
                               history.push(
@@ -106,7 +112,9 @@ class StudentDashboard extends React.Component {
                           }}
                         >
                           <Card.Content>
-                            <Card.Header>{qu}</Card.Header>
+                            <Card.Header style={{ color: "#1456ff" }}>
+                              {qu}
+                            </Card.Header>
                             <Card.Description>
                               {qd.a === false ? (
                                 <Header as="h3">Awaiting Approval</Header>
@@ -133,13 +141,25 @@ class StudentDashboard extends React.Component {
                             </Card.Description>
                           </Card.Content>
                           {qd.a === true ? (
-                            <Card.Content extra>
+                            <Card.Content
+                              extra
+                              style={{
+                                borderTopColor: this.props.dark ? "#666" : null,
+                                color: "#fff"
+                              }}
+                            >
                               <Icon name="tasks" />
                               {attempted} Questions Attempted
                             </Card.Content>
                           ) : null}
                           {qd.a === true ? (
-                            <Card.Content extra>
+                            <Card.Content
+                              extra
+                              style={{
+                                borderTopColor: this.props.dark ? "#666" : null,
+                                color: "#fff"
+                              }}
+                            >
                               <Icon name="checkmark" />
                               {correct} Questions Correct
                             </Card.Content>
@@ -154,7 +174,10 @@ class StudentDashboard extends React.Component {
             <Grid.Row>
               <Grid.Column>
                 <Card
-                  style={{ height: "100%" }}
+                  style={{
+                    height: "100%",
+                    backgroundColor: this.props.dark ? "#1b1c1d" : "#fff"
+                  }}
                   className="courseCard request-course"
                   onClick={e => {
                     history.push("/eskill/request");

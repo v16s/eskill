@@ -25,7 +25,7 @@ export default class StudentTable extends React.Component {
     let { width } = this.props;
     let { details } = this.props.details;
     return (
-      <Table>
+      <Table inverted={this.props.dark}>
         {width > 768 ? (
           <Table.Header>
             <Table.Row>

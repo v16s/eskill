@@ -69,7 +69,8 @@ class Root extends React.Component {
       addSuccess: "",
       addError: "",
       studentCount: 0,
-      facultyCount: 0
+      facultyCount: 0,
+      dark: false
     };
     this.emit = this.emit.bind(this);
     this.logout = this.logout.bind(this);
@@ -331,8 +332,9 @@ class Root extends React.Component {
                 marginBottom: "0",
                 padding: "0.5em 1em"
               }}
+              inverted={this.state.dark}
             >
-              <Menu secondary fluid borderless>
+              <Menu secondary fluid borderless inverted={this.state.dark}>
                 {width < 768 ? (
                   <Menu.Item onClick={e => this.handleClick()}>
                     <Icon
@@ -464,7 +466,8 @@ class Root extends React.Component {
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "space-between",
-                  padding: "10px 0"
+                  padding: "10px 0",
+                  backgroundColor: this.state.dark ? "#222" : "#fff"
                 }}
               >
                 <Switch>
@@ -494,6 +497,7 @@ class Root extends React.Component {
                         render={props => (
                           <NewTest
                             stateSet={this.stateSet}
+                            dark={this.state.dark}
                             q={this.state.qstate}
                             logout={this.logout}
                             topics={this.state.topics}
@@ -521,6 +525,7 @@ class Root extends React.Component {
                             emit={this.emit}
                             details={this.state.details}
                             topics={this.state.topics}
+                            dark={this.state.dark}
                           />
                         )}
                       />
@@ -531,6 +536,7 @@ class Root extends React.Component {
                         path="/eskill/question/:category/:topic"
                         render={props => (
                           <QuestionPage
+                            dark={this.state.dark}
                             md={this.state.details.details}
                             level={this.state.level}
                             emit={this.emit}
@@ -564,6 +570,7 @@ class Root extends React.Component {
                       render={() =>
                         this.state.level == 2 ? (
                           <AdminDashboard
+                            dark={this.state.dark}
                             canReg={this.state.canReg}
                             facultyCount={this.state.facultyCount}
                             studentCount={this.state.studentCount}
@@ -603,6 +610,7 @@ class Root extends React.Component {
                         ) : this.state.level == 1 ? (
                           <CoordinatorDashboard
                             facultyCount={this.state.facultyCount}
+                            dark={this.state.dark}
                             studentCount={this.state.studentCount}
                             md={this.state.details.details}
                             level={this.state.level}
@@ -633,6 +641,7 @@ class Root extends React.Component {
                           <StudentDashboard
                             md={this.state.details.details}
                             level={this.state.level}
+                            dark={this.state.dark}
                             emit={this.emit}
                             faculties={this.state.details.faculties}
                             categories={this.state.categories}
@@ -658,6 +667,7 @@ class Root extends React.Component {
                   </Segment>
                 </Switch>
                 <Header
+                  inverted={this.props.dark}
                   size="tiny"
                   style={{
                     position: "relative",
@@ -677,18 +687,25 @@ class Root extends React.Component {
               <Route
                 path="/eskill/register"
                 render={() => (
-                  <RegisterPage mode={this.state.mode} emit={this.emit} />
+                  <RegisterPage
+                    dark={this.state.dark}
+                    mode={this.state.mode}
+                    emit={this.emit}
+                  />
                 )}
               />
             ) : null}
             <Route
               path="/eskill/forgot"
-              render={() => <ForgotPage emit={this.emit} />}
+              render={() => (
+                <ForgotPage dark={this.state.dark} emit={this.emit} />
+              )}
             />
             <Route
               path="/eskill/"
               render={() => (
                 <Login
+                  dark={this.state.dark}
                   fail={this.state.fail}
                   success={this.state.success}
                   emit={this.mainEmit}

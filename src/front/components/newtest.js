@@ -157,8 +157,9 @@ class NewTest extends React.Component {
         {qall[cat] != undefined ? (
           <Segment basic>
             {q != undefined ? (
-              <Segment>
+              <Segment inverted={this.props.dark}>
                 <Preview
+                  dark={this.props.dark}
                   q={q}
                   emit={this.emit}
                   without
@@ -186,7 +187,9 @@ class NewTest extends React.Component {
                               className="cursorpointer"
                               onClick={e => this.handleRadio(e, { value: "a" })}
                               inverted={
-                                value == "a" || (check && q.answer == "a")
+                                value == "a" ||
+                                (check && q.answer == "a") ||
+                                this.props.dark
                               }
                               color={
                                 value == "a" && check && q.answer != "a"
@@ -217,7 +220,9 @@ class NewTest extends React.Component {
                               className="cursorpointer"
                               onClick={e => this.handleRadio(e, { value: "b" })}
                               inverted={
-                                value == "b" || (check && q.answer == "b")
+                                value == "b" ||
+                                (check && q.answer == "b") ||
+                                this.props.dark
                               }
                               color={
                                 value == "b" && check && q.answer != "b"
@@ -250,7 +255,9 @@ class NewTest extends React.Component {
                               className="cursorpointer"
                               onClick={e => this.handleRadio(e, { value: "c" })}
                               inverted={
-                                value == "c" || (check && q.answer == "c")
+                                value == "c" ||
+                                (check && q.answer == "c") ||
+                                this.props.dark
                               }
                               color={
                                 value == "c" && check && q.answer != "c"
@@ -281,7 +288,9 @@ class NewTest extends React.Component {
                               className="cursorpointer"
                               onClick={e => this.handleRadio(e, { value: "d" })}
                               inverted={
-                                value == "d" || (check && q.answer == "d")
+                                value == "d" ||
+                                (check && q.answer == "d") ||
+                                this.props.dark
                               }
                               color={
                                 value == "d" && check && q.answer != "d"
@@ -301,6 +310,7 @@ class NewTest extends React.Component {
                   </Grid>
                 </Segment>
                 <Form
+                  inverted={this.props.dark}
                   onSubmit={e => {
                     e.preventDefault();
                     if (![null, ""].includes(this.state.value)) {
@@ -321,7 +331,7 @@ class NewTest extends React.Component {
                 </Form>
               </Segment>
             ) : (
-              <Segment padded>
+              <Segment padded inverted={this.props.dark}>
                 <Grid centered style={{ minHeight: "500px" }}>
                   <Spinner color="#1456ff" name="circle" />{" "}
                 </Grid>
@@ -336,7 +346,9 @@ class NewTest extends React.Component {
                       fluid
                       onClick={e => {
                         if (i > 0) {
-                          history.push(`/eskill/question/${ac}/${top}/${i - 1}`);
+                          history.push(
+                            `/eskill/question/${ac}/${top}/${i - 1}`
+                          );
                           this.reset();
                         }
                       }}

@@ -170,19 +170,27 @@ class ChangeQuestion extends React.Component {
     let { categories, grouped } = this.props;
     if (loading) {
       return (
-        <Segment basic>
+        <Segment inverted={this.props.dark} basic>
           <Spinner color="#1456ff" name="circle" />
         </Segment>
       );
     }
     if (err) {
-      return <Segment basic>Question not found</Segment>;
+      return (
+        <Segment inverted={this.props.dark} basic>
+          Question not found
+        </Segment>
+      );
     }
     return (
       <Grid stackable centered>
         <Grid.Column width={this.props.modal ? 16 : 14}>
-          <Segment basic={this.props.modal}>
-            <Form id="addform" onSubmit={this.handleChange}>
+          <Segment inverted={this.props.dark} basic={this.props.modal}>
+            <Form
+              inverted={this.props.dark}
+              id="addform"
+              onSubmit={this.handleChange}
+            >
               <Segment basic>
                 <Form.Group widths="equal">
                   <Form.Field>
@@ -265,7 +273,11 @@ class ChangeQuestion extends React.Component {
                 />
               </Segment>
 
-              <Preview desc={this.state.previewData} name={this.state.name} />
+              <Preview
+                dark={this.props.dark}
+                desc={this.state.previewData}
+                name={this.state.name}
+              />
               <Segment basic>
                 <Form.Field>
                   <Grid columns={2} divided>
@@ -366,7 +378,11 @@ class ChangeQuestion extends React.Component {
                     </div>
                   ) : null}
                 </Form.Field>
-                <Answers correct={value} options={this.state.options} />
+                <Answers
+                  dark={this.props.dark}
+                  correct={value}
+                  options={this.state.options}
+                />
                 <Segment basic>
                   <Form.Group widths="equal">
                     <Form.Field>
@@ -389,7 +405,7 @@ class ChangeQuestion extends React.Component {
                   />
                 </Form.Field>
 
-                <Segment>
+                <Segment inverted={this.props.dark}>
                   <b>Explanation:</b>{" "}
                   <InlineTex
                     texContent={this.state.hints}

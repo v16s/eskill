@@ -29,7 +29,7 @@ export default class CompletionTable extends React.Component {
     let { searchvalue } = this.state;
     let { details } = this.props.details;
     return (
-      <Table>
+      <Table inverted={this.props.dark}>
         {width > 768 ? (
           <Table.Header>
             <Table.Row>
@@ -74,7 +74,8 @@ export default class CompletionTable extends React.Component {
                       theme={{
                         success: {
                           color: "#1456ff",
-                          symbol: s.c + "%"
+                          symbol: s.c + "%",
+                          trailColor: this.props.dark ? "#fff" : "#efefef"
                         }
                       }}
                     />

@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import History from './history'
-import Queries from './queries'
-import Attempted from './attempted'
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import History from "./history";
+import Queries from "./queries";
+import Attempted from "./attempted";
 import {
   Sidebar,
   Segment,
@@ -21,63 +21,63 @@ import {
   GridRow,
   Card,
   GridColumn
-} from 'semantic-ui-react'
-import history from './history'
-import { localPoint } from '@vx/event'
-import { Pie } from '@vx/shape'
-import { Group } from '@vx/group'
+} from "semantic-ui-react";
+import history from "./history";
+import { localPoint } from "@vx/event";
+import { Pie } from "@vx/shape";
+import { Group } from "@vx/group";
 
-import { withTooltip, Tooltip } from '@vx/tooltip'
-import _ from 'lodash'
+import { withTooltip, Tooltip } from "@vx/tooltip";
+import _ from "lodash";
 
-const white = '#888888'
-const black = '#000000'
+const white = "#888888";
+const black = "#000000";
 
-const usage = d => d.usage
+const usage = d => d.usage;
 
 class QuestionPage extends React.Component {
-  constructor (props) {
-    super(props)
+  constructor(props) {
+    super(props);
     this.state = {
       visible: false,
       modalVisible: false,
       filter: props.categories
-    }
-    this.logout = this.logout.bind(this)
-    this.emit = this.emit.bind(this)
-    this.handleClick = this.handleClick.bind(this)
-    this.handleTooltip = this.handleTooltip.bind(this)
+    };
+    this.logout = this.logout.bind(this);
+    this.emit = this.emit.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.handleTooltip = this.handleTooltip.bind(this);
   }
-  handleTooltip ({ event, da }) {
-    const { showTooltip } = this.props
-    const { x, y } = localPoint(event)
+  handleTooltip({ event, da }) {
+    const { showTooltip } = this.props;
+    const { x, y } = localPoint(event);
 
     showTooltip({
       tooltipData: { ...da },
       tooltipLeft: x,
       tooltipTop: y
-    })
+    });
   }
-  handleClick () {
-    this.setState({ visible: !this.state.visible })
+  handleClick() {
+    this.setState({ visible: !this.state.visible });
   }
 
-  logout () {
-    this.props.logout()
+  logout() {
+    this.props.logout();
   }
-  componentDidMount () {}
-  emit (name, obj) {
-    this.props.emit(name, obj)
+  componentDidMount() {}
+  emit(name, obj) {
+    this.props.emit(name, obj);
   }
-  reset (e, cat, top) {
-    e.preventDefault()
-    this.emit('reset', { topic: top, cat: cat })
+  reset(e, cat, top) {
+    e.preventDefault();
+    this.emit("reset", { topic: top, cat: cat });
   }
-  render () {
-    let width = 600
+  render() {
+    let width = 600;
 
-    let height = 600
-    let margin = { top: 10, bottom: 10, right: 10, left: 10 }
+    let height = 600;
+    let margin = { top: 10, bottom: 10, right: 10, left: 10 };
     let {
       md: det,
       topics,
@@ -87,11 +87,11 @@ class QuestionPage extends React.Component {
       cat,
       topic,
       width: w
-    } = this.props
-    let data = []
-    let allcomplete = false
-    let actualcat = cat.replace('+', ' ')
-    let actualtop = topic.replace('+', ' ')
+    } = this.props;
+    let data = [];
+    let allcomplete = false;
+    let actualcat = cat.replace("+", " ");
+    let actualtop = topic.replace("+", " ");
     if (qs[actualcat] != undefined) {
       data = qs[actualcat][actualtop].q.map((k, i) => {
         return {
@@ -100,27 +100,28 @@ class QuestionPage extends React.Component {
           name: `Question ${i}`,
           state: k.a,
           ind: i
-        }
-      })
+        };
+      });
       if (data.filter(k => k.state == 1 || k.state == 2).length == 100) {
-        allcomplete = true
+        allcomplete = true;
       }
     }
 
-    const radius = Math.min(width, height) / 2
-    const centerY = height / 2
-    const centerX = width / 2
+    const radius = Math.min(width, height) / 2;
+    const centerY = height / 2;
+    const centerX = width / 2;
 
     if (w > 768) {
       return (
         <div>
           <Segment
             style={{
-              width: '100%',
-              height: '100%',
-              display: 'flex',
-              justifyContent: 'center'
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              justifyContent: "center"
             }}
+            inverted={this.props.dark}
           >
             <svg height={height} width={width}>
               <Group top={centerY - margin.top} left={centerX}>
@@ -134,10 +135,10 @@ class QuestionPage extends React.Component {
                 >
                   {pie => {
                     return pie.arcs.map((arc, i) => {
-                      const opacity = 1
-                      const [centroidX, centroidY] = pie.path.centroid(arc)
-                      const { startAngle, endAngle } = arc
-                      const hasSpaceForLabel = endAngle - startAngle >= 0.1
+                      const opacity = 1;
+                      const [centroidX, centroidY] = pie.path.centroid(arc);
+                      const { startAngle, endAngle } = arc;
+                      const hasSpaceForLabel = endAngle - startAngle >= 0.1;
                       return (
                         <g key={`browser-${arc.data.label}-${i}`}>
                           <a
@@ -145,28 +146,28 @@ class QuestionPage extends React.Component {
                               arc.data.ind
                             }`}
                             onClick={e => {
-                              e.preventDefault()
+                              e.preventDefault();
                               history.push(
                                 `/eskill/question/${this.props.cat}/${
                                   this.props.topic
                                 }/${arc.data.ind}`
-                              )
+                              );
                             }}
                           >
                             <path
                               d={pie.path(arc)}
                               fill={
                                 arc.data.state == 0
-                                  ? '#1456ff'
+                                  ? "#1456ff"
                                   : arc.data.state == 1
-                                    ? '#ff3262'
-                                    : arc.data.state == 2
-                                      ? '#00ef5f'
-                                      : '#ffe500'
+                                  ? "#ff3262"
+                                  : arc.data.state == 2
+                                  ? "#00ef5f"
+                                  : "#ffe500"
                               }
-                              stroke='#fff'
-                              strokeLinecap='square'
-                              strokeLinejoin='bevel'
+                              stroke={this.props.dark ? "#1b1c1d" : "#fff"}
+                              strokeLinecap="square"
+                              strokeLinejoin="bevel"
                               fillOpacity={opacity}
                               onMouseMove={event =>
                                 this.handleTooltip({
@@ -175,12 +176,12 @@ class QuestionPage extends React.Component {
                                     content: arc.data.name,
                                     bgc:
                                       arc.data.state == 0
-                                        ? 'red'
+                                        ? "red"
                                         : arc.data.state == 1
-                                          ? 'yellow'
-                                          : 'green',
+                                        ? "yellow"
+                                        : "green",
                                     color:
-                                      arc.data.state == 0 ? 'white' : 'black'
+                                      arc.data.state == 0 ? "white" : "black"
                                   }
                                 })
                               }
@@ -188,8 +189,8 @@ class QuestionPage extends React.Component {
                             />
                           </a>
                         </g>
-                      )
-                    })
+                      );
+                    });
                   }}
                 </Pie>
               </Group>
@@ -199,14 +200,14 @@ class QuestionPage extends React.Component {
                 width={200}
                 height={40}
               >
-                <text textAnchor='middle' className='center-label'>
+                <text textAnchor="middle" className="center-label">
                   {actualtop}
                 </text>
               </Group>
               {allcomplete ? (
                 <a
-                  className='link-label'
-                  href='reset'
+                  className="link-label"
+                  href="reset"
                   onClick={e => this.reset(e, actualcat, actualtop)}
                 >
                   <Group
@@ -214,14 +215,14 @@ class QuestionPage extends React.Component {
                     left={centerX}
                     width={200}
                     height={40}
-                    fill={'white'}
+                    fill={"white"}
                   >
                     <text
-                      textAnchor='middle'
-                      className='center-label'
-                      style={{ border: '1px solid #000' }}
+                      textAnchor="middle"
+                      className="center-label"
+                      style={{ border: "1px solid #000" }}
                     >
-                      {'Reset'}
+                      {"Reset"}
                     </text>
                   </Group>
                 </a>
@@ -229,7 +230,7 @@ class QuestionPage extends React.Component {
             </svg>
           </Segment>
         </div>
-      )
+      );
     } else {
       return (
         <div>
@@ -237,50 +238,50 @@ class QuestionPage extends React.Component {
             {data.map(k => (
               <Segment
                 onClick={e => {
-                  e.preventDefault()
+                  e.preventDefault();
                   history.push(
                     `/eskill/question/${this.props.cat}/${topic}/${k.ind}`
-                  )
+                  );
                 }}
                 style={{
                   color:
                     k.state == 0
-                      ? '#1456ff'
+                      ? "#1456ff"
                       : k.state == 1
-                        ? '#ff3262'
-                        : k.state == 2
-                          ? '#00ef5f'
-                          : '#ffe500',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  flexDriection: 'row'
+                      ? "#ff3262"
+                      : k.state == 2
+                      ? "#00ef5f"
+                      : "#ffe500",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  flexDriection: "row"
                 }}
-                className='question'
+                className="question"
               >
                 <Header
-                  as='h3'
+                  as="h3"
                   style={{
                     color:
                       k.state == 0
-                        ? '#1456ff'
+                        ? "#1456ff"
                         : k.state == 1
-                          ? '#ff3262'
-                          : k.state == 2
-                            ? '#00ef5f'
-                            : '#ffe500'
+                        ? "#ff3262"
+                        : k.state == 2
+                        ? "#00ef5f"
+                        : "#ffe500"
                   }}
-                  className='question-name'
+                  className="question-name"
                 >
                   {k.name}
                 </Header>
-                <Icon name='angle right' />
+                <Icon name="angle right" />
               </Segment>
             ))}
           </Segment>
         </div>
-      )
+      );
     }
   }
 }
 
-export default withTooltip(QuestionPage)
+export default withTooltip(QuestionPage);

@@ -194,12 +194,13 @@ class RegisterPage extends Component {
         style={{
           height: "100vh",
           paddingTop: "14px",
-          width: "100vw"
+          width: "100vw",
+          backgroundColor: this.props.dark ? "#222" : "#fff"
         }}
       >
         <Grid.Row verticalAlign="middle">
           <Grid.Column width={13} textAlign="center">
-            <Segment padded size="big">
+            <Segment padded size="big" inverted={this.props.dark}>
               <Header
                 as="h2"
                 style={{
@@ -217,6 +218,7 @@ class RegisterPage extends Component {
                 Please fill in the details in order to continue
               </p>
               <Form
+                inverted={this.props.dark}
                 onSubmit={e => {
                   e.preventDefault();
                   this.submit(e);

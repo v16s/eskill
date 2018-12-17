@@ -88,11 +88,16 @@ export default class CoordinatorProblems extends React.Component {
                         size="large"
                         onClose={() => this.handleClick()}
                       >
-                        <Modal.Content>
+                        <Modal.Content
+                          style={{
+                            backgroundColor: this.props.dark ? "#222" : "#fff"
+                          }}
+                        >
                           <ChangeQuestion
                             {...this.props}
                             n={this.state.n}
                             modal
+                            dark={this.props.dark}
                             category={this.state.cat}
                             error={this.props.chError}
                             success={this.props.chSuccess}

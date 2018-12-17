@@ -125,12 +125,13 @@ class FacultyDashboard extends React.Component {
             <Grid.Row>
               <Grid.Column width={13}>
                 <Tab
+                  inverted={this.props.dark}
                   menu={{ pointing: true }}
                   panes={[
                     {
                       menuItem: "Approval List",
                       render: () => (
-                        <Tab.Pane attached={false}>
+                        <Tab.Pane inverted={this.props.dark} attached={false}>
                           <StudentTable {...this.props} />
                         </Tab.Pane>
                       )
@@ -138,7 +139,7 @@ class FacultyDashboard extends React.Component {
                     {
                       menuItem: "Student Progress",
                       render: () => (
-                        <Tab.Pane attached={false}>
+                        <Tab.Pane inverted={this.props.dark} attached={false}>
                           <CompletionTable
                             {...this.props}
                             studentDetails={studentDetails}
@@ -149,7 +150,7 @@ class FacultyDashboard extends React.Component {
                     {
                       menuItem: "Problem Reports",
                       render: () => (
-                        <Tab.Pane attached={false}>
+                        <Tab.Pane inverted={this.props.dark} attached={false}>
                           <ReportProblem
                             {...this.props}
                             studentDetails={studentDetails}

@@ -64,10 +64,12 @@ class Dashboard extends React.Component {
               qn={this.props.qnumber}
               students={this.props.studentCount}
               faculty={this.props.facultyCount}
+              dark={this.props.dark}
             />
           </Grid.Row>
           <Grid.Row>
             <Categories
+              dark={this.props.dark}
               categories={this.props.categories}
               emit={this.emit}
               catError={this.props.catError}
@@ -79,6 +81,7 @@ class Dashboard extends React.Component {
               stateSet={this.props.stateSet}
             />
             <Configuration
+              dark={this.props.dark}
               emit={this.props.emit}
               mode={this.props.mode}
               canReg={this.props.canReg}

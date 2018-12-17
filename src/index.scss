@@ -152,7 +152,8 @@ textarea {
   box-shadow: none !important;
   background-color: $gray;
 }
-.ui.secondary.menu .item {
+.ui.secondary.menu .item,
+.ui.secondary.menu.inverted .item {
   color: $primarycolor;
 }
 .ui.message {

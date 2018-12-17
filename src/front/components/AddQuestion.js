@@ -137,7 +137,11 @@ class AddQuestion extends React.Component {
     let { categories, grouped } = this.props;
     return (
       <div>
-        <Form id="addform" onSubmit={this.handleChange}>
+        <Form
+          inverted={this.props.dark}
+          id="addform"
+          onSubmit={this.handleChange}
+        >
           <Segment basic>
             <Form.Group widths="equal">
               <Form.Field>
@@ -250,7 +254,11 @@ class AddQuestion extends React.Component {
             />
           </Segment>
 
-          <Preview desc={this.state.previewData} name={this.state.name} />
+          <Preview
+            dark={this.props.dark}
+            desc={this.state.previewData}
+            name={this.state.name}
+          />
           <Segment basic>
             <Form.Field>
               <Grid columns={2} divided>
@@ -347,7 +355,11 @@ class AddQuestion extends React.Component {
                 </div>
               ) : null}
             </Form.Field>
-            <Answers correct={value} options={this.state.options} />
+            <Answers
+              dark={this.props.dark}
+              correct={value}
+              options={this.state.options}
+            />
             <Segment basic>
               <Form.Group widths="equal">
                 <Form.Field>
@@ -371,7 +383,7 @@ class AddQuestion extends React.Component {
               </Input>
             </Form.Field>
 
-            <Segment>
+            <Segment inverted={this.props.dark}>
               <b>Explanation:</b>{" "}
               <InlineTex texContent={this.state.hints} texSeperator="${1}" />
             </Segment>

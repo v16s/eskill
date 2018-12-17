@@ -25,7 +25,8 @@ class Login extends React.Component {
           flexDirection: "column",
           justifyContent: "center",
           width: "100vw",
-          minHeight: "100vh"
+          minHeight: "100vh",
+          backgroundColor: this.props.dark ? "#222" : "#fff"
         }}
       >
         <div
@@ -47,7 +48,13 @@ class Login extends React.Component {
                 this.sendToServer(e);
               }}
             >
-              <div className="ui secondary segment basic minimal">
+              <div
+                className={
+                  this.props.dark
+                    ? "ui segment basic inverted"
+                    : "ui secondary segment basic minimal"
+                }
+              >
                 <Header as="h2" className="login-heading">
                   SRM CARE eSkill
                 </Header>

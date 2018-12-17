@@ -42,10 +42,15 @@ class Preview extends Component {
         >
           <Form.Field>
             <label>Question Preview</label>
-            <Header attached="top" as="h3" style={{ marginTop: "0" }}>
+            <Header
+              inverted={this.props.dark}
+              attached="top"
+              as="h3"
+              style={{ marginTop: "0" }}
+            >
               {name}
             </Header>
-            <Segment attached>
+            <Segment inverted={this.props.dark} attached>
               <InlineTex texContent={this.props.desc} texSeperator="${1}" />
             </Segment>
           </Form.Field>
@@ -68,6 +73,7 @@ class Preview extends Component {
               justifyContent: "space-between",
               marginTop: "0"
             }}
+            inverted={this.props.dark}
           >
             <div className="float">{`Question ${parseFloat(this.props.i) +
               1}`}</div>
@@ -103,7 +109,7 @@ class Preview extends Component {
               </Modal>
             </div>
           </Header>
-          <Segment basic>
+          <Segment basic inverted={this.props.dark}>
             <InlineTex texContent={q.qdef} texSeperator="${1}" />
           </Segment>
         </Segment>

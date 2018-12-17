@@ -63,17 +63,18 @@ class CoordinatorDashboard extends React.Component {
               qn={this.props.qnumber}
               students={this.props.studentCount}
               faculty={this.props.facultyCount}
+              dark={this.props.dark}
             />
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={13}>
               <Tab
-                menu={{ pointing: true }}
+                menu={{ pointing: true, inverted: this.props.dark }}
                 panes={[
                   {
                     menuItem: "Problem Reports",
                     render: () => (
-                      <Tab.Pane attached={false}>
+                      <Tab.Pane inverted={this.props.dark} attached={false}>
                         <CoordinatorProblems {...this.props} />
                       </Tab.Pane>
                     )
@@ -81,7 +82,7 @@ class CoordinatorDashboard extends React.Component {
                   {
                     menuItem: "Add Question",
                     render: () => (
-                      <Tab.Pane attached={false}>
+                      <Tab.Pane inverted={this.props.dark} attached={false}>
                         <AddQuestion
                           categories={this.props.categories}
                           tags={this.props.tags}
@@ -90,6 +91,7 @@ class CoordinatorDashboard extends React.Component {
                           topics={this.props}
                           error={this.props.addError}
                           success={this.props.addSuccess}
+                          dark={this.props.dark}
                         />
                       </Tab.Pane>
                     )
@@ -97,11 +99,12 @@ class CoordinatorDashboard extends React.Component {
                   {
                     menuItem: "Change Question",
                     render: () => (
-                      <Tab.Pane attached={false}>
+                      <Tab.Pane inverted={this.props.dark} attached={false}>
                         <ChangeSearch
                           categories={this.props.categories}
                           stateSet={this.props.stateSet}
                           emit={this.emit}
+                          dark={this.props.dark}
                         />
                       </Tab.Pane>
                     )
