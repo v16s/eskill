@@ -462,9 +462,6 @@ class Root extends React.Component {
                   onClick={e => {
                     history.push("/eskill/");
                   }}
-                  onClick={e => {
-                    history.push("/eskill/");
-                  }}
                 >
                   <Icon name="home" />
                   Home

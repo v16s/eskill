@@ -97,7 +97,7 @@ class RegisterPage extends Component {
       { key: "b", text: "BioTechnology", value: "biotech" },
       { key: "a", text: "Automobile Engineering", value: "auto" },
       { key: "i", text: "Information Technology", value: "it" },
-      { key: "c", text: "Chemical Engineering", value: "ce" },
+      { key: "cheme", text: "Chemical Engineering", value: "cheme" },
       {
         key: "ee",
         text: "Electrical and Electronics Engineering",
