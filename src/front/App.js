@@ -16,8 +16,11 @@ import FacultyDashboard from "./components/FacultyDashboard";
 import QuestionPage from "./components/QuestionPage";
 import ChangeQuestion from "./components/ChangeQuestion";
 import { socket as socUrl } from "./enpoint";
-let socket = io.connect('http://care.srmuniv.ac.in', {path: '/eskill/socket.io/', transports: ['polling', 'xhr-polling']});
-console.log(window.location.origin + '/eskill')
+let socket = io.connect(
+  "http://care.srmuniv.ac.in",
+  { path: "/eskill/socket.io/", transports: ["polling", "xhr-polling"] }
+);
+console.log(window.location.origin + "/eskill");
 import {
   Sidebar,
   Segment,
@@ -129,7 +132,12 @@ class Root extends React.Component {
     let topics = [];
     _.map(categories, c => {
       c.topics.map(t => {
-        topics.push({ tid: t.id, name: t.name, cid: c._id });
+        topics.push({
+          tid: t.id,
+          name: t.name,
+          cid: c._id,
+          notified: c.notified
+        });
       });
     });
     topics = _.sortBy(topics, "tid", "asc");
