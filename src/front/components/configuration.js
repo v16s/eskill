@@ -70,7 +70,7 @@ class Configuration extends React.Component {
                 style={{ margin: "0 2em", marginTop: "5px" }}
                 onChange={(e, d) => this.switchReg(d.checked)}
               />
-              {this.props.mode ? "On" : "Off"}
+              {this.props.canReg ? "On" : "Off"}
             </Header>
           </Segment>
         </Segment>

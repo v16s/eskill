@@ -255,8 +255,8 @@ io.on("connection", socket => {
       dbCheck.on("count", () => {
         Users.countDocuments({ level: 0 }, (err, c) => {
           studentCount = c;
-          Users.facCount({ level: 0 }, (err, c) => {
-            facCount = c;
+          Users.countDocuments({ level: 0 }, (err, c2) => {
+            facCount = c2;
             socket.emit("count", [studentCount, facCount]);
           });
         });
