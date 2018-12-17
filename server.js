@@ -330,8 +330,9 @@ io.on("connection", socket => {
             }
           });
           socket.on("removeTop", t => {
+            console.log("remove topic called", t);
             Category.findById(t.cid, (err, cate) => {
-              cate.topics = _.reject(cate.topics, top => top == t);
+              cate.topics = _.reject(cate.topics, top => top.tid == t.tid);
               cate.markModified("topics");
               cate.save(err => {
                 Category.find()
