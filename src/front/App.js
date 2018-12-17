@@ -136,7 +136,7 @@ class Root extends React.Component {
           tid: t.id,
           name: t.name,
           cid: c._id,
-          notified: c.notified
+          notified: t.notified
         });
       });
     });
