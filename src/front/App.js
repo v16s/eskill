@@ -298,6 +298,10 @@ class Root extends React.Component {
       socket.emit("disconnect");
     };
   }
+  handleHomeClick() {
+    history.push("/eskill/");
+    this.setState({ visible: false });
+  }
   notificationSeen() {
     setTimeout(() => {
       let { details } = this.state;
@@ -462,12 +466,7 @@ class Root extends React.Component {
                 vertical
                 inverted
               >
-                <Menu.Item
-                  name="home"
-                  onClick={e => {
-                    history.push("/eskill/");
-                  }}
-                >
+                <Menu.Item name="home" onClick={e => this.handleHomeClick()}>
                   <Icon name="home" />
                   Home
                 </Menu.Item>
