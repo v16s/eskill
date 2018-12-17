@@ -33,7 +33,7 @@ export default class CompletionTable extends React.Component {
         {width > 768 ? (
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell colSpan="5">
+              <Table.HeaderCell colSpan="6">
                 <Input
                   fluid
                   placeholder="Search"
@@ -47,6 +47,7 @@ export default class CompletionTable extends React.Component {
               <Table.HeaderCell>Branch</Table.HeaderCell>
               <Table.HeaderCell>Course</Table.HeaderCell>
               <Table.HeaderCell>Completion Level</Table.HeaderCell>
+              <Table.HeaderCell>Correct Answers</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
         ) : null}
@@ -78,6 +79,7 @@ export default class CompletionTable extends React.Component {
                       }}
                     />
                   </Table.Cell>
+                  <Table.Cell>{s.cor}</Table.Cell>
                 </Table.Row>
               );
             }

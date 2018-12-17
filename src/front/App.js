@@ -132,7 +132,6 @@ class Root extends React.Component {
     let topics = [];
     categories.map(c => {
       c.topics.map(t => {
-        console.log(t);
         topics.push({
           tid: t.id,
           name: t.name,
@@ -211,7 +210,12 @@ class Root extends React.Component {
       topics = [];
       _.map(cats, c => {
         c.topics.map(t => {
-          topics.push({ tid: parseInt(t.id), name: t.name, cid: c._id });
+          topics.push({
+            tid: parseInt(t.id),
+            name: t.name,
+            cid: c._id,
+            notified: t.notified
+          });
         });
       });
       topics = _.sortBy(topics, "tid", "asc");
