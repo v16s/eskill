@@ -400,8 +400,8 @@ class Root extends React.Component {
                             style={{
                               fontWeight: "bold",
                               backgroundColor: this.state.dark
-                                ? rgba(230, 230, 230, 0.5)
-                                : rgba(20, 20, 20, 0.5)
+                                ? "rgba(230, 230, 230, 0.5)"
+                                : "rgba(20, 20, 20, 0.5)"
                             }}
                             content="Notifcations"
                           />
