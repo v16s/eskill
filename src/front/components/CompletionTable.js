@@ -79,7 +79,7 @@ export default class CompletionTable extends React.Component {
                       }}
                     />
                   </Table.Cell>
-                  <Table.Cell>{s.cor}</Table.Cell>
+                  <Table.Cell textAlign="center">{s.cor}</Table.Cell>
                 </Table.Row>
               );
             }
