@@ -70,7 +70,7 @@ class Root extends React.Component {
       addError: "",
       studentCount: 0,
       facultyCount: 0,
-      dark: cookies.get("dark") || false
+      dark: cookies.get("dark") == "true" ? true : false
     };
     this.emit = this.emit.bind(this);
     this.logout = this.logout.bind(this);
