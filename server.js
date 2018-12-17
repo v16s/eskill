@@ -803,7 +803,7 @@ io.on("connection", socket => {
   });
 
   socket.on("forgot", details => {
-    let fid = "/reset/" + makeid();
+    let fid = "/eskill/reset/" + makeid();
     resetArray.push(fid);
     let email = details.email;
     transporter.sendMail({
@@ -815,10 +815,10 @@ io.on("connection", socket => {
     setTimeout(() => {
       resetArray = resetArray.filter(k => k != fid);
     }, 1800000);
-    app.get("/eskill" + fid, (req, res) => {
+    app.get(fid, (req, res) => {
       res.sendFile(path.resolve(__dirname, "forgot", "index.html"));
     });
-    app.post("/eskill" + fid, (req, res) => {
+    app.post(fid, (req, res) => {
       Users.findOne({ email: email }, (err, resetacc) => {
         bcrypt.hash(req.body.p, 10, function(err, hash) {
           resetacc.password = hash;
