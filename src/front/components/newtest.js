@@ -197,6 +197,8 @@ class NewTest extends React.Component {
                                   : (!check && value == "a") ||
                                     (check && q.answer == "a")
                                   ? "green"
+                                  : this.props.dark
+                                  ? "grey"
                                   : null
                               }
                             >
@@ -230,6 +232,8 @@ class NewTest extends React.Component {
                                   : (!check && value == "b") ||
                                     (check && q.answer == "b")
                                   ? "green"
+                                  : this.props.dark
+                                  ? "grey"
                                   : null
                               }
                             >
@@ -265,6 +269,8 @@ class NewTest extends React.Component {
                                   : (!check && value == "c") ||
                                     (check && q.answer == "c")
                                   ? "green"
+                                  : this.props.dark
+                                  ? "grey"
                                   : null
                               }
                             >
@@ -298,6 +304,8 @@ class NewTest extends React.Component {
                                   : (!check && value == "d") ||
                                     (check && q.answer == "d")
                                   ? "green"
+                                  : this.props.dark
+                                  ? "grey"
                                   : null
                               }
                             >

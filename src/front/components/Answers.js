@@ -14,7 +14,13 @@ class Answers extends Component {
                 <Grid.Column>
                   <Segment
                     inverted={correct === "a" || this.props.dark}
-                    color={correct === "a" ? "green" : null}
+                    color={
+                      correct === "a"
+                        ? "green"
+                        : this.props.dark
+                        ? "grey"
+                        : null
+                    }
                   >
                     {" "}
                     <Latex>{options.a}</Latex>
@@ -27,7 +33,13 @@ class Answers extends Component {
                 <Grid.Column>
                   <Segment
                     inverted={correct === "b" || this.props.dark}
-                    color={correct === "b" ? "green" : null}
+                    color={
+                      correct === "b"
+                        ? "green"
+                        : this.props.dark
+                        ? "grey"
+                        : null
+                    }
                   >
                     <Latex>{options.b}</Latex>
                   </Segment>
@@ -41,7 +53,13 @@ class Answers extends Component {
                 <Grid.Column>
                   <Segment
                     inverted={correct === "c" || this.props.dark}
-                    color={correct === "c" ? "green" : null}
+                    color={
+                      correct === "c"
+                        ? "green"
+                        : this.props.dark
+                        ? "grey"
+                        : null
+                    }
                   >
                     <Latex>{options.c}</Latex>
                   </Segment>
@@ -53,7 +71,13 @@ class Answers extends Component {
                 <Grid.Column>
                   <Segment
                     inverted={correct === "d" || this.props.dark}
-                    color={correct === "d" ? "green" : null}
+                    color={
+                      correct === "d"
+                        ? "green"
+                        : this.props.dark
+                        ? "grey"
+                        : null
+                    }
                   >
                     <Latex>{options.d}</Latex>
                   </Segment>
