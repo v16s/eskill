@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import History from './history'
-import Queries from './queries'
-import Attempted from './attempted'
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import History from "./history";
+import Queries from "./queries";
+import Attempted from "./attempted";
 import {
   Sidebar,
   Segment,
@@ -14,90 +14,94 @@ import {
   Grid,
   Progress,
   Card
-} from 'semantic-ui-react'
-import history from './history'
-import 'react-circular-progressbar/dist/styles.css'
-import CircularProgressbar from 'react-circular-progressbar'
+} from "semantic-ui-react";
+import history from "./history";
+import "react-circular-progressbar/dist/styles.css";
+import CircularProgressbar from "react-circular-progressbar";
 
-import _ from 'lodash'
+import _ from "lodash";
 
 class StudentDashboard extends React.Component {
-  constructor (props) {
-    super(props)
+  constructor(props) {
+    super(props);
     this.state = {
       visible: false,
       modalVisible: false,
       filter: props.categories
-    }
-    this.logout = this.logout.bind(this)
-    this.emit = this.emit.bind(this)
+    };
+    this.logout = this.logout.bind(this);
+    this.emit = this.emit.bind(this);
   }
-  handleClick () {
-    this.setState({ visible: !this.state.visible })
-  }
-
-  logout () {
-    this.props.logout()
+  handleClick() {
+    this.setState({ visible: !this.state.visible });
   }
 
-  componentDidMount () {}
-  emit (name, obj) {
-    this.props.emit(name, obj)
+  logout() {
+    this.props.logout();
   }
 
-  render () {
-    let { qs: qstate, categories } = this.props
+  componentDidMount() {}
+  emit(name, obj) {
+    this.props.emit(name, obj);
+  }
 
-    let questions = []
+  render() {
+    let { qs: qstate, categories } = this.props;
+
+    let questions = [];
     if (qstate != undefined) {
-      questions = Object.keys(qstate)
+      questions = Object.keys(qstate);
     }
     return (
       <div>
         <Segment>
-          <Header as='h3'>Assigned Courses</Header>
+          <Header as="h3">Assigned Courses</Header>
         </Segment>
         <Segment
           basic
           style={{
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            justifyContent: 'center'
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            justifyContent: "center"
           }}
         >
-          <Grid stackable container columns={4} style={{ flexGrow: '1' }}>
+          <Grid stackable container columns={4} style={{ flexGrow: "1" }}>
             {questions.map((q, qi) => {
               return (
-                <Grid.Row key={'row-' + qi}>
+                <Grid.Row key={"row-" + qi}>
                   {Object.keys(qstate[q]).map((qu, i) => {
-                    let qd = qstate[q][qu]
-                    let attempted = 0
+                    let qd = qstate[q][qu];
+                    let attempted = 0,
+                      correct = 0;
 
-                    let complete = 0
+                    let complete = 0;
                     if (qd.a === true) {
                       qd.q.map(x => {
                         if (x.a > 0) {
-                          attempted++
+                          attempted++;
                           if (x.a < 3) {
-                            complete++
+                            complete++;
+                          }
+                          if (x.a == 2) {
+                            correct++;
                           }
                         }
-                      })
+                      });
                     }
                     return (
-                      <Grid.Column width={4} key={'col-' + qi + '-' + i}>
+                      <Grid.Column width={4} key={"col-" + qi + "-" + i}>
                         <Card
-                          className='courseCard'
+                          className="courseCard"
                           onClick={e => {
                             if (qd.a === true) {
                               history.push(
                                 `/eskill/question/${qd.cat.replace(
-                                  ' ',
-                                  '+'
-                                )}/${qd.topic.replace(' ', '+')}`
-                              )
-                              this.props.stateSet('selcatname', qu)
+                                  " ",
+                                  "+"
+                                )}/${qd.topic.replace(" ", "+")}`
+                              );
+                              this.props.stateSet("selcatname", qu);
                             }
                           }}
                         >
@@ -105,9 +109,9 @@ class StudentDashboard extends React.Component {
                             <Card.Header>{qu}</Card.Header>
                             <Card.Description>
                               {qd.a === false ? (
-                                <Header as='h3'>Awaiting Approval</Header>
-                              ) : qd.a == 'rejected' ? (
-                                <Header as='h3'>Rejected</Header>
+                                <Header as="h3">Awaiting Approval</Header>
+                              ) : qd.a == "rejected" ? (
+                                <Header as="h3">Rejected</Header>
                               ) : (
                                 <CircularProgressbar
                                   percentage={complete}
@@ -115,13 +119,13 @@ class StudentDashboard extends React.Component {
                                   styles={{
                                     path: { stroke: `#1456ff` },
                                     text: {
-                                      fill: '#1456ff',
-                                      fontSize: '8px',
-                                      fontFamily: 'Lato, sans-serif'
+                                      fill: "#1456ff",
+                                      fontSize: "8px",
+                                      fontFamily: "Lato, sans-serif"
                                     },
                                     root: {
-                                      minWidth: '150px',
-                                      minHeight: '150px'
+                                      minWidth: "150px",
+                                      minHeight: "150px"
                                     }
                                   }}
                                 />
@@ -129,41 +133,47 @@ class StudentDashboard extends React.Component {
                             </Card.Description>
                           </Card.Content>
                           {qd.a === true ? (
-                            <Card.Content extra>
-                              <Icon name='tasks' />
-                              {attempted} Questions Attempted
-                            </Card.Content>
+                            <div>
+                              <Card.Content extra>
+                                <Icon name="tasks" />
+                                {attempted} Questions Attempted
+                              </Card.Content>
+                              <Card.Content extra>
+                                <Icon name="checkmark" />
+                                {correct} Questions Correct
+                              </Card.Content>
+                            </div>
                           ) : null}
                         </Card>
                       </Grid.Column>
-                    )
+                    );
                   })}
                 </Grid.Row>
-              )
+              );
             })}
             <Grid.Row>
               <Grid.Column>
                 <Card
-                  style={{ height: '100%' }}
-                  className='courseCard request-course'
+                  style={{ height: "100%" }}
+                  className="courseCard request-course"
                   onClick={e => {
-                    history.push('/eskill/request')
+                    history.push("/eskill/request");
                   }}
                 >
                   <Card.Content
                     style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'center',
-                      textAlign: 'center'
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      textAlign: "center"
                     }}
                   >
                     <Icon
-                      name='add'
-                      size='huge'
-                      style={{ alignSelf: 'center', color: '#1456ff' }}
+                      name="add"
+                      size="huge"
+                      style={{ alignSelf: "center", color: "#1456ff" }}
                     />
-                    <Header as='h4'>Request Course</Header>
+                    <Header as="h4">Request Course</Header>
                   </Card.Content>
                 </Card>
               </Grid.Column>
@@ -171,8 +181,8 @@ class StudentDashboard extends React.Component {
           </Grid>
         </Segment>
       </div>
-    )
+    );
   }
 }
 
-export default StudentDashboard
+export default StudentDashboard;
