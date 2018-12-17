@@ -106,10 +106,12 @@ class RequestCourse extends React.Component {
     return (
       <div>
         <Segment basic style={{ flexGrow: "1" }}>
-          <Segment>
+          <Segment inverted={this.props.dark}>
             <Segment basic>
-              <Header as={"h3"}>Request Course</Header>
-              <Form onSubmit={this.handleSubmit}>
+              <Header inverted={this.props.dark} as={"h3"}>
+                Request Course
+              </Header>
+              <Form inverted={this.props.dark} onSubmit={this.handleSubmit}>
                 <Form.Field inline>
                   <Form.Field label="Choose Branch" />
                   <Form.Group>
@@ -155,27 +157,28 @@ class RequestCourse extends React.Component {
                     }}
                   />
                 </Form.Group>
-
-                <Form.Group widths="equal">
-                  <Form.Button
-                    fluid
-                    type="cancel"
-                    onClick={e => {
-                      e.preventDefault();
-                      history.push("/eskill/");
-                    }}
-                  >
-                    Cancel
-                  </Form.Button>
-                  <Form.Button
-                    style={{ height: "36px" }}
-                    fluid
-                    primary
-                    type="submit"
-                  >
-                    Request
-                  </Form.Button>
-                </Form.Group>
+                <Segment basic>
+                  <Form.Group widths="equal">
+                    <Form.Button
+                      fluid
+                      type="cancel"
+                      onClick={e => {
+                        e.preventDefault();
+                        history.push("/eskill/");
+                      }}
+                    >
+                      Cancel
+                    </Form.Button>
+                    <Form.Button
+                      style={{ height: "36px" }}
+                      fluid
+                      primary
+                      type="submit"
+                    >
+                      Request
+                    </Form.Button>
+                  </Form.Group>
+                </Segment>
               </Form>
             </Segment>
           </Segment>
