@@ -271,6 +271,7 @@ io.on("connection", socket => {
           socket.emit("questionnumber", c);
         });
         if (level == 2) {
+          dbCheck.emit("count");
           socket.on("toggleReg", () => {
             canReg = !canReg;
             socket.emit("canReg", canReg);
@@ -514,6 +515,7 @@ io.on("connection", socket => {
           });
         }
         if (level == 1) {
+          dbCheck.emit("count");
           socket.on("resolve", ({ problem, action }) => {
             let ind = _.findIndex(details.details.problems, problem);
             if (ind != -1) {
