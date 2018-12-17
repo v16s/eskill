@@ -126,7 +126,7 @@ class FacultyDashboard extends React.Component {
               <Grid.Column width={13}>
                 <Tab
                   menu={{
-                    pointing: true,
+                    pointing: this.props.width > 768,
                     inverted: this.props.dark,
                     stackable: true
                   }}
