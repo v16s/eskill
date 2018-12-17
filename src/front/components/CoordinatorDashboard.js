@@ -69,7 +69,11 @@ class CoordinatorDashboard extends React.Component {
           <Grid.Row>
             <Grid.Column width={13}>
               <Tab
-                menu={{ pointing: true, inverted: this.props.dark }}
+                menu={{
+                  pointing: true,
+                  inverted: this.props.dark,
+                  stackable: true
+                }}
                 panes={[
                   {
                     menuItem: "Problem Reports",
