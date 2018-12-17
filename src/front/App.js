@@ -337,7 +337,7 @@ class Root extends React.Component {
                 marginBottom: "0",
                 padding: "0.5em 1em"
               }}
-              className="sticky"
+              className="navbar"
               style={{
                 position: "fixed",
                 width: "100vw"

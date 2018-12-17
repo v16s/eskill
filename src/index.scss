@@ -35,17 +35,12 @@ html,
 .pushable > .pusher {
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
   flex-grow: 1;
   width: calc(100vw);
   margin: 0;
-  margin-top: 35px;
 }
-.ui.segment.sticky {
+.ui.segment.navbar {
   border-radius: 0 !important;
-}
-.ui.left.push.sidebar {
-  padding-top: 40px !important;
 }
 .ui.header.login-heading {
   letter-spacing: 1.5px;
