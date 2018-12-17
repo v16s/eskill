@@ -94,6 +94,8 @@ export default class CoordinatorProblems extends React.Component {
                             n={this.state.n}
                             modal
                             category={this.state.cat}
+                            error={this.props.chError}
+                            success={this.props.chSuccess}
                             topic={this.state.topic}
                             afterEmit={this.resolve}
                           />

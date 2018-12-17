@@ -267,6 +267,81 @@ io.on("connection", socket => {
             mode = !mode;
             socket.emit("mode", mode);
           });
+          socket.on("addCategory", cat => {
+            if (loggedIn && level == 2) {
+              Category.findOne(
+                {
+                  name: {
+                    $regex: new RegExp(`(${cat})\\b`, "gi")
+                  }
+                },
+                (err, presentCat) => {
+                  if (presentCat == null) {
+                    socket.emit("catError", "");
+                    Category.find()
+                      .sort({ $natural: -1 })
+                      .limit(1)
+                      .exec((err, el) => {
+                        if (el.length == 0) {
+                          let newCat = new Category({
+                            _id: 1,
+                            name: `${cat}`,
+                            topics: [],
+                            notified: false
+                          });
+                          newCat.save(err => {
+                            if (err == null) {
+                              socket.emit("success", "category");
+                              Category.find()
+                                .sort({ $natural: 1 })
+                                .exec((err, cats) => {
+                                  socket.emit("categories", cats);
+                                });
+                            } else {
+                            }
+                          });
+                        } else {
+                          let id = parseInt(el[0]._id);
+                          id++;
+                          let newCat = new Category({
+                            _id: id,
+                            name: `${cat}`,
+                            topics: [],
+                            notified: false
+                          });
+                          newCat.save(err => {
+                            if (err == null) {
+                              socket.emit("success", "category");
+                              Category.find()
+                                .sort({ $natural: 1 })
+                                .exec((err, cats) => {
+                                  io.emit("categories", cats);
+                                });
+                            } else {
+                            }
+                          });
+                        }
+                      });
+                  } else {
+                    socket.emit("catError", "Branch already exists!");
+                  }
+                }
+              );
+            }
+          });
+          socket.on("removeTop", t => {
+            Category.findById(t.cid, (err, cate) => {
+              cate.topics = _.reject(cate.topics, top => top == t);
+              cate.markModified("topics");
+              cate.save(err => {
+                Category.find()
+                  .sort({ $natural: 1 })
+                  .exec((err, cats) => {
+                    io.emit("categories", cats);
+                  });
+              });
+            });
+          });
           socket.on("categoryNotify", c => {
             Category.findById(c.cid, (err, cate) => {
               let index = _.findIndex(cate.topics, { name: c.name });
@@ -276,7 +351,7 @@ io.on("connection", socket => {
                 Category.find()
                   .sort({ $natural: 1 })
                   .exec((err, cats) => {
-                    socket.emit("categories", cats);
+                    io.emit("categories", cats);
                     dbCheck.emit(
                       "notify",
                       `${c.name} has been added to ${cate.name}`
@@ -469,7 +544,19 @@ io.on("connection", socket => {
                 question.hints = changed.hints;
                 question.markModified("hints");
 
-                question.save(err => {});
+                question.save(err => {
+                  if (!err) {
+                    socket.emit("changeResponse", {
+                      fail: false,
+                      message: "success"
+                    });
+                  } else {
+                    socket.emit("changeResponse", {
+                      fail: true,
+                      message: "error"
+                    });
+                  }
+                });
               }
             );
           });
@@ -488,10 +575,16 @@ io.on("connection", socket => {
                   number: count
                 });
                 question.save(err => {
-                  if (err == null) {
-                    socket.emit("added", "success");
+                  if (!err) {
+                    socket.emit("addResponse", {
+                      fail: false,
+                      message: "success"
+                    });
                   } else {
-                    socket.emit("added", "error");
+                    socket.emit("addResponse", {
+                      fail: true,
+                      message: "error"
+                    });
                   }
                 });
               }
@@ -626,68 +719,7 @@ io.on("connection", socket => {
       });
     });
   });
-  socket.on("addCategory", cat => {
-    if (loggedIn && level == 2) {
-      Category.findOne(
-        {
-          name: {
-            $regex: new RegExp(`(${cat})\\b`, "gi")
-          }
-        },
-        (err, presentCat) => {
-          if (presentCat == null) {
-            socket.emit("catError", "");
-            Category.find()
-              .sort({ $natural: -1 })
-              .limit(1)
-              .exec((err, el) => {
-                if (el.length == 0) {
-                  let newCat = new Category({
-                    _id: 1,
-                    name: `${cat}`,
-                    topics: [],
-                    notified: false
-                  });
-                  newCat.save(err => {
-                    if (err == null) {
-                      socket.emit("success", "category");
-                      Category.find()
-                        .sort({ $natural: 1 })
-                        .exec((err, cats) => {
-                          socket.emit("categories", cats);
-                        });
-                    } else {
-                    }
-                  });
-                } else {
-                  let id = parseInt(el[0]._id);
-                  id++;
-                  let newCat = new Category({
-                    _id: id,
-                    name: `${cat}`,
-                    topics: [],
-                    notified: false
-                  });
-                  newCat.save(err => {
-                    if (err == null) {
-                      socket.emit("success", "category");
-                      Category.find()
-                        .sort({ $natural: 1 })
-                        .exec((err, cats) => {
-                          socket.emit("categories", cats);
-                        });
-                    } else {
-                    }
-                  });
-                }
-              });
-          } else {
-            socket.emit("catError", "Branch already exists!");
-          }
-        }
-      );
-    }
-  });
+
   socket.on("addTag", info => {
     if (loggedIn && level == 2) {
       Tags.findOne(

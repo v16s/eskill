@@ -82,6 +82,8 @@ class CoordinatorDashboard extends React.Component {
                           grouped={this.props.grouped}
                           emit={this.emit}
                           topics={this.props}
+                          error={this.props.addError}
+                          success={this.props.addSuccess}
                         />
                       </Tab.Pane>
                     )

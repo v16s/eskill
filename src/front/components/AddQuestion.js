@@ -390,6 +390,36 @@ class AddQuestion extends React.Component {
             Add Question
           </Button>
         </Segment>
+        {this.props.error != "" ? (
+          <Segment basic>
+            <div
+              className="ui error message"
+              style={{
+                display: "block",
+                border: "none",
+                height: "38px",
+                fontSize: "1rem"
+              }}
+            >
+              Error adding Question
+            </div>
+          </Segment>
+        ) : null}
+        {this.props.success != "" ? (
+          <Segment basic>
+            <div
+              className="ui success message"
+              style={{
+                display: "block",
+                border: "none",
+                height: "38px",
+                fontSize: "1rem"
+              }}
+            >
+              Question successfully added
+            </div>
+          </Segment>
+        ) : null}
       </div>
     );
   }

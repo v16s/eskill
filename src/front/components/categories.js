@@ -64,6 +64,9 @@ class Categories extends React.Component {
   notify(c) {
     this.props.emit("categoryNotify", c);
   }
+  removeTop(t) {
+    this.props.emit("topicRemove", t);
+  }
   componentWillUpdate(nextProps, nextState) {
     if (this.props.catError !== nextProps.catError) {
       nextState.catError = nextProps.catError;
@@ -239,6 +242,7 @@ class Categories extends React.Component {
                   <Table.HeaderCell>Course ID</Table.HeaderCell>
                   <Table.HeaderCell>Course Name</Table.HeaderCell>
                   <Table.HeaderCell>Notify</Table.HeaderCell>
+                  <Table.HeaderCell>Remove</Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
               <Table.Body>
@@ -255,6 +259,11 @@ class Categories extends React.Component {
                             Notify
                           </Button>
                         )}
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Button negative onClick={e => this.removeTop(t)}>
+                          Remove
+                        </Button>
                       </Table.Cell>
                     </Table.Row>
                   );

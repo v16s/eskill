@@ -55,6 +55,8 @@ class Root extends React.Component {
       topSuccess: "none",
       tagSuccess: "none",
       topics: [],
+      chError: "",
+      chSuccess: "",
       qstate: cookies.get("qstate") || [],
       mode: false,
       selcatname: cookies.get("selcat") || "",
@@ -62,7 +64,9 @@ class Root extends React.Component {
       width: 0,
       height: 0,
       notified: true,
-      success: ""
+      success: "",
+      addSuccess: "",
+      addError: ""
     };
     this.emit = this.emit.bind(this);
     this.logout = this.logout.bind(this);
@@ -188,9 +192,9 @@ class Root extends React.Component {
     });
     socket.on("registerResponse", res => {
       if (res.fail) {
-        this.setState({ fail: res.message });
+        this.setState({ fail: res.message, success: "" });
       } else {
-        this.setState({ success: res.message });
+        this.setState({ success: res.message, fail: "" });
       }
     });
     socket.on("q", q => {
@@ -213,6 +217,20 @@ class Root extends React.Component {
       type == "category" ? this.setState({ catSuccess: "success" }) : null;
       type == "topic" ? this.setState({ topSuccess: "success" }) : null;
       type == "tag" ? this.setState({ tagSuccess: "success" }) : null;
+    });
+    socket.on("addResponse", res => {
+      if (res.fail) {
+        this.setState({ addError: res.message, addSuccess: "" });
+      } else {
+        this.setState({ addSuccess: res.message, addError: "" });
+      }
+    });
+    socket.on("changeResponse", res => {
+      if (res.fail) {
+        this.setState({ chError: res.message, chSuccess: "" });
+      } else {
+        this.setState({ chSuccess: res.message, chError: "" });
+      }
     });
     socket.on("categories", cats => {
       topics = [];
@@ -451,6 +469,8 @@ class Root extends React.Component {
                             {...this.state}
                             stateSet={this.stateSet}
                             emit={this.emit}
+                            success={this.state.chSuccess}
+                            error={this.state.chError}
                             category={props.match.params.category}
                             n={props.match.params.number}
                             topic={props.match.params.topic}
@@ -589,7 +609,11 @@ class Root extends React.Component {
                             tags={this.state.tags}
                             grouped={this.state.grouped}
                             tagError={this.state.tagError}
+                            chError={this.state.chError}
+                            chSuccess={this.state.chSuccess}
                             tagSuccess={this.state.tagSuccess}
+                            addSuccess={this.state.addSuccess}
+                            addError={this.state.addError}
                           />
                         ) : (
                           <StudentDashboard

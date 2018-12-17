@@ -110,6 +110,81 @@ class RegisterPage extends Component {
         key: "ec",
         text: "Electronics and Communications Engineering",
         value: "ece"
+      },
+      {
+        key: "se",
+        text: "Software Engineering",
+        value: "se"
+      },
+      {
+        key: "ae",
+        text: "Aerospace Engineering",
+        value: "ae"
+      },
+      {
+        key: "bin",
+        text: "Bioinformatics",
+        value: "bin"
+      },
+      {
+        key: "bme",
+        text: "Biomedical Engineering",
+        value: "bme"
+      },
+      {
+        key: "mche",
+        text: "Mechatronics Engineering",
+        value: "mche"
+      },
+      {
+        key: "som",
+        text: "School of Management",
+        value: "som"
+      },
+      {
+        key: "agre",
+        text: "Agricultural Engineering",
+        value: "agre"
+      },
+      {
+        key: "eai",
+        text: "Electronics and Instrumentation",
+        value: "eai"
+      },
+      {
+        key: "gen",
+        text: "Genetic Engineering",
+        value: "gen"
+      },
+      {
+        key: "fpe",
+        text: "Food Processing Engineering",
+        value: "fpe"
+      },
+      {
+        key: "care",
+        text: "SRM CARE",
+        value: "care"
+      },
+      {
+        key: "eng",
+        text: "English",
+        value: "eng"
+      },
+      {
+        key: "phy",
+        text: "Physics",
+        value: "phy"
+      },
+      {
+        key: "chem",
+        text: "Chemistry",
+        value: "chem"
+      },
+      {
+        key: "math",
+        text: "Mathematics",
+        value: "math"
       }
     ];
     return (
