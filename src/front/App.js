@@ -130,7 +130,7 @@ class Root extends React.Component {
       }
     });
     let topics = [];
-    _.map(categories, c => {
+    categories.map(c => {
       c.topics.map(t => {
         console.log(t);
         topics.push({
