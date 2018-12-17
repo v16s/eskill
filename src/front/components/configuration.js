@@ -44,7 +44,7 @@ class Configuration extends React.Component {
       <Grid.Column width={8}>
         <Segment inverted={this.props.dark}>
           <Segment basic>
-            <Header size="large" textAlign="center">
+            <Header inverted={this.props.dark} size="large" textAlign="center">
               Configuration
             </Header>
           </Segment>

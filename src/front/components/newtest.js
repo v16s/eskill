@@ -327,7 +327,9 @@ class NewTest extends React.Component {
                       Submit
                     </Button>
                   </Segment>
-                  {check ? <Segment>{q.hints}</Segment> : null}
+                  {check ? (
+                    <Segment inverted={this.props.dark}>{q.hints}</Segment>
+                  ) : null}
                 </Form>
               </Segment>
             ) : (
@@ -337,7 +339,7 @@ class NewTest extends React.Component {
                 </Grid>
               </Segment>
             )}
-            <Segment>
+            <Segment inverted={this.props.dark}>
               <Segment basic>
                 <Grid columns={3} stackable>
                   <Grid.Column>

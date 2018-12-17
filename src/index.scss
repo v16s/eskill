@@ -154,7 +154,7 @@ textarea {
 }
 .ui.secondary.menu .item,
 .ui.secondary.menu.inverted .item {
-  color: $primarycolor;
+  color: $primarycolor !important;
 }
 .ui.message {
   border: none !important;

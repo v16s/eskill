@@ -39,7 +39,7 @@ export default class CoordinatorProblems extends React.Component {
       problems = details.problems;
     }
     return (
-      <Table>
+      <Table inverted={this.props.dark}>
         {width > 768 ? (
           <Table.Header>
             <Table.Row>

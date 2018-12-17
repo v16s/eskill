@@ -667,7 +667,7 @@ class Root extends React.Component {
                   </Segment>
                 </Switch>
                 <Header
-                  inverted={this.props.dark}
+                  inverted={this.state.dark}
                   size="tiny"
                   style={{
                     position: "relative",

@@ -97,7 +97,8 @@ class StudentDashboard extends React.Component {
                             backgroundColor: this.props.dark
                               ? "#1b1c1d"
                               : "#fff",
-                            borderColor: this.props.dark ? "#1b1c1d" : "#fff"
+                            borderColor: this.props.dark ? "#1b1c1d" : "#fff",
+                            boxShadow: this.props.dark ? "none" : null
                           }}
                           onClick={e => {
                             if (qd.a === true) {
@@ -144,8 +145,10 @@ class StudentDashboard extends React.Component {
                             <Card.Content
                               extra
                               style={{
-                                borderTopColor: this.props.dark ? "#666" : null,
-                                color: "#fff"
+                                borderTopColor: this.props.dark
+                                  ? "#666 !important"
+                                  : null,
+                                color: this.props.dark ? "#fff" : null
                               }}
                             >
                               <Icon name="tasks" />
@@ -156,8 +159,10 @@ class StudentDashboard extends React.Component {
                             <Card.Content
                               extra
                               style={{
-                                borderTopColor: this.props.dark ? "#666" : null,
-                                color: "#fff"
+                                borderTopColor: this.props.dark
+                                  ? "#666 !important"
+                                  : null,
+                                color: this.props.dark ? "#fff" : null
                               }}
                             >
                               <Icon name="checkmark" />
