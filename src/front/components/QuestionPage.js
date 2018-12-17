@@ -237,6 +237,7 @@ class QuestionPage extends React.Component {
           <Segment basic>
             {data.map(k => (
               <Segment
+              inverted={this.props.dark}
                 onClick={e => {
                   e.preventDefault();
                   history.push(
