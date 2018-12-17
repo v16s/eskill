@@ -65,7 +65,7 @@ class Categories extends React.Component {
     this.props.emit("categoryNotify", c);
   }
   removeTop(t) {
-    this.props.emit("topicRemove", t);
+    this.props.emit("removeTop", t);
   }
   componentWillUpdate(nextProps, nextState) {
     if (this.props.catError !== nextProps.catError) {
@@ -255,7 +255,11 @@ class Categories extends React.Component {
                         {t.notified ? (
                           "Notified"
                         ) : (
-                          <Button primary onClick={e => this.notify(t)}>
+                          <Button
+                            style={{ height: "36px" }}
+                            primary
+                            onClick={e => this.notify(t)}
+                          >
                             Notify
                           </Button>
                         )}
