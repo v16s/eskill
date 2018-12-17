@@ -815,6 +815,7 @@ io.on("connection", socket => {
     setTimeout(() => {
       resetArray = resetArray.filter(k => k != fid);
     }, 1800000);
+    app.use(fid, express.static(path.resolve(__dirname, "forgot")));
     app.get(fid, (req, res) => {
       res.sendFile(path.resolve(__dirname, "forgot", "index.html"));
     });
@@ -855,8 +856,6 @@ app.post("/eskill/api/student", (req, res) => {
     res.json(q);
   });
 });
-
-app.use("/eskill", express.static(path.resolve(__dirname, "forgot")));
 
 app.post("/eskill/api/question", (req, res) => {
   let { n, cat, topic } = req.body;
