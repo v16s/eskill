@@ -398,14 +398,15 @@ class Root extends React.Component {
                           className="notifications"
                           style={{
                             backgroundColor: !this.state.dark
-                              ? "rgba(230, 230, 230, 0.8)"
+                              ? "rgba(240, 240, 240, 0.8)"
                               : "rgba(20, 20, 20, 0.8)"
                           }}
                         >
                           <Dropdown.Header
                             inverted={this.state.dark}
                             style={{
-                              fontWeight: "bold"
+                              fontWeight: "bold",
+                              color: this.state.dark ? "#fff" : null
                             }}
                             content="Notifcations"
                           />
