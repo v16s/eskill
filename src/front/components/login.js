@@ -96,7 +96,7 @@ class Login extends React.Component {
                   border: "none"
                 }}
               >
-                {this.props.success == "r" ? "Successfully Registered" : null}
+                {this.props.success == "" ? "" : "Registered Successfully"}
               </div>
             </form>
 
