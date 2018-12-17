@@ -397,7 +397,7 @@ class Root extends React.Component {
                         <Dropdown.Menu
                           className="notifications"
                           style={{
-                            backgroundColor: this.state.dark
+                            backgroundColor: !this.state.dark
                               ? "rgba(230, 230, 230, 0.5)"
                               : "rgba(20, 20, 20, 0.5)"
                           }}
