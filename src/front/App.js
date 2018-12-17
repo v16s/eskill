@@ -394,14 +394,18 @@ class Root extends React.Component {
                       className="item"
                     >
                       {this.state.details.notifications.length > 0 ? (
-                        <Dropdown.Menu className="notifications">
+                        <Dropdown.Menu
+                          className="notifications"
+                          style={{
+                            backgroundColor: this.state.dark
+                              ? "rgba(230, 230, 230, 0.5)"
+                              : "rgba(20, 20, 20, 0.5)"
+                          }}
+                        >
                           <Dropdown.Header
                             inverted={this.state.dark}
                             style={{
-                              fontWeight: "bold",
-                              backgroundColor: this.state.dark
-                                ? "rgba(230, 230, 230, 0.5)"
-                                : "rgba(20, 20, 20, 0.5)"
+                              fontWeight: "bold"
                             }}
                             content="Notifcations"
                           />
@@ -421,7 +425,7 @@ class Root extends React.Component {
                     </Dropdown>
                   ) : null}
 
-                  {width < 768 ? (
+                  {width >= 768 ? (
                     <Menu.Item onClick={e => this.handleDarkSwitch()}>
                       <Icon
                         name={
