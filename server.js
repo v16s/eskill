@@ -5,8 +5,8 @@ const server = http.Server(app);
 const path = require("path");
 const debug = process.env.NODE_ENV !== "production";
 const io = require("socket.io")(server, {
-  path: '/eskill/socket.io',
-  transports: ['polling', 'xhr-polling']
+  path: "/eskill/socket.io",
+  transports: ["polling", "xhr-polling"]
 });
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
@@ -62,7 +62,7 @@ app.use((req, res, next) => {
   );
   next();
 });
-app.use('/eskill', express.static(path.resolve(__dirname, "dist")));
+app.use("/eskill", express.static(path.resolve(__dirname, "dist")));
 
 let config = require("./config.json");
 let { dburl, email: emailid, password, reset: resetURL, stagingurl } = config;
@@ -751,10 +751,10 @@ io.on("connection", socket => {
     setTimeout(() => {
       resetArray = resetArray.filter(k => k != fid);
     }, 1800000);
-    app.get('/eskill' + fid, (req, res) => {
+    app.get("/eskill" + fid, (req, res) => {
       res.sendFile(path.resolve(__dirname, "forgot", "index.html"));
     });
-    app.post('/eskill' + fid, (req, res) => {
+    app.post("/eskill" + fid, (req, res) => {
       Users.findOne({ email: email }, (err, resetacc) => {
         bcrypt.hash(req.body.p, 10, function(err, hash) {
           resetacc.password = hash;
@@ -773,22 +773,26 @@ app.post("/eskill/api/student", (req, res) => {
 
     let at = 0,
       cm = 0;
+    correct = 0;
     questions[cat][topic].q.map(qa => {
       if (qa.a > 0) {
         at++;
         if (qa.a < 3) {
           cm++;
         }
+        if (qa.a == 2) {
+          correct++;
+        }
       }
     });
     q.a = at;
     q.c = cm;
-
+    q.cor = correct;
     res.json(q);
   });
 });
 
-app.use('/eskill', express.static(path.resolve(__dirname, "forgot")));
+app.use("/eskill", express.static(path.resolve(__dirname, "forgot")));
 
 app.post("/eskill/api/question", (req, res) => {
   let { n, cat, topic } = req.body;
