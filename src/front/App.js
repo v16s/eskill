@@ -132,6 +132,7 @@ class Root extends React.Component {
     let topics = [];
     _.map(categories, c => {
       c.topics.map(t => {
+        console.log(t);
         topics.push({
           tid: t.id,
           name: t.name,
