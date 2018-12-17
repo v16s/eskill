@@ -85,6 +85,7 @@ class Root extends React.Component {
     this.setState({ visible: !this.state.visible });
   }
   handleDarkSwitch() {
+    const { cookies } = this.props;
     cookies.set("darl", !this.state.dark);
     this.setState({ dark: !this.state.dark });
   }
