@@ -41,14 +41,7 @@ db.on("open", () => {
   console.log("connected to database");
   Questions.find((err, questions) => {
     questions.map(q => {
-      if (q.qdef.split(". ")[0] != q.qdef) {
-        let newdef = q.qdef.split(". ");
-        newdef.shift();
-        q.qdef = newdef.join("");
-        q.save(err => {
-          console.log(q.topic);
-        });
-      }
+      console.log(q);
     });
   });
 });
