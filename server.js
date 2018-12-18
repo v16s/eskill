@@ -881,6 +881,8 @@ app.post("/eskill/api/student", (req, res) => {
       q.c = cm;
       q.cor = correct;
       res.json(q);
+    } else {
+      res.json({ err: "no student" });
     }
   });
 });
