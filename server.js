@@ -222,11 +222,19 @@ db.on("open", () => {
             if (
               !err &&
               student != null &&
+              student.questions[cat] != undefined &&
+              student.questions[cat][topic] != undefined &&
               student.questions[cat][topic].q.length == 0
             ) {
               delete student.questions[cat][topic];
               student.markModified("questions");
               student.save();
+              request.reject = true;
+            } else if (
+              student == undefined ||
+              student.questions == undefined ||
+              student.questions[cat] == undefined
+            ) {
               request.reject = true;
             }
           });
