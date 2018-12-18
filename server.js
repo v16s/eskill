@@ -231,7 +231,7 @@ db.on("open", () => {
           });
         }
       });
-      requests = requests.reject(r => r.reject);
+      requests = _.reject(requests, r => r.reject);
       faculty.details.students = requests;
       faculty.markModified("details");
       faculty.save();
