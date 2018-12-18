@@ -212,23 +212,24 @@ let validateLogin = (acc, content, e) => {
 };
 db.on("open", () => {
   dbconnect = true;
-  UserDetails.find({ level: 4 }, (err, faculties) => {
-    faculties.map(faculty => {
-      let requests = faculty.details.students;
+  // DO NOT UNCOMMENT IF YOU DONT NEED TO NUKE ---------------WARNING-------------
+  // UserDetails.find({ level: 4 }, (err, faculties) => {
+  //   faculties.map(faculty => {
+  //     let requests = faculty.details.students;
 
-      requests = [];
-      faculty.details.students = requests;
-      faculty.markModified("details");
-      faculty.save();
-    });
-  });
-  Users.find({ level: 0 }, (err, students) => {
-    students.map(student => {
-      student.questions = {};
-      student.markModified("questions");
-      student.save();
-    });
-  });
+  //     requests = [];
+  //     faculty.details.students = requests;
+  //     faculty.markModified("details");
+  //     faculty.save();
+  //   });
+  // });
+  // Users.find({ level: 0 }, (err, students) => {
+  //   students.map(student => {
+  //     student.questions = {};
+  //     student.markModified("questions");
+  //     student.save();
+  //   });
+  // });
 });
 let canReg = true;
 let resetArray = [];
