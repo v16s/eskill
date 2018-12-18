@@ -214,13 +214,16 @@ db.on("open", () => {
   dbconnect = true;
   UserDetails.find((err, users) => {
     users.map(user => {
-      if(user.details.branch == undefined || user.details.branch == 'Kattankulathur') {
-        user.details.branch = 'SRM Kattankulathur'
-        user.markModified('details')
-        user.save()
+      if (
+        user.details.branch == undefined ||
+        user.details.branch == "Kattankulathur"
+      ) {
+        user.details.branch = "SRM Kattankulathur";
+        user.markModified("details");
+        user.save();
       }
-    })
-  })
+    });
+  });
 });
 let canReg = true;
 let resetArray = [];
@@ -732,6 +735,7 @@ io.on("connection", socket => {
                 name: r.name,
                 regNo: r.regNo,
                 department: r.branch,
+                branch: r.cbranch,
                 students: []
               }
             });
@@ -889,7 +893,11 @@ app.post("/eskill/api/question", (req, res) => {
 app.post("/eskill/api/faculty", (req, res) => {
   let { branch, cbranch } = req.body;
   UserDetails.find(
-    { "details.department": `${branch}`, "details.branch": `${cbranch}`, level: 4 },
+    {
+      "details.department": `${branch}`,
+      "details.branch": `${cbranch}`,
+      level: 4
+    },
     (err, fac) => {
       res.json(fac);
     }
