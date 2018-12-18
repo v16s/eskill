@@ -76,6 +76,7 @@ class RegisterPage extends Component {
       name: document.querySelector("#name").value,
       regNo: document.querySelector("#reg").value,
       branch: document.querySelector("#branch").innerText,
+      cbranch: document.querySelector("#collegebranch").innerText,
       password: document.querySelector("#password").value,
       confirm: document.querySelector("#confirm").value,
       email: document.querySelector("#email").value
@@ -187,6 +188,14 @@ class RegisterPage extends Component {
         value: "math"
       }
     ];
+    const collegebranches = [
+      { key: "srmktr", text: "Kattankulathur", value: "srmktr" },
+      { key: "srmrmp", text: "Ramapuram", value: "srmrmp" },
+      { key: "srmvdp", text: "Vadapalani", value: "srmvdp" },
+      { key: "srmamr", text: "Amaravathi", value: "srmamr" },
+      { key: "srmncr", text: "NCR", value: "srmncr" },
+      
+    ];
     return (
       <Grid
         centered
@@ -236,16 +245,27 @@ class RegisterPage extends Component {
                     placeholder={this.props.mode ? "Id" : "Reg No."}
                   />
                 </Form.Field>
+                <Form.Group widths="equal">
+
                 <Form.Field
-                  width={16}
+
                   control={Select}
                   required
-                  label="Branch"
+                  label="College Branch"
+                  options={collegebranches}
+                  placeholder="College Branch"
+                  id="collegebranch"
+                />
+                <Form.Field
+
+                  control={Select}
+                  required
+                  label="Field"
                   options={branches}
-                  placeholder="Branch"
+                  placeholder="Field"
                   id="branch"
                 />
-
+                </Form.Group>
                 <Form.Group widths="equal">
                   <Form.Input
                     required

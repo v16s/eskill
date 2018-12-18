@@ -135,7 +135,8 @@ let UserDetails = mongoose.model(
       gender: String,
       department: String,
       students: Array,
-      problems: Array
+      problems: Array,
+      branch: String
     }
   }),
   "UserDetails"
@@ -150,6 +151,7 @@ let Category = mongoose.model(
   }),
   "Category"
 );
+
 dbCheck.on("notify", name => {
   UserDetails.find((err, accounts) => {
     accounts.map(account => {
@@ -210,6 +212,15 @@ let validateLogin = (acc, content, e) => {
 };
 db.on("open", () => {
   dbconnect = true;
+  UserDetails.find((err, users) => {
+    users.map(user => {
+      if(user.details.branch == undefined) {
+        user.details.branch = 'Kattankulathur'
+        user.markModified('details')
+        user.save()
+      }
+    })
+  })
 });
 let canReg = true;
 let resetArray = [];
@@ -702,7 +713,8 @@ io.on("connection", socket => {
               details: {
                 name: r.name,
                 regNo: r.regNo,
-                department: r.branch
+                department: r.branch,
+                branch: r.cbranch
               }
             });
           } else {
@@ -875,9 +887,9 @@ app.post("/eskill/api/question", (req, res) => {
 });
 
 app.post("/eskill/api/faculty", (req, res) => {
-  let { branch } = req.body;
+  let { branch, cbranch } = req.body;
   UserDetails.find(
-    { "details.department": `${branch}`, level: 4 },
+    { "details.department": `${branch}`, "details.branch": `${cbranch}`, level: 4 },
     (err, fac) => {
       res.json(fac);
     }

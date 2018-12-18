@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import History from "./history";
-import Queries from "./queries";
-import Attempted from "./attempted";
-import endpoint from "../enpoint";
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+import History from './history'
+import Queries from './queries'
+import Attempted from './attempted'
+import endpoint from '../enpoint'
 import {
   Sidebar,
   Segment,
@@ -15,16 +15,16 @@ import {
   Grid,
   Progress,
   Card
-} from "semantic-ui-react";
-import history from "./history";
-import "react-circular-progressbar/dist/styles.css";
-import CircularProgressbar from "react-circular-progressbar";
-import Select from "react-select";
-import _ from "lodash";
+} from 'semantic-ui-react'
+import history from './history'
+import 'react-circular-progressbar/dist/styles.css'
+import CircularProgressbar from 'react-circular-progressbar'
+import Select from 'react-select'
+import _ from 'lodash'
 
 class RequestCourse extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
       visible: false,
       modalVisible: false,
@@ -33,87 +33,90 @@ class RequestCourse extends React.Component {
       selfac: null,
       selcat: null,
       seltop: null
-    };
-    this.logout = this.logout.bind(this);
-    this.emit = this.emit.bind(this);
-    this.fetchFaculty = this.fetchFaculty.bind(this);
-    this.handleFacChange = this.handleFacChange.bind(this);
-    this.handleCatChange = this.handleCatChange.bind(this);
+    }
+    this.logout = this.logout.bind(this)
+    this.emit = this.emit.bind(this)
+    this.fetchFaculty = this.fetchFaculty.bind(this)
+    this.handleFacChange = this.handleFacChange.bind(this)
+    this.handleCatChange = this.handleCatChange.bind(this)
 
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.fetchFaculty();
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.fetchFaculty()
   }
-  handleClick() {
-    this.setState({ visible: !this.state.visible });
+  handleClick () {
+    this.setState({ visible: !this.state.visible })
   }
-  topchange(e) {
-    this.setState({ seltop: e });
+  topchange (e) {
+    this.setState({ seltop: e })
   }
-  fetchFaculty() {
-    let { details } = this.props.details;
-    fetch(endpoint + "/api/faculty", {
-      body: JSON.stringify({ branch: details.department }),
-      method: "POST",
-      headers: { "Content-Type": "application/json" }
+  fetchFaculty () {
+    let { details } = this.props.details
+    fetch(endpoint + '/api/faculty', {
+      body: JSON.stringify({
+        branch: details.department,
+        cbranch: details.branch
+      }),
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
     })
       .then(res => res.json())
       .then(res => {
         if (res != null) {
           let faculty = res.map(f => {
-            return { label: `${f._id} - ${f.details.name}`, value: `${f._id}` };
-          });
-          this.setState({ faculty: faculty });
+            return { label: `${f._id} - ${f.details.name}`, value: `${f._id}` }
+          })
+          this.setState({ faculty: faculty })
         }
-      });
+      })
   }
-  handleFacChange(e) {
-    this.setState({ selfac: e });
+  handleFacChange (e) {
+    this.setState({ selfac: e })
   }
-  handleCatChange(e) {
-    this.setState({ selcat: e });
+  handleCatChange (e) {
+    this.setState({ selcat: e })
   }
-  logout() {
-    this.props.logout();
+  logout () {
+    this.props.logout()
   }
-  componentDidMount() {
-    this.fetchFaculty();
+  componentDidMount () {
+    this.fetchFaculty()
   }
-  emit(name, obj) {
-    this.props.emit(name, obj);
+  emit (name, obj) {
+    this.props.emit(name, obj)
   }
-  handleSubmit() {
-    let { selcat, selfac, seltop } = this.state;
-    let { details } = this.props;
+  handleSubmit () {
+    let { selcat, selfac, seltop } = this.state
+    let { details } = this.props
     if (![selcat, selfac].includes(null)) {
-      this.props.emit("requestCourse", {
+      this.props.emit('requestCourse', {
         cat: selcat.label,
         faculty: selfac.value,
         student: details._id,
         cid: selcat.value,
         topic: seltop.label
-      });
-      history.push("/eskill/");
+      })
+      history.push('/eskill/')
     }
   }
-  render() {
-    let { faculty, selcat } = this.state;
-    let { categories, topics } = this.props;
+  render () {
+    let { faculty, selcat } = this.state
+    let { categories, topics } = this.props
     if (selcat != null) {
-      topics = topics.filter(t => t.cid == selcat.value);
+      topics = topics.filter(t => t.cid == selcat.value)
     } else {
-      topics = [];
+      topics = []
     }
     return (
       <div>
-        <Segment basic style={{ flexGrow: "1" }}>
+        <Segment basic style={{ flexGrow: '1' }}>
           <Segment inverted={this.props.dark}>
             <Segment basic>
-              <Header inverted={this.props.dark} as={"h3"}>
+              <Header inverted={this.props.dark} as={'h3'}>
                 Request Course
               </Header>
               <Form inverted={this.props.dark} onSubmit={this.handleSubmit}>
                 <Form.Field inline>
-                  <Form.Field label="Choose Branch" />
+                  <Form.Field label='Choose Branch' />
                   <Form.Group>
                     <Select
                       value={this.state.selcat}
@@ -122,16 +125,16 @@ class RequestCourse extends React.Component {
                         categories == null
                           ? []
                           : categories.map(c => ({
-                              label: c.name,
-                              value: c._id
-                            }))
+                            label: c.name,
+                            value: c._id
+                          }))
                       }
                       styles={{
-                        container: style => ({ ...style, width: "100%" })
+                        container: style => ({ ...style, width: '100%' })
                       }}
                     />
                   </Form.Group>
-                  <Form.Field label="Choose Course" />
+                  <Form.Field label='Choose Course' />
                   <Form.Group>
                     <Select
                       value={this.state.seltop}
@@ -141,39 +144,39 @@ class RequestCourse extends React.Component {
                         value: c.tid
                       }))}
                       styles={{
-                        container: style => ({ ...style, width: "100%" })
+                        container: style => ({ ...style, width: '100%' })
                       }}
                     />
                   </Form.Group>
                 </Form.Field>
-                <Form.Field label="Choose Faculty" />
+                <Form.Field label='Choose Faculty' />
                 <Form.Group>
                   <Select
                     options={faculty}
                     value={this.state.selfac}
                     onChange={this.handleFacChange}
                     styles={{
-                      container: style => ({ ...style, width: "100%" })
+                      container: style => ({ ...style, width: '100%' })
                     }}
                   />
                 </Form.Group>
                 <Segment basic>
-                  <Form.Group widths="equal">
+                  <Form.Group widths='equal'>
                     <Form.Button
                       fluid
-                      type="cancel"
+                      type='cancel'
                       onClick={e => {
-                        e.preventDefault();
-                        history.push("/eskill/");
+                        e.preventDefault()
+                        history.push('/eskill/')
                       }}
                     >
                       Cancel
                     </Form.Button>
                     <Form.Button
-                      style={{ height: "36px" }}
+                      style={{ height: '36px' }}
                       fluid
                       primary
-                      type="submit"
+                      type='submit'
                     >
                       Request
                     </Form.Button>
@@ -184,8 +187,8 @@ class RequestCourse extends React.Component {
           </Segment>
         </Segment>
       </div>
-    );
+    )
   }
 }
 
-export default RequestCourse;
+export default RequestCourse
