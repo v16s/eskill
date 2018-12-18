@@ -68,7 +68,7 @@ let Users = mongoose.model(
 );
 db.on("open", () => {
   console.log("connected to database");
-  UserDetails.find({ level: 0 }, err => {
+  UserDetails.remove({ level: 0 }, err => {
     console.log("purged details");
   });
   Users.remove({ level: 0 }, err => {
