@@ -662,14 +662,16 @@ io.on("connection", socket => {
                       }
                     );
                   } else if (!err && student != null) {
-                    student.questions[cat][topic].a = "rejected";
-                    student.markModified("questions");
-                    student.save(err => {
-                      if (err) {
-                      } else {
-                        dbCheck.emit("change", [student._id]);
-                      }
-                    });
+                    try {
+                      delete student.questions[cat][topic];
+                      student.markModified("questions");
+                      student.save(err => {
+                        if (err) {
+                        } else {
+                          dbCheck.emit("change", [student._id]);
+                        }
+                      });
+                    } catch (e) {}
                   }
                 });
               } else {

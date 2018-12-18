@@ -1,5 +1,6 @@
 import { Table, Grid, Button, Segment, Input } from "semantic-ui-react";
 import React from "react";
+import _ from "lodash";
 export default class StudentTable extends React.Component {
   constructor(props) {
     super(props);
@@ -12,12 +13,15 @@ export default class StudentTable extends React.Component {
   }
   accept(s, action) {
     let { details, stateSet, emit } = this.props;
-    details.details.students = details.details.students.map(st => {
-      if (st == s) {
-        return { ...st, a: action || "rejected" };
-      }
-      return st;
-    });
+    details.details.students = _.reject(
+      details.details.students.map(st => {
+        if (st == s) {
+          return { ...st, a: action || "rejected" };
+        }
+        return st;
+      }),
+      s => s.action == "rejected"
+    );
     stateSet("details", details);
     emit("acceptCourse", [s._id, s.cat, action, details, s.topic]);
   }
