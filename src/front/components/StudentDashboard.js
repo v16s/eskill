@@ -56,8 +56,8 @@ class StudentDashboard extends React.Component {
         _.flatten([
           "first",
           ...questions.map(x => {
-            return Object.keys(questions[x]).map(key => ({
-              ...questions[x][key]
+            return Object.keys(qstate[x]).map(key => ({
+              ...qstate[x][key]
             }));
           })
         ]),
