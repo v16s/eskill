@@ -39,15 +39,13 @@ const fs = require("fs");
 
 db.on("open", () => {
   console.log("connected to database");
-  Questions.find((err, questions) => {
+  Questions.find({ "category._id": NaN }, (err, questions) => {
     questions.map(q => {
-      if (q.category._id == NaN) {
-        q.category._id = parseInt(q.category.name.slice(0, 1));
-        q.markModified("category");
-        q.save(err => {
-          console.log(q.category._id, q.topic._id);
-        });
-      }
+      q.category._id = parseInt(q.category.name.slice(0, 1));
+      q.markModified("category");
+      q.save(err => {
+        console.log(q.category._id, q.topic._id);
+      });
     });
   });
 });
