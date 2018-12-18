@@ -91,7 +91,11 @@ class StudentDashboard extends React.Component {
                       })
                     }
                     return (
-                      <Grid.Column width={4} key={'col-' + qi + '-' + i}>
+                      <Grid.Column
+                        style={{ display: 'flex', justifyContent: 'center' }}
+                        width={4}
+                        key={'col-' + qi + '-' + i}
+                      >
                         <Card
                           className='courseCard'
                           style={{
