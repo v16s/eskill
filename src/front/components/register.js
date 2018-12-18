@@ -189,11 +189,14 @@ class RegisterPage extends Component {
       }
     ];
     const collegebranches = [
-      { key: "srmktr", text: "Kattankulathur", value: "srmktr" },
-      { key: "srmrmp", text: "Ramapuram", value: "srmrmp" },
-      { key: "srmvdp", text: "Vadapalani", value: "srmvdp" },
-      { key: "srmamr", text: "Amaravathi", value: "srmamr" },
-      { key: "srmncr", text: "NCR", value: "srmncr" },
+      { key: "srmktr", text: "SRM Kattankulathur", value: "srmktr" },
+      { key: "srmrmp", text: "SRM Ramapuram", value: "srmrmp" },
+      { key: "srmvdp", text: "SRM Vadapalani", value: "srmvdp" },
+      { key: "srmamr", text: "SRM Amaravathi", value: "srmamr" },
+      { key: "srmncr", text: "SRM NCR", value: "srmncr" },
+      { key: "valengc", text: "Valliammai Engineering College", value: "valengc" },
+      { key: "trp", text: "TRP Engineering College", value: "trp" },
+      { key: "easw", text: "Easwari Engineering College", value: "easw" },
       
     ];
     return (
@@ -251,9 +254,9 @@ class RegisterPage extends Component {
 
                   control={Select}
                   required
-                  label="College Branch"
+                  label="College"
                   options={collegebranches}
-                  placeholder="College Branch"
+                  placeholder="College"
                   id="collegebranch"
                 />
                 <Form.Field
