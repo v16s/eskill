@@ -215,35 +215,18 @@ db.on("open", () => {
   UserDetails.find({ level: 4 }, (err, faculties) => {
     faculties.map(faculty => {
       let requests = faculty.details.students;
-      requests.map(request => {
-        let { cat, topic, _id, a } = request;
-        if (a === true) {
-          Users.findOne({ _id: _id }, (err, student) => {
-            if (
-              !err &&
-              student != null &&
-              student.questions[cat] != undefined &&
-              student.questions[cat][topic] != undefined &&
-              student.questions[cat][topic].q.length == 0
-            ) {
-              delete student.questions[cat][topic];
-              student.markModified("questions");
-              student.save();
-              request.reject = true;
-            } else if (
-              student == undefined ||
-              student.questions == undefined ||
-              student.questions[cat] == undefined
-            ) {
-              request.reject = true;
-            }
-          });
-        }
-      });
-      requests = _.reject(requests, r => r.reject);
+
+      requests = [];
       faculty.details.students = requests;
       faculty.markModified("details");
       faculty.save();
+    });
+  });
+  Users.find({ level: 0 }, (err, students) => {
+    students.map(student => {
+      student.questions = {};
+      student.markModified("questions");
+      student.save();
     });
   });
 });
