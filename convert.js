@@ -53,6 +53,8 @@ db.on("open", () => {
         .then(jsonObj => {
           jsonObj.map((k, i) => {
             console.log(i);
+            let newdef = k.Question.split(". ");
+            newdef.shift();
             let obj = {
               category: {
                 _id: cid,
@@ -72,7 +74,7 @@ db.on("open", () => {
                 d: k["Option D"]
               },
               qname: k["Question Name"],
-              qdef: k.Question,
+              qdef: newdef.join(""),
               hints: k["Explanation"]
             };
             let q = new Questions(obj);
