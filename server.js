@@ -669,7 +669,7 @@ io.on("connection", socket => {
                         if (err) {
                         } else {
                           console.log("rejected and deleted");
-                          dbCheck.emit("change", [student._id]);
+                          dbCheck.emit("change", [student._id, acc._id]);
                         }
                       });
                     } catch (e) {}
