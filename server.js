@@ -215,7 +215,8 @@ db.on("open", () => {
   UserDetails.find({ level: 4 }, (err, faculties) => {
     faculties.map(faculty => {
       let requests = faculty.details.students;
-      requests.map(({ cat, topic, _id, a }) => {
+      requests.map(request => {
+        let { cat, topic, _id, a } = request;
         if (a === true) {
           Users.findOne({ _id: _id }, (err, student) => {
             if (
