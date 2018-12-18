@@ -668,6 +668,7 @@ io.on("connection", socket => {
                       student.save(err => {
                         if (err) {
                         } else {
+                          console.log("rejected and deleted");
                           dbCheck.emit("change", [student._id]);
                         }
                       });

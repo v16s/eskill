@@ -333,7 +333,7 @@ class Root extends React.Component {
     let { width } = this.state;
     return (
       <Router history={history}>
-        {this.state.isLoggedIn ? (
+        {this.state.isLoggedIn && this.state.details.details != undefined ? (
           <div>
             <Segment
               style={{
