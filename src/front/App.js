@@ -333,7 +333,7 @@ class Root extends React.Component {
     let { width } = this.state;
     return (
       <Router history={history}>
-        {this.state.isLoggedIn && this.state.details.details != undefined ? (
+        {this.state.isLoggedIn ? (
           <div>
             <Segment
               style={{
@@ -503,200 +503,211 @@ class Root extends React.Component {
               >
                 <Switch>
                   <Segment basic style={{ flexGrow: "1" }}>
-                    {this.state.level == 1 ? (
-                      <Route
-                        path="/eskill/change/:category/:topic/:number"
-                        exact
-                        render={props => (
-                          <ChangeQuestion
-                            {...this.state}
-                            stateSet={this.stateSet}
-                            emit={this.emit}
-                            success={this.state.chSuccess}
-                            error={this.state.chError}
-                            category={props.match.params.category}
-                            n={props.match.params.number}
-                            topic={props.match.params.topic}
+                    {this.state.details.details != undefined ? (
+                      <div>
+                        {this.state.level == 1 ? (
+                          <Route
+                            path="/eskill/change/:category/:topic/:number"
+                            exact
+                            render={props => (
+                              <ChangeQuestion
+                                {...this.state}
+                                stateSet={this.stateSet}
+                                emit={this.emit}
+                                success={this.state.chSuccess}
+                                error={this.state.chError}
+                                category={props.match.params.category}
+                                n={props.match.params.number}
+                                topic={props.match.params.topic}
+                              />
+                            )}
                           />
-                        )}
-                      />
+                        ) : null}
+                        {this.state.level == 0 ? (
+                          <Route
+                            path="/eskill/question/:category/:topic/:id"
+                            exact
+                            render={props => (
+                              <NewTest
+                                stateSet={this.stateSet}
+                                dark={this.state.dark}
+                                q={this.state.qstate}
+                                logout={this.logout}
+                                topics={this.state.topics}
+                                grouped={this.state.grouped}
+                                categories={this.state.categories}
+                                emit={this.emit}
+                                id={this.state.details._id}
+                                sname={this.state.details.details.name}
+                                i={props.match.params.id}
+                                cat={props.match.params.category.replace(
+                                  "+",
+                                  " "
+                                )}
+                                topic={props.match.params.topic.replace(
+                                  "+",
+                                  " "
+                                )}
+                              />
+                            )}
+                          />
+                        ) : null}
+                        {this.state.level == 0 || this.state.level == 1 ? (
+                          <Route
+                            path="/eskill/request"
+                            render={props => (
+                              <RequestCourse
+                                stateSet={this.stateSet}
+                                q={this.state.qstate}
+                                logout={this.logout}
+                                categories={this.state.categories}
+                                emit={this.emit}
+                                details={this.state.details}
+                                topics={this.state.topics}
+                                dark={this.state.dark}
+                              />
+                            )}
+                          />
+                        ) : null}
+                        {this.state.level == 0 ? (
+                          <Route
+                            exact
+                            path="/eskill/question/:category/:topic"
+                            render={props => (
+                              <QuestionPage
+                                dark={this.state.dark}
+                                md={this.state.details.details}
+                                level={this.state.level}
+                                emit={this.emit}
+                                faculties={this.state.details.faculties}
+                                categories={this.state.categories}
+                                history={this.props.history}
+                                logout={this.logout}
+                                details={this.state.details}
+                                catError={this.state.catError}
+                                topError={this.state.topError}
+                                topics={this.state.topics}
+                                catSuccess={this.state.catSuccess}
+                                setLoading={this.setLoading}
+                                topSuccess={this.state.topSuccess}
+                                tags={this.state.tags}
+                                grouped={this.state.grouped}
+                                tagError={this.state.tagError}
+                                tagSuccess={this.state.tagSuccess}
+                                qs={this.state.qstate}
+                                stateSet={this.stateSet}
+                                topic={props.match.params.topic}
+                                cat={props.match.params.category}
+                                width={width}
+                              />
+                            )}
+                          />
+                        ) : null}
+                        <Route
+                          path="/eskill/"
+                          exact
+                          render={() =>
+                            this.state.level == 2 ? (
+                              <AdminDashboard
+                                dark={this.state.dark}
+                                canReg={this.state.canReg}
+                                facultyCount={this.state.facultyCount}
+                                studentCount={this.state.studentCount}
+                                mode={this.state.mode}
+                                md={this.state.details.details}
+                                stateSet={this.stateSet}
+                                level={this.state.level}
+                                emit={this.emit}
+                                faculties={this.state.details.faculties}
+                                categories={this.state.categories}
+                                history={this.props.history}
+                                logout={this.logout}
+                                details={this.state.details}
+                                catError={this.state.catError}
+                                topError={this.state.topError}
+                                topics={this.state.topics}
+                                catSuccess={this.state.catSuccess}
+                                setLoading={this.setLoading}
+                                topSuccess={this.state.topSuccess}
+                                tags={this.state.tags}
+                                grouped={this.state.grouped}
+                                tagError={this.state.tagError}
+                                tagSuccess={this.state.tagSuccess}
+                                qnumber={this.state.qnumber}
+                              />
+                            ) : this.state.level == 4 ? (
+                              <FacultyDashboard
+                                md={this.state.details.details}
+                                emit={this.emit}
+                                history={this.props.history}
+                                logout={this.logout}
+                                setLoading={this.setLoading}
+                                stateSet={this.stateSet}
+                                emit={this.emit}
+                                {...this.state}
+                              />
+                            ) : this.state.level == 1 ? (
+                              <CoordinatorDashboard
+                                facultyCount={this.state.facultyCount}
+                                dark={this.state.dark}
+                                studentCount={this.state.studentCount}
+                                md={this.state.details.details}
+                                level={this.state.level}
+                                emit={this.emit}
+                                faculties={this.state.details.faculties}
+                                categories={this.state.categories}
+                                history={this.props.history}
+                                logout={this.logout}
+                                details={this.state.details}
+                                catError={this.state.catError}
+                                qnumber={this.state.qnumber}
+                                width={this.state.width}
+                                topError={this.state.topError}
+                                topics={this.state.topics}
+                                catSuccess={this.state.catSuccess}
+                                setLoading={this.setLoading}
+                                topSuccess={this.state.topSuccess}
+                                tags={this.state.tags}
+                                grouped={this.state.grouped}
+                                tagError={this.state.tagError}
+                                chError={this.state.chError}
+                                chSuccess={this.state.chSuccess}
+                                tagSuccess={this.state.tagSuccess}
+                                addSuccess={this.state.addSuccess}
+                                addError={this.state.addError}
+                              />
+                            ) : (
+                              <StudentDashboard
+                                md={this.state.details.details}
+                                level={this.state.level}
+                                dark={this.state.dark}
+                                emit={this.emit}
+                                faculties={this.state.details.faculties}
+                                categories={this.state.categories}
+                                history={this.props.history}
+                                logout={this.logout}
+                                details={this.state.details}
+                                catError={this.state.catError}
+                                topError={this.state.topError}
+                                topics={this.state.topics}
+                                catSuccess={this.state.catSuccess}
+                                setLoading={this.setLoading}
+                                topSuccess={this.state.topSuccess}
+                                tags={this.state.tags}
+                                grouped={this.state.grouped}
+                                tagError={this.state.tagError}
+                                tagSuccess={this.state.tagSuccess}
+                                qs={this.state.qstate}
+                                stateSet={this.stateSet}
+                              />
+                            )
+                          }
+                        />
+                      </div>
                     ) : null}
-                    {this.state.level == 0 ? (
-                      <Route
-                        path="/eskill/question/:category/:topic/:id"
-                        exact
-                        render={props => (
-                          <NewTest
-                            stateSet={this.stateSet}
-                            dark={this.state.dark}
-                            q={this.state.qstate}
-                            logout={this.logout}
-                            topics={this.state.topics}
-                            grouped={this.state.grouped}
-                            categories={this.state.categories}
-                            emit={this.emit}
-                            id={this.state.details._id}
-                            sname={this.state.details.details.name}
-                            i={props.match.params.id}
-                            cat={props.match.params.category.replace("+", " ")}
-                            topic={props.match.params.topic.replace("+", " ")}
-                          />
-                        )}
-                      />
-                    ) : null}
-                    {this.state.level == 0 || this.state.level == 1 ? (
-                      <Route
-                        path="/eskill/request"
-                        render={props => (
-                          <RequestCourse
-                            stateSet={this.stateSet}
-                            q={this.state.qstate}
-                            logout={this.logout}
-                            categories={this.state.categories}
-                            emit={this.emit}
-                            details={this.state.details}
-                            topics={this.state.topics}
-                            dark={this.state.dark}
-                          />
-                        )}
-                      />
-                    ) : null}
-                    {this.state.level == 0 ? (
-                      <Route
-                        exact
-                        path="/eskill/question/:category/:topic"
-                        render={props => (
-                          <QuestionPage
-                            dark={this.state.dark}
-                            md={this.state.details.details}
-                            level={this.state.level}
-                            emit={this.emit}
-                            faculties={this.state.details.faculties}
-                            categories={this.state.categories}
-                            history={this.props.history}
-                            logout={this.logout}
-                            details={this.state.details}
-                            catError={this.state.catError}
-                            topError={this.state.topError}
-                            topics={this.state.topics}
-                            catSuccess={this.state.catSuccess}
-                            setLoading={this.setLoading}
-                            topSuccess={this.state.topSuccess}
-                            tags={this.state.tags}
-                            grouped={this.state.grouped}
-                            tagError={this.state.tagError}
-                            tagSuccess={this.state.tagSuccess}
-                            qs={this.state.qstate}
-                            stateSet={this.stateSet}
-                            topic={props.match.params.topic}
-                            cat={props.match.params.category}
-                            width={width}
-                          />
-                        )}
-                      />
-                    ) : null}
-                    <Route
-                      path="/eskill/"
-                      exact
-                      render={() =>
-                        this.state.level == 2 ? (
-                          <AdminDashboard
-                            dark={this.state.dark}
-                            canReg={this.state.canReg}
-                            facultyCount={this.state.facultyCount}
-                            studentCount={this.state.studentCount}
-                            mode={this.state.mode}
-                            md={this.state.details.details}
-                            stateSet={this.stateSet}
-                            level={this.state.level}
-                            emit={this.emit}
-                            faculties={this.state.details.faculties}
-                            categories={this.state.categories}
-                            history={this.props.history}
-                            logout={this.logout}
-                            details={this.state.details}
-                            catError={this.state.catError}
-                            topError={this.state.topError}
-                            topics={this.state.topics}
-                            catSuccess={this.state.catSuccess}
-                            setLoading={this.setLoading}
-                            topSuccess={this.state.topSuccess}
-                            tags={this.state.tags}
-                            grouped={this.state.grouped}
-                            tagError={this.state.tagError}
-                            tagSuccess={this.state.tagSuccess}
-                            qnumber={this.state.qnumber}
-                          />
-                        ) : this.state.level == 4 ? (
-                          <FacultyDashboard
-                            md={this.state.details.details}
-                            emit={this.emit}
-                            history={this.props.history}
-                            logout={this.logout}
-                            setLoading={this.setLoading}
-                            stateSet={this.stateSet}
-                            emit={this.emit}
-                            {...this.state}
-                          />
-                        ) : this.state.level == 1 ? (
-                          <CoordinatorDashboard
-                            facultyCount={this.state.facultyCount}
-                            dark={this.state.dark}
-                            studentCount={this.state.studentCount}
-                            md={this.state.details.details}
-                            level={this.state.level}
-                            emit={this.emit}
-                            faculties={this.state.details.faculties}
-                            categories={this.state.categories}
-                            history={this.props.history}
-                            logout={this.logout}
-                            details={this.state.details}
-                            catError={this.state.catError}
-                            qnumber={this.state.qnumber}
-                            width={this.state.width}
-                            topError={this.state.topError}
-                            topics={this.state.topics}
-                            catSuccess={this.state.catSuccess}
-                            setLoading={this.setLoading}
-                            topSuccess={this.state.topSuccess}
-                            tags={this.state.tags}
-                            grouped={this.state.grouped}
-                            tagError={this.state.tagError}
-                            chError={this.state.chError}
-                            chSuccess={this.state.chSuccess}
-                            tagSuccess={this.state.tagSuccess}
-                            addSuccess={this.state.addSuccess}
-                            addError={this.state.addError}
-                          />
-                        ) : (
-                          <StudentDashboard
-                            md={this.state.details.details}
-                            level={this.state.level}
-                            dark={this.state.dark}
-                            emit={this.emit}
-                            faculties={this.state.details.faculties}
-                            categories={this.state.categories}
-                            history={this.props.history}
-                            logout={this.logout}
-                            details={this.state.details}
-                            catError={this.state.catError}
-                            topError={this.state.topError}
-                            topics={this.state.topics}
-                            catSuccess={this.state.catSuccess}
-                            setLoading={this.setLoading}
-                            topSuccess={this.state.topSuccess}
-                            tags={this.state.tags}
-                            grouped={this.state.grouped}
-                            tagError={this.state.tagError}
-                            tagSuccess={this.state.tagSuccess}
-                            qs={this.state.qstate}
-                            stateSet={this.stateSet}
-                          />
-                        )
-                      }
-                    />
                   </Segment>
                 </Switch>
+
                 <Header
                   inverted={this.state.dark}
                   size="tiny"
