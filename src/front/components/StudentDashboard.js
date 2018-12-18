@@ -171,7 +171,7 @@ class StudentDashboard extends React.Component {
                               }}
                             >
                               <Icon name="checkmark" />
-                              {correct} Questions Correct
+                              {correct} Answered Correctly
                             </Card.Content>
                           ) : null}
                         </Card>
