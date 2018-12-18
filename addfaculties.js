@@ -118,9 +118,6 @@ db.on("open", () => {
     }
     branches.map((b, i) => {
       if (i < branchcount) {
-        console.log(
-          `Adding SRM ${colleges[college].a} ${abbr[i]} FACULTY eSkill`
-        );
         bcrypt.hash("samplepassword", 10, function(err, hash) {
           user = new Users({
             _id: `${colleges[college].id}${i + 1}`,
@@ -139,6 +136,12 @@ db.on("open", () => {
               branch: `${college}`,
               students: []
             }
+          });
+          details.save();
+          user.save(err => {
+            console.log(
+              `Adding SRM ${colleges[college].a} ${abbr[i]} FACULTY eSkill`
+            );
           });
         });
       }
