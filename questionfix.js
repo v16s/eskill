@@ -36,16 +36,57 @@ let Questions = mongoose.model(
   "Questions"
 );
 const fs = require("fs");
-
+let UserDetails = mongoose.model(
+  "UserDetails",
+  new Schema({
+    _id: String,
+    level: Number,
+    notifications: Array,
+    details: {
+      name: String,
+      regNo: String,
+      dob: Date,
+      gender: String,
+      department: String,
+      students: Array,
+      problems: Array,
+      branch: String
+    }
+  }),
+  "UserDetails"
+);
+let Users = mongoose.model(
+  "Users",
+  new Schema({
+    _id: String,
+    email: String,
+    password: String,
+    type: String,
+    level: Number,
+    questions: Object
+  }),
+  "Users"
+);
 db.on("open", () => {
   console.log("connected to database");
-  Questions.find({ "category._id": NaN }, (err, questions) => {
-    questions.map(q => {
-      q.category._id = parseInt(q.category.name.slice(0, 1));
-      q.markModified("category");
-      q.save(err => {
-        console.log(q.category._id, q.topic._id);
-      });
+  UserDetails.find({ level: 4 }, (err, faculties) => {
+    faculties.map(faculty => {
+      let requests = faculty.details.students;
+
+      requests = [];
+      faculty.details.students = requests;
+      faculty.markModified("details");
+      faculty.save();
     });
+  });
+  Users.find({ level: 0 }, (err, students) => {
+    students.map(student => {
+      student.questions = {};
+      student.markModified("questions");
+      student.save();
+    });
+  });
+  Questions.remove({ "category._id": { $gt: 6 } }, err => {
+    console.log("removed");
   });
 });
