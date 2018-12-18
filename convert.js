@@ -13,12 +13,12 @@ const Schema = mongoose.Schema;
 const _ = require("lodash");
 const dburl = require("./config.json").dburl;
 const csv = require("csvtojson");
-// mongoose.connect(
-//   dburl,
-//   { useNewUrlParser: true }
-// );
+mongoose.connect(
+  dburl,
+  { useNewUrlParser: true }
+);
 
-//let db = mongoose.connection;
+let db = mongoose.connection;
 
 let Questions = mongoose.model(
   "Questions",
