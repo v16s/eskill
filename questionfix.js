@@ -41,12 +41,11 @@ db.on("open", () => {
   console.log("connected to database");
   Questions.find((err, questions) => {
     questions.map(q => {
-      if (q.qdef !== undefined && q.qdef.split(". ")[0] != q.qdef) {
-        let newdef = q.qdef.split(". ");
-        newdef.shift();
-        q.qdef = newdef.join("");
+      if (q.category._id == NaN) {
+        q.category._id = parseInt(q.category.name.slice(0, 1));
+        q.markModified("category");
         q.save(err => {
-          console.log(q.topic);
+          console.log(q.category._id, q.topic._id);
         });
       }
     });

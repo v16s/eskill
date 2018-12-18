@@ -21,7 +21,7 @@ class Event extends EventEmitter {}
 let mode = false;
 let concurrentUsers = 0;
 const dbCheck = new Event();
-dbCheck.setMaxListeners(2000000);
+dbCheck.setMaxListeners(8000000);
 function makeid() {
   var text = "";
   var possible =
@@ -212,13 +212,29 @@ let validateLogin = (acc, content, e) => {
 };
 db.on("open", () => {
   dbconnect = true;
-  Users.find((err, users) => {
-    users.map(user => {
-      if (user.level == 0) {
-        user.type = "Student";
-        user.markModified("type");
-        user.save();
-      }
+  UsersDetails.find({ level: 4 }, (err, faculties) => {
+    faculties.map(faculty => {
+      let requests = faculty.details.students;
+      requests.map(({ cat, topic, _id, a }) => {
+        if (a === true) {
+          Users.findOne({ _id: _id }, (err, student) => {
+            if (
+              !err &&
+              student != null &&
+              student.questions[cat][topic].q.length == 0
+            ) {
+              delete student.questions[cat][topic];
+              student.markModified("questions");
+              student.save();
+              request.reject = true;
+            }
+          });
+        }
+      });
+      requests = requests.reject(r => r.reject);
+      faculty.details.students = requests;
+      faculty.markModified("details");
+      faculty.save();
     });
   });
 });
@@ -248,6 +264,7 @@ io.on("connection", socket => {
   console.log("user connected");
   concurrentUsers++;
   const loginCheck = new Event();
+  loginCheck.setMaxListeners(8000000);
   socket.on("det", content => {
     if (validateEmail(content.email)) {
       Users.findOne({ email: content.email }, (err, acc) => {
