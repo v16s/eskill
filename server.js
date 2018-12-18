@@ -214,8 +214,8 @@ db.on("open", () => {
   dbconnect = true;
   UserDetails.find((err, users) => {
     users.map(user => {
-      if(user.details.branch == undefined) {
-        user.details.branch = 'Kattankulathur'
+      if(user.details.branch == undefined || user.details.branch == 'Kattankulathur') {
+        user.details.branch = 'SRM Kattankulathur'
         user.markModified('details')
         user.save()
       }
