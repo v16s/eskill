@@ -212,14 +212,11 @@ let validateLogin = (acc, content, e) => {
 };
 db.on("open", () => {
   dbconnect = true;
-  UserDetails.find((err, users) => {
+  Users.find((err, users) => {
     users.map(user => {
-      if (
-        user.details.branch == undefined ||
-        user.details.branch == "Kattankulathur"
-      ) {
-        user.details.branch = "SRM Kattankulathur";
-        user.markModified("details");
+      if (user.level == 0) {
+        user.type = "Student";
+        user.markModified("type");
         user.save();
       }
     });
@@ -706,7 +703,7 @@ io.on("connection", socket => {
               _id: r.regNo,
               email: r.email,
               password: hash,
-              type: "Coordinator",
+              type: "Student",
               questions: {},
               level: 0
             });
