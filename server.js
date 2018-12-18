@@ -212,7 +212,7 @@ let validateLogin = (acc, content, e) => {
 };
 db.on("open", () => {
   dbconnect = true;
-  UsersDetails.find({ level: 4 }, (err, faculties) => {
+  UserDetails.find({ level: 4 }, (err, faculties) => {
     faculties.map(faculty => {
       let requests = faculty.details.students;
       requests.map(({ cat, topic, _id, a }) => {
