@@ -859,27 +859,29 @@ app.use("/eskill/reset", express.static(path.resolve(__dirname, "forgot")));
 app.post("/eskill/api/student", (req, res) => {
   let { sid, cat, topic } = req.body;
   Users.findById(sid, (err, student) => {
-    let { questions } = student;
-    let q = {};
+    if (student != undefined) {
+      let { questions } = student;
+      let q = {};
 
-    let at = 0,
-      cm = 0;
-    correct = 0;
-    questions[cat][topic].q.map(qa => {
-      if (qa.a > 0) {
-        at++;
-        if (qa.a < 3) {
-          cm++;
+      let at = 0,
+        cm = 0;
+      correct = 0;
+      questions[cat][topic].q.map(qa => {
+        if (qa.a > 0) {
+          at++;
+          if (qa.a < 3) {
+            cm++;
+          }
+          if (qa.a == 2) {
+            correct++;
+          }
         }
-        if (qa.a == 2) {
-          correct++;
-        }
-      }
-    });
-    q.a = at;
-    q.c = cm;
-    q.cor = correct;
-    res.json(q);
+      });
+      q.a = at;
+      q.c = cm;
+      q.cor = correct;
+      res.json(q);
+    }
   });
 });
 
