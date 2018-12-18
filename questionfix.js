@@ -86,7 +86,11 @@ db.on("open", () => {
       student.save();
     });
   });
-  Questions.remove({ "category._id": { $gt: 6 } }, err => {
-    console.log("removed");
+  Questions.find({ "topic._id": "501" }, (err, questions) => {
+    questions.map(question => {
+      question.topic.name = "Strength of Materials";
+      question.markModified("topic");
+      question.save();
+    });
   });
 });
