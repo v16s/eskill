@@ -233,6 +233,40 @@ class StudentDashboard extends React.Component {
                 </Grid.Row>
               );
             })}
+            {chunkedquestions.length == 0 ? (
+              <Grid.Row>
+                <Grid.Column
+                  style={{ display: "flex", justifyContent: "center" }}
+                >
+                  <Card
+                    style={{
+                      height: "100%",
+                      backgroundColor: this.props.dark ? "#1b1c1d" : "#fff"
+                    }}
+                    className="courseCard request-course"
+                    onClick={e => {
+                      history.push("/eskill/request");
+                    }}
+                  >
+                    <Card.Content
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        textAlign: "center"
+                      }}
+                    >
+                      <Icon
+                        name="add"
+                        size="huge"
+                        style={{ alignSelf: "center", color: "#3281ff" }}
+                      />
+                      <Header as="h4">Request Course</Header>
+                    </Card.Content>
+                  </Card>
+                </Grid.Column>
+              </Grid.Row>
+            ) : null}
           </Grid>
         </Segment>
       </div>
