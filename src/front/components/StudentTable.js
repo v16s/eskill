@@ -22,7 +22,6 @@ export default class StudentTable extends React.Component {
       }),
       { a: "rejected" }
     );
-    stateSet("details", details);
     emit("acceptCourse", [s._id, s.cat, action, details, s.topic]);
   }
   render() {
