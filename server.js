@@ -932,7 +932,6 @@ app.post("/eskill/api/faculty", (req, res) => {
         level: 4
       },
       (err, fac) => {
-        console.log(fac, branch, cbranch);
         res.json({ faculty: fac, err: false });
       }
     );
