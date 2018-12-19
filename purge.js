@@ -74,7 +74,4 @@ db.on("open", () => {
   Users.remove({ level: 0 }, err => {
     console.log("students purged");
   });
-  Questions.remove({ "topic.name": "Electrical Machines" }, err => {
-    console.log("electrical machines purged");
-  });
 });
