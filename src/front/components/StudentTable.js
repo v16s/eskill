@@ -23,6 +23,13 @@ export default class StudentTable extends React.Component {
       { a: "rejected" }
     );
     emit("acceptCourse", [s._id, s.cat, action, details, s.topic]);
+    details.details.students.map(st => {
+      if (st == s) {
+        return { ...st, a: "loading" };
+      }
+      return st;
+    });
+    stateSet("details", details);
   }
   render() {
     let { width } = this.props;
@@ -88,24 +95,22 @@ export default class StudentTable extends React.Component {
                         </Grid.Column>
                       </Grid>
                     ) : s.a === true ? (
-                      <Grid stackable columns={2}>
-                        <Grid.Column computer={12}>
-                          <Segment inverted color="green">
-                            Accepted
-                          </Segment>
-                        </Grid.Column>
-                        <Grid.Column computer={4}>
-                          <Button
-                            fluid
-                            negative
-                            onClick={e => this.accept(s, false)}
-                            icon="close"
-                          />
-                        </Grid.Column>
-                      </Grid>
+                      <Segment inverted color="green">
+                        <Grid stackable columns={2}>
+                          <Grid.Column computer={12}>Accepted</Grid.Column>
+                          <Grid.Column computer={4}>
+                            <Button
+                              fluid
+                              negative
+                              onClick={e => this.accept(s, false)}
+                              icon="close"
+                            />
+                          </Grid.Column>
+                        </Grid>
+                      </Segment>
                     ) : (
-                      <Segment inverted color="red">
-                        Rejected
+                      <Segment inverted color="blue">
+                        Accepting
                       </Segment>
                     )}
                   </Table.Cell>
