@@ -646,8 +646,6 @@ io.on("connection", socket => {
               loading: false
             }));
 
-            details.markModified("details");
-
             Users.findOne({ _id: user }, (err, student) => {
               if (!err && action === true && student != null) {
                 student.questions[cat][topic].a = true;
@@ -671,8 +669,10 @@ io.on("connection", socket => {
                     student.save(err => {
                       if (err) {
                       } else {
-                        details.save();
-                        dbCheck.emit("change", [student._id, acc._id]);
+                        details.markModified("details");
+                        details.save(err2 => {
+                          dbCheck.emit("change", [student._id, acc._id]);
+                        });
                       }
                     });
                   }
@@ -685,9 +685,10 @@ io.on("connection", socket => {
                     if (err) {
                     } else {
                       console.log("rejected and deleted");
-
-                      details.save();
-                      dbCheck.emit("change", [student._id, acc._id]);
+                      details.markModified("details");
+                      details.save(err2 => {
+                        dbCheck.emit("change", [student._id, acc._id]);
+                      });
                     }
                   });
                 } catch (e) {}
