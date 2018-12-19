@@ -8,7 +8,7 @@ import {
   Segment,
   Button,
   Menu,
-  Image,
+  Input,
   Icon,
   Header,
   Grid,
@@ -27,7 +27,8 @@ class StudentDashboard extends React.Component {
     this.state = {
       visible: false,
       modalVisible: false,
-      filter: props.categories
+      filter: props.categories,
+      searchContent: ""
     };
     this.logout = this.logout.bind(this);
     this.emit = this.emit.bind(this);
@@ -44,7 +45,9 @@ class StudentDashboard extends React.Component {
   emit(name, obj) {
     this.props.emit(name, obj);
   }
-
+  updateSearch(e) {
+    this.setState({ searchContent: e.value });
+  }
   render() {
     let { qs: qstate, categories } = this.props;
 
@@ -53,14 +56,23 @@ class StudentDashboard extends React.Component {
     if (qstate != undefined) {
       questions = Object.keys(qstate);
       chunkedquestions = _.chunk(
-        _.flatten([
-          "first",
-          ...questions.map(x => {
-            return Object.keys(qstate[x]).map(key => ({
-              ...qstate[x][key]
-            }));
-          })
-        ]),
+        _.compact(
+          _.flatten([
+            "first",
+            ...questions.map(x => {
+              return Object.keys(qstate[x]).map(key => {
+                if (
+                  x.includes(this.state.searchContent) ||
+                  key.includes(this.state.searchContent)
+                ) {
+                  return {
+                    ...qstate[x][key]
+                  };
+                } else return null;
+              });
+            })
+          ])
+        ),
         4
       );
     }
@@ -68,6 +80,18 @@ class StudentDashboard extends React.Component {
       <div>
         <Segment inverted={this.props.dark}>
           <Header as="h3">Assigned Courses</Header>
+        </Segment>
+        <Segment basic>
+          <Grid>
+            <Grid.Column width={14}>
+              <Input
+                fluid
+                placeholder="Search"
+                value={this.state.searchContent}
+                onChange={(e, syn) => this.updateSearch(syn)}
+              />
+            </Grid.Column>
+          </Grid>
         </Segment>
         <Segment
           basic
