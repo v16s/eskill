@@ -891,16 +891,18 @@ app.post("/eskill/api/student", (req, res) => {
 app.post("/eskill/api/question", (req, res) => {
   let { n, cat, topic } = req.body;
   if (dbconnect) {
-    Questions.findOne(
-      { "category.name": cat, number: n, "topic.name": topic },
-      (err, q) => {
-        if (!err) {
-          res.json({ question: q, err: false });
-        } else {
-          res.json({ err: true });
+    try {
+      Questions.findOne(
+        { "category.name": cat, number: n, "topic.name": topic },
+        (err, q) => {
+          if (!err) {
+            res.json({ question: q, err: false });
+          }
         }
-      }
-    );
+      );
+    } catch (e) {
+      res.json({ err: true });
+    }
   }
 });
 
