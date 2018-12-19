@@ -24,17 +24,18 @@ export default class StudentTable extends React.Component {
       }
       return st;
     });
-    stateSet("details", details);
-    details.details.students = _.reject(
-      details.details.students.map((st, i) => {
-        if (st.topic == s.topic && st.cat == s.cat) {
-          return { ...st, a: action || "rejected" };
-        }
-        return st;
-      }),
-      { a: "rejected" }
-    );
-    emit("acceptCourse", [s._id, s.cat, action, details, s.topic]);
+    stateSet("details", details, () => {
+      details.details.students = _.reject(
+        details.details.students.map((st, i) => {
+          if (st.topic == s.topic && st.cat == s.cat) {
+            return { ...st, a: action || "rejected" };
+          }
+          return st;
+        }),
+        { a: "rejected" }
+      );
+      emit("acceptCourse", [s._id, s.cat, action, details, s.topic]);
+    });
   }
   render() {
     let { width } = this.props;

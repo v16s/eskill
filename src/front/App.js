@@ -325,10 +325,14 @@ class Root extends React.Component {
     newState[type] = "load";
     this.setState(newState);
   }
-  stateSet(key, value) {
+  stateSet(key, value, callback) {
     let newstate = this.state;
     newstate[key] = value;
-    this.setState(newstate);
+    this.setState(newstate, () => {
+      if (callback) {
+        callback();
+      }
+    });
   }
   render() {
     let { width } = this.state;
