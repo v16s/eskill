@@ -113,14 +113,14 @@ export default class CoordinatorProblems extends React.Component {
                           <Button
                             fluid
                             negative
+                            icon="close"
                             onClick={e => this.setProblem(s)}
-                          >
-                            Reject
-                          </Button>
+                          />
                         </Grid.Column>
                         <Grid.Column style={{ padding: "5px" }}>
                           <Button
                             fluid
+                            icon="check"
                             positive
                             onClick={e =>
                               this.handleClick(
@@ -131,9 +131,7 @@ export default class CoordinatorProblems extends React.Component {
                                 s.topic.name.replace(" ", "+")
                               )
                             }
-                          >
-                            Solve
-                          </Button>
+                          />
                         </Grid.Column>
                       </Grid>
                     ) : s.resolution === true ? (

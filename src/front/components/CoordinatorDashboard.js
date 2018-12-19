@@ -67,7 +67,7 @@ class CoordinatorDashboard extends React.Component {
             />
           </Grid.Row>
           <Grid.Row>
-            <Grid.Column width={13}>
+            <Grid.Column width={15}>
               <Tab
                 menu={{
                   pointing: this.props.width > 768,
