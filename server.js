@@ -238,6 +238,9 @@ db.on("open", () => {
 let canReg = true;
 let resetArray = [];
 io.on("connection", socket => {
+  socket.on("error", err => {
+    console.log(err);
+  });
   let loggedIn = false,
     level = 0,
     account = { _id: "" };
