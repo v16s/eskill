@@ -860,7 +860,7 @@ app.use("/eskill/reset", express.static(path.resolve(__dirname, "forgot")));
 app.post("/eskill/api/student", (req, res) => {
   let { sid, cat, topic } = req.body;
   Users.findById(sid, (err, student) => {
-    if (student != undefined) {
+    try {
       let { questions } = student;
       let q = {};
 
@@ -882,7 +882,7 @@ app.post("/eskill/api/student", (req, res) => {
       q.c = cm;
       q.cor = correct;
       res.json(q);
-    } else {
+    } catch (e) {
       res.json({ err: "no student" });
     }
   });
