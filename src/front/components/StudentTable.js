@@ -14,6 +14,16 @@ export default class StudentTable extends React.Component {
   accept(s, action) {
     let { details, stateSet, emit } = this.props;
     let ind = -1;
+    details.details.students = details.details.students.map((st, i) => {
+      if (st == s) {
+        if (action) {
+          ind = i;
+        }
+        return { ...st, a: "loading" };
+      }
+      return st;
+    });
+    stateSet("details", details);
     details.details.students = _.reject(
       details.details.students.map((st, i) => {
         if (st == s) {
@@ -27,10 +37,6 @@ export default class StudentTable extends React.Component {
       { a: "rejected" }
     );
     emit("acceptCourse", [s._id, s.cat, action, details, s.topic]);
-    if (ind > -1) {
-      details.details.students[ind].a = "loading";
-    }
-    stateSet("details", details);
   }
   render() {
     let { width } = this.props;
