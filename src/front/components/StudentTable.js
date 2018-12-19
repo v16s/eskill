@@ -15,7 +15,7 @@ export default class StudentTable extends React.Component {
     let { details, stateSet, emit } = this.props;
     let ind = -1;
     details.details.students = details.details.students.map((st, i) => {
-      if (st == s) {
+      if (st.topic == s.topic && st.cat == s.cat) {
         if (action) {
           ind = i;
         }
@@ -27,10 +27,7 @@ export default class StudentTable extends React.Component {
     stateSet("details", details);
     details.details.students = _.reject(
       details.details.students.map((st, i) => {
-        if (st == s) {
-          if (action) {
-            ind = i;
-          }
+        if (st.topic == s.topic && st.cat == s.cat) {
           return { ...st, a: action || "rejected" };
         }
         return st;
