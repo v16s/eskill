@@ -101,6 +101,7 @@ class Root extends React.Component {
     cookies.remove("level");
     cookies.remove("tags");
     cookies.remove("qstate");
+    this.emit("logout");
     this.setState = {
       isLoggedIn: false,
       details: {},

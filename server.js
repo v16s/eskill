@@ -241,11 +241,17 @@ io.on("connection", socket => {
   socket.on("error", err => {
     console.log(err);
   });
+
   let loggedIn = false,
     level = 0,
     account = { _id: "" };
   socket.emit("mode", mode);
   socket.emit("canReg", canReg);
+  socket.on("logout", () => {
+    loggedIn = false;
+    level = 0;
+    account = { _id: "" };
+  });
   dbCheck.on("change", idlist => {
     if (idlist.includes(account._id)) {
       UserDetails.findById(account._id, (err, details) => {
