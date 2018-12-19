@@ -71,6 +71,13 @@ db.on("open", () => {
   UserDetails.remove({ level: 0 }, err => {
     console.log("purged details");
   });
+  UserDetails.find({ level: 4 }, (err, faculties) => {
+    faculties.map(faculty => {
+      faculty.details.students = [];
+      faculty.markModified("details");
+      faculty.save();
+    });
+  });
   Users.remove({ level: 0 }, err => {
     console.log("students purged");
   });
