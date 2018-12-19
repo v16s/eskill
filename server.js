@@ -181,23 +181,25 @@ dbCheck.on("notify", name => {
   } catch (e) {}
 });
 dbCheck.on("singlenotify", ({ name, id: sid }) => {
-  UserDetails.findById(sid, (err, account) => {
-    if (
-      account.notifications == undefined ||
-      account.notifications.length == 0
-    ) {
-      account.notifications = notifications;
-    }
-    if (_.find(account.notifications, { name: name }) == undefined) {
-      account.notifications.push({ name: name, unread: true });
-    }
-    account.markModified("notifications");
-    account.save(err => {
-      if (!err) {
-        dbCheck.emit("change", [account._id]);
+  try {
+    UserDetails.findById(sid, (err, account) => {
+      if (
+        account.notifications == undefined ||
+        account.notifications.length == 0
+      ) {
+        account.notifications = notifications;
       }
+      if (_.find(account.notifications, { name: name }) == undefined) {
+        account.notifications.push({ name: name, unread: true });
+      }
+      account.markModified("notifications");
+      account.save(err => {
+        if (!err) {
+          dbCheck.emit("change", [account._id]);
+        }
+      });
     });
-  });
+  } catch (e) {}
 });
 let validateLogin = (acc, content, e) => {
   if (acc != null) {
