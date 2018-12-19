@@ -23,7 +23,7 @@ export default class StudentTable extends React.Component {
       { a: "rejected" }
     );
     emit("acceptCourse", [s._id, s.cat, action, details, s.topic]);
-    details.details.students.map(st => {
+    details.details.students = details.details.students.map(st => {
       if (st == s) {
         return { ...st, a: "loading" };
       }
@@ -97,7 +97,16 @@ export default class StudentTable extends React.Component {
                     ) : s.a === true ? (
                       <Segment inverted color="green">
                         <Grid stackable columns={2}>
-                          <Grid.Column computer={12}>Accepted</Grid.Column>
+                          <Grid.Column
+                            computer={12}
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              justifyContent: "center"
+                            }}
+                          >
+                            Accepted
+                          </Grid.Column>
                           <Grid.Column computer={4}>
                             <Button
                               fluid
@@ -108,11 +117,11 @@ export default class StudentTable extends React.Component {
                           </Grid.Column>
                         </Grid>
                       </Segment>
-                    ) : (
+                    ) : s.a == "loading" ? (
                       <Segment inverted color="blue">
                         Accepting
                       </Segment>
-                    )}
+                    ) : null}
                   </Table.Cell>
                 </Table.Row>
               );
