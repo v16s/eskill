@@ -13,27 +13,18 @@ export default class StudentTable extends React.Component {
   }
   accept(s, action) {
     let { details, stateSet, emit } = this.props;
-    let ind = -1;
-    details.details.students = details.details.students.map((st, i) => {
-      if (st.topic == s.topic && st.cat == s.cat) {
-        if (action) {
-          ind = i;
+
+    details.details.students = _.reject(
+      details.details.students.map((st, i) => {
+        if (st.topic == s.topic && st.cat == s.cat) {
+          return { ...st, a: action || "rejected", loading: true };
         }
-        s = { ...st, a: "loading" };
-        return { ...st, a: "loading" };
-      }
-      return st;
-    });
+        return st;
+      }),
+      { a: "rejected" }
+    );
+
     stateSet("details", details, () => {
-      details.details.students = _.reject(
-        details.details.students.map((st, i) => {
-          if (st.topic == s.topic && st.cat == s.cat) {
-            return { ...st, a: action || "rejected" };
-          }
-          return st;
-        }),
-        { a: "rejected" }
-      );
       emit("acceptCourse", [s._id, s.cat, action, details, s.topic]);
     });
   }
@@ -100,7 +91,7 @@ export default class StudentTable extends React.Component {
                           </Button>
                         </Grid.Column>
                       </Grid>
-                    ) : s.a === true ? (
+                    ) : s.a === true && !s.loading ? (
                       <Segment inverted color="green">
                         <Grid stackable columns={2}>
                           <Grid.Column
@@ -123,11 +114,11 @@ export default class StudentTable extends React.Component {
                           </Grid.Column>
                         </Grid>
                       </Segment>
-                    ) : s.a == "loading" ? (
+                    ) : (
                       <Segment inverted color="blue">
                         Loading
                       </Segment>
-                    ) : null}
+                    )}
                   </Table.Cell>
                 </Table.Row>
               );

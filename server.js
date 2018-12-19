@@ -641,7 +641,10 @@ io.on("connection", socket => {
         }
         if (level == 4) {
           socket.on("acceptCourse", ([user, cat, action, d, topic]) => {
-            details.details = d.details;
+            details.details = d.details.students.map(s => ({
+              ...s,
+              loading: false
+            }));
 
             details.markModified("details");
 
