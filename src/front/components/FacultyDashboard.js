@@ -56,19 +56,20 @@ class FacultyDashboard extends React.Component {
         })
           .then(res => res.json())
           .then(res => {
-            let i = _.findIndex(studentDetails, {
-              _id: s._id,
-              cat: s.cat,
-              topic: s.topic
-            });
-            if (i > -1) {
-              studentDetails[i] = { ...studentDetails[i], ...res };
-            } else {
-              studentDetails.push({ ...s, ...res });
+            if (!res.err) {
+              let i = _.findIndex(studentDetails, {
+                _id: s._id,
+                cat: s.cat,
+                topic: s.topic
+              });
+              if (i > -1) {
+                studentDetails[i] = { ...studentDetails[i], ...res };
+              } else {
+                studentDetails.push({ ...s, ...res });
+              }
+              this.setState({ studentDetails: studentDetails });
             }
-            this.setState({ studentDetails: studentDetails });
           });
-        console.log(studentDetails);
       }
     });
   }
