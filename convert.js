@@ -73,7 +73,7 @@ db.on("open", () => {
                 c: k["Option C"],
                 d: k["Option D"]
               },
-              qname: k["Question Name"],
+              qname: `Question ${i}`,
               qdef: newdef.join(""),
               hints: k["Explanation"]
             };
