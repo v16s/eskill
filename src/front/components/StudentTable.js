@@ -89,12 +89,12 @@ export default class StudentTable extends React.Component {
                       </Grid>
                     ) : s.a === true ? (
                       <Grid stackable columns={2}>
-                        <Grid.Column width={12}>
+                        <Grid.Column computer={12}>
                           <Segment inverted color="green">
                             Accepted
                           </Segment>
                         </Grid.Column>
-                        <Grid.Column>
+                        <Grid.Column computer={4}>
                           <Button
                             fluid
                             negative
