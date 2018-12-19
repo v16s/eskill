@@ -19,6 +19,7 @@ export default class StudentTable extends React.Component {
         if (action) {
           ind = i;
         }
+        s = { ...st, a: "loading" };
         return { ...st, a: "loading" };
       }
       return st;
