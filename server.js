@@ -642,53 +642,52 @@ io.on("connection", socket => {
         if (level == 4) {
           socket.on("acceptCourse", ([user, cat, action, d, topic]) => {
             details.details = d.details;
-            details.markModified("details");
-            details.save(err => {
-              if (!err) {
-                dbCheck.emit("change", [acc._id]);
-                Users.findOne({ _id: user }, (err, student) => {
-                  if (!err && action === true && student != null) {
-                    student.questions[cat][topic].a = true;
-                    let q = [],
-                      count = 0;
-                    Questions.countDocuments(
-                      { "category.name": cat, "topic.name": topic },
-                      (err, c) => {
-                        count = c;
-                        if (count > 100) {
-                          while (q.length < 100) {
-                            var r = Math.floor(Math.random() * count);
-                            if (q.indexOf(r) === -1) q.push(r);
-                          }
-                        }
 
-                        student.questions[cat][topic].q = q.map(k => {
-                          return { n: k, a: 0 };
-                        });
-                        student.markModified("questions");
-                        student.save(err => {
-                          if (err) {
-                          } else {
-                            dbCheck.emit("change", [student._id]);
-                          }
-                        });
+            details.markModified("details");
+
+            Users.findOne({ _id: user }, (err, student) => {
+              if (!err && action === true && student != null) {
+                student.questions[cat][topic].a = true;
+                let q = [],
+                  count = 0;
+                Questions.countDocuments(
+                  { "category.name": cat, "topic.name": topic },
+                  (err, c) => {
+                    count = c;
+                    if (count > 100) {
+                      while (q.length < 100) {
+                        var r = Math.floor(Math.random() * count);
+                        if (q.indexOf(r) === -1) q.push(r);
                       }
-                    );
-                  } else if (!err && student != null) {
-                    try {
-                      delete student.questions[cat][topic];
-                      student.markModified("questions");
-                      student.save(err => {
-                        if (err) {
-                        } else {
-                          console.log("rejected and deleted");
-                          dbCheck.emit("change", [student._id, acc._id]);
-                        }
-                      });
-                    } catch (e) {}
+                    }
+
+                    student.questions[cat][topic].q = q.map(k => {
+                      return { n: k, a: 0 };
+                    });
+                    student.markModified("questions");
+                    student.save(err => {
+                      if (err) {
+                      } else {
+                        details.save();
+                        dbCheck.emit("change", [student._id, acc._id]);
+                      }
+                    });
                   }
-                });
-              } else {
+                );
+              } else if (!err && student != null) {
+                try {
+                  delete student.questions[cat][topic];
+                  student.markModified("questions");
+                  student.save(err => {
+                    if (err) {
+                    } else {
+                      console.log("rejected and deleted");
+
+                      details.save();
+                      dbCheck.emit("change", [student._id, acc._id]);
+                    }
+                  });
+                } catch (e) {}
               }
             });
           });
