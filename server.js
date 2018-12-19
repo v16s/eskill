@@ -153,30 +153,32 @@ let Category = mongoose.model(
 );
 
 dbCheck.on("notify", name => {
-  UserDetails.find((err, accounts) => {
-    accounts.map(account => {
-      if ([0, 4].includes(account.level)) {
-        if (
-          account.notifications == undefined ||
-          account.notifications.length == 0
-        ) {
-          account.notifications = notifications;
-        }
-        if (_.find(account.notifications, { name: name }) == undefined) {
-          account.notifications.push({ name: name, unread: true });
-        }
-        if (_.find(notifications, { name: name }) == undefined) {
-          notifications.push({ name: name, unread: true });
-        }
-        account.markModified("notifications");
-        account.save(err => {
-          if (!err) {
-            dbCheck.emit("change", [account._id]);
+  try {
+    UserDetails.find((err, accounts) => {
+      accounts.map(account => {
+        if ([0, 4].includes(account.level)) {
+          if (
+            account.notifications == undefined ||
+            account.notifications.length == 0
+          ) {
+            account.notifications = notifications;
           }
-        });
-      }
+          if (_.find(account.notifications, { name: name }) == undefined) {
+            account.notifications.push({ name: name, unread: true });
+          }
+          if (_.find(notifications, { name: name }) == undefined) {
+            notifications.push({ name: name, unread: true });
+          }
+          account.markModified("notifications");
+          account.save(err => {
+            if (!err) {
+              dbCheck.emit("change", [account._id]);
+            }
+          });
+        }
+      });
     });
-  });
+  } catch (e) {}
 });
 dbCheck.on("singlenotify", ({ name, id: sid }) => {
   UserDetails.findById(sid, (err, account) => {
