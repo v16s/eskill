@@ -921,16 +921,18 @@ app.post("/eskill/api/question", (req, res) => {
 
 app.post("/eskill/api/faculty", (req, res) => {
   let { branch, cbranch } = req.body;
-  UserDetails.find(
-    {
-      "details.department": `${branch}`,
-      "details.branch": `${cbranch}`,
-      level: 4
-    },
-    (err, fac) => {
-      res.json(fac);
-    }
-  );
+  try {
+    UserDetails.find(
+      {
+        "details.department": `${branch}`,
+        "details.branch": `${cbranch}`,
+        level: 4
+      },
+      (err, fac) => {
+        res.json(fac);
+      }
+    );
+  } catch (e) {}
 });
 app.get("*", (req, res, next) => {
   if (resetArray.includes(req.url)) {
