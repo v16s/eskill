@@ -88,9 +88,21 @@ export default class StudentTable extends React.Component {
                         </Grid.Column>
                       </Grid>
                     ) : s.a === true ? (
-                      <Segment inverted color="green">
-                        Accepted
-                      </Segment>
+                      <Grid stackable columns={2}>
+                        <Grid.Column width={12}>
+                          <Segment inverted color="green">
+                            Accepted
+                          </Segment>
+                        </Grid.Column>
+                        <Grid.Column>
+                          <Button
+                            fluid
+                            negative
+                            onClick={e => this.accept(s, false)}
+                            icon="close"
+                          />
+                        </Grid.Column>
+                      </Grid>
                     ) : (
                       <Segment inverted color="red">
                         Rejected

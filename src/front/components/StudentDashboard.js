@@ -82,7 +82,7 @@ class StudentDashboard extends React.Component {
           <Header as="h3">Assigned Courses</Header>
         </Segment>
         <Segment basic>
-          <Grid centered>
+          <Grid centered className="centered">
             <Grid.Column width={14}>
               <Input
                 fluid
