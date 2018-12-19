@@ -932,10 +932,13 @@ app.post("/eskill/api/faculty", (req, res) => {
         level: 4
       },
       (err, fac) => {
-        res.json(fac);
+        res.json({ faculty: fac, err: false });
       }
     );
-  } catch (e) {}
+  } catch (e) {
+    console.log(e);
+    res.json({ err: true });
+  }
 });
 app.get("*", (req, res, next) => {
   if (resetArray.includes(req.url)) {
