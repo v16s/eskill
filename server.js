@@ -469,63 +469,67 @@ io.on("connection", socket => {
           socket.emit("q", acc.questions);
           socket.on("requestCourse", det => {
             let { cat, faculty: pid, student: sid, cid, topic } = det;
-            UserDetails.findOne({ _id: pid }, (err, fac) => {
-              if (
-                _.find(fac.details.students, {
-                  _id: sid,
-                  cat: cat,
-                  topic: topic
-                }) == undefined
-              ) {
-                fac.details.students.push({
-                  cat: cat,
-                  topic: topic,
-                  _id: sid,
-                  a: true,
-                  name: details.details.name
-                });
-                fac.markModified("details");
-                fac.save(err => {
-                  if (acc.questions == undefined) {
-                    acc.questions = {};
-                    acc.questions[cat] = {};
-                  }
-                  if (acc.questions[cat] == undefined) {
-                    acc.questions[cat] = {};
-                  }
-                  acc.questions[cat][topic] = {
-                    a: true,
-                    q: [],
+            Users.findById(acc._id, (err, stacc) => {
+              acc.questions = stacc.questions
+              UserDetails.findOne({ _id: pid }, (err, fac) => {
+                if (
+                  _.find(fac.details.students, {
+                    _id: sid,
                     cat: cat,
-                    pid: fac._id,
                     topic: topic
-                  };
-                  let q = [],
-                  count = 0;
-                Questions.countDocuments(
-                  { "category.name": cat, "topic.name": topic },
-                  (err, c) => {
-                    count = c;
-                    if (count > 100) {
-                      while (q.length < 100) {
-                        var r = Math.floor(Math.random() * count);
-                        if (q.indexOf(r) === -1) q.push(r);
-                      }
-                    }
-
-                    acc.questions[cat][topic].q = q.map(k => {
-                      return { n: k, a: 0 };
-                    })
-                    acc.markModified("questions");
-                  acc.save(err => {
-                    socket.emit("q", acc.questions);
-                    dbCheck.emit("change", [sid, pid]);
+                  }) == undefined
+                ) {
+                  fac.details.students.push({
+                    cat: cat,
+                    topic: topic,
+                    _id: sid,
+                    a: true,
+                    name: details.details.name
                   });
-                  })
-                  
-                });
-              }
-            });
+                  fac.markModified("details");
+                  fac.save(err => {
+                    if (acc.questions == undefined) {
+                      acc.questions = {};
+                      acc.questions[cat] = {};
+                    }
+                    if (acc.questions[cat] == undefined) {
+                      acc.questions[cat] = {};
+                    }
+                    acc.questions[cat][topic] = {
+                      a: true,
+                      q: [],
+                      cat: cat,
+                      pid: fac._id,
+                      topic: topic
+                    };
+                    let q = [],
+                    count = 0;
+                  Questions.countDocuments(
+                    { "category.name": cat, "topic.name": topic },
+                    (err, c) => {
+                      count = c;
+                      if (count > 100) {
+                        while (q.length < 100) {
+                          var r = Math.floor(Math.random() * count);
+                          if (q.indexOf(r) === -1) q.push(r);
+                        }
+                      }
+  
+                      acc.questions[cat][topic].q = q.map(k => {
+                        return { n: k, a: 0 };
+                      })
+                      acc.markModified("questions");
+                    acc.save(err => {
+                      socket.emit("q", acc.questions);
+                      dbCheck.emit("change", [sid, pid]);
+                    });
+                    })
+                    
+                  });
+                }
+              })
+            })
+            
           });
           socket.on("changeQuestion", opts => {
             let [q, cat, topic] = opts;
