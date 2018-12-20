@@ -91,6 +91,4 @@ db.on('open', () => {
   Users.remove({ level: 0 }, err => {
     console.log('students purged')
   })
-  Questions.remove()
-  Category.remove()
 })
