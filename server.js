@@ -259,7 +259,7 @@ io.on("connection", socket => {
         socket.emit("changeDetails", {
           details: details
         });
-        if (account.level == 0) {
+        if (level == 0) {
           Users.findById(account._id, (err, newacc) => {
             socket.emit("q", newacc.questions);
           });
