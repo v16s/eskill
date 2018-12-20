@@ -60,7 +60,7 @@ db.on('open', () => {
             que = que.split('. ')
             que.shift()
             let newdef = k.Question
-            if (que == null) {
+            if (que.length > 0) {
               newdef = newdef.split('. ')
             } else {
               newdef = newdef.split('\t')
