@@ -1,27 +1,27 @@
-const express = require("express");
-const app = express();
-const http = require("http");
-const server = http.Server(app);
-const path = require("path");
-const debug = process.env.NODE_ENV !== "production";
-const io = require("socket.io")(server);
-const bcrypt = require("bcryptjs");
-const cookieParser = require("cookie-parser");
-const mongoose = require("mongoose");
-const EventEmitter = require("events");
-const Schema = mongoose.Schema;
-const _ = require("lodash");
-const dburl = require("./config.json").dburl;
-const csv = require("csvtojson");
+const express = require('express')
+const app = express()
+const http = require('http')
+const server = http.Server(app)
+const path = require('path')
+const debug = process.env.NODE_ENV !== 'production'
+const io = require('socket.io')(server)
+const bcrypt = require('bcryptjs')
+const cookieParser = require('cookie-parser')
+const mongoose = require('mongoose')
+const EventEmitter = require('events')
+const Schema = mongoose.Schema
+const _ = require('lodash')
+const dburl = require('./config.json').dburl
+const csv = require('csvtojson')
 mongoose.connect(
   dburl,
   { useNewUrlParser: true }
-);
+)
 
-let db = mongoose.connection;
+let db = mongoose.connection
 
 let Questions = mongoose.model(
-  "Questions",
+  'Questions',
   new Schema({
     category: Object,
     label: Array,
@@ -33,10 +33,20 @@ let Questions = mongoose.model(
     hints: String,
     number: Number
   }),
-  "Questions"
-);
+  'Questions'
+)
+let Category = mongoose.model(
+  'Category',
+  new Schema({
+    _id: Number,
+    name: String,
+    topics: Array,
+    notified: Boolean
+  }),
+  'Category'
+)
 let UserDetails = mongoose.model(
-  "UserDetails",
+  'UserDetails',
   new Schema({
     _id: String,
     level: Number,
@@ -52,10 +62,10 @@ let UserDetails = mongoose.model(
       branch: String
     }
   }),
-  "UserDetails"
-);
+  'UserDetails'
+)
 let Users = mongoose.model(
-  "Users",
+  'Users',
   new Schema({
     _id: String,
     email: String,
@@ -64,21 +74,23 @@ let Users = mongoose.model(
     level: Number,
     questions: Object
   }),
-  "Users"
-);
-db.on("open", () => {
-  console.log("connected to database");
+  'Users'
+)
+db.on('open', () => {
+  console.log('connected to database')
   UserDetails.remove({ level: 0 }, err => {
-    console.log("purged details");
-  });
+    console.log('purged details')
+  })
   UserDetails.find({ level: 4 }, (err, faculties) => {
     faculties.map(faculty => {
-      faculty.details.students = [];
-      faculty.markModified("details");
-      faculty.save();
-    });
-  });
+      faculty.details.students = []
+      faculty.markModified('details')
+      faculty.save()
+    })
+  })
   Users.remove({ level: 0 }, err => {
-    console.log("students purged");
-  });
-});
+    console.log('students purged')
+  })
+  Questions.remove()
+  Category.remove()
+})

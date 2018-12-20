@@ -15,6 +15,7 @@ import {
   Header
 } from "semantic-ui-react";
 import history from "./history";
+import _ from 'lodash'
 class RegisterPage extends Component {
   constructor(props) {
     super(props);
@@ -264,7 +265,7 @@ class RegisterPage extends Component {
                   control={Select}
                   required
                   label="Field"
-                  options={branches}
+                  options={_.orderBy(branches, ['text'], ['asc'])}
                   placeholder="Field"
                   id="branch"
                 />

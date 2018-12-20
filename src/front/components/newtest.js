@@ -146,15 +146,15 @@ class NewTest extends React.Component {
     let { topics, value, check, question: q } = this.state;
     let { categories, i, q: qall, cat, cid, topic } = this.props;
 
-    let ac = cat.replace(" ", "+"),
-      top = topic.replace(" ", "+");
-    let qa = qall[ac];
+    let ac = cat.replace(/ /g, "+"),
+      top = topic.replace(/ /g, "+");
+    let qa = qall[cat];
     if (qa != undefined && q == undefined) {
       this.fetchQuestion();
     }
     return (
       <div>
-        {qall[cat] != undefined ? (
+        {qa != undefined ? (
           <Segment basic>
             {q != undefined ? (
               <Segment inverted={this.props.dark}>

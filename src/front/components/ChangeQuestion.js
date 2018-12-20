@@ -72,8 +72,8 @@ class ChangeQuestion extends React.Component {
   }
   componentDidMount() {
     let { category, n, topic } = this.props;
-    let cat = category.replace("+", " ");
-    let top = topic.replace("+", " ");
+    let cat = category.replace(/[+]/g, " ");
+    let top = topic.replace(/[+]/g, " ");
     fetch(endpoint + "/api/question", {
       body: JSON.stringify({ n: n, cat: cat, topic: top }),
       method: "POST",
