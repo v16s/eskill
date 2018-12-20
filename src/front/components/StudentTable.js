@@ -1,45 +1,42 @@
-import { Table, Grid, Button, Segment, Input } from "semantic-ui-react";
-import React from "react";
-import _ from "lodash";
+import { Table, Grid, Button, Segment, Input } from 'semantic-ui-react'
+import React from 'react'
+import _ from 'lodash'
 export default class StudentTable extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { searchvalue: "" };
-    this.accept = this.accept.bind(this);
+  constructor (props) {
+    super(props)
+    this.state = { searchvalue: '' }
+    this.accept = this.accept.bind(this)
   }
-  componentDidMount() {}
-  updateSearch(e) {
-    this.setState({ searchvalue: e.value });
+  componentDidMount () {}
+  updateSearch (e) {
+    this.setState({ searchvalue: e.value })
   }
-  accept(s, action) {
-    let { details, stateSet, emit } = this.props;
+  accept (s, action) {
+    let { details, stateSet, emit } = this.props
+    let loadingdetails = details.details.students.map((st, i) => {
+      if (st.topic == s.topic && st.cat == s.cat && s._id == st._id) {
+        return { ...st, a: action || 'rejected', loading: true }
+      }
+      return st
+    })
+    details.details.students = _.reject(loadingdetails, { a: 'rejected' })
 
-    details.details.students = _.reject(
-      details.details.students.map((st, i) => {
-        if (st.topic == s.topic && st.cat == s.cat && s._id == st._id) {
-          return { ...st, a: action || "rejected", loading: true };
-        }
-        return st;
-      }),
-      { a: "rejected" }
-    );
-
-    stateSet("details", details, () => {
-      emit("acceptCourse", [s._id, s.cat, action, details, s.topic]);
-    });
+    stateSet('details', loadingdetails, () => {
+      emit('acceptCourse', [s._id, s.cat, action, details, s.topic])
+    })
   }
-  render() {
-    let { width } = this.props;
-    let { details } = this.props.details;
+  render () {
+    let { width } = this.props
+    let { details } = this.props.details
     return (
       <Table inverted={this.props.dark}>
         {width > 768 ? (
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell colSpan="5">
+              <Table.HeaderCell colSpan='5'>
                 <Input
                   fluid
-                  placeholder="Search"
+                  placeholder='Search'
                   onChange={(e, syn) => this.updateSearch(syn)}
                 />
               </Table.HeaderCell>
@@ -57,9 +54,9 @@ export default class StudentTable extends React.Component {
           {[...details.students].reverse().map(s => {
             if (
               Object.values(s).find(a => {
-                if (typeof a === "string") {
-                  let reg = new RegExp(this.state.searchvalue, "gi");
-                  return a.match(reg);
+                if (typeof a === 'string') {
+                  let reg = new RegExp(this.state.searchvalue, 'gi')
+                  return a.match(reg)
                 }
               }) != undefined
             ) {
@@ -92,14 +89,14 @@ export default class StudentTable extends React.Component {
                         </Grid.Column>
                       </Grid>
                     ) : s.a === true && !s.loading ? (
-                      <Segment inverted color="green">
+                      <Segment inverted color='green'>
                         <Grid stackable columns={2}>
                           <Grid.Column
                             computer={12}
                             style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              justifyContent: "center"
+                              display: 'flex',
+                              flexDirection: 'column',
+                              justifyContent: 'center'
                             }}
                           >
                             Accepted
@@ -109,23 +106,23 @@ export default class StudentTable extends React.Component {
                               fluid
                               negative
                               onClick={e => this.accept(s, false)}
-                              icon="close"
+                              icon='close'
                             />
                           </Grid.Column>
                         </Grid>
                       </Segment>
                     ) : (
-                      <Segment inverted color="blue">
+                      <Segment inverted color='blue'>
                         Loading
                       </Segment>
                     )}
                   </Table.Cell>
                 </Table.Row>
-              );
+              )
             }
           })}
         </Table.Body>
       </Table>
-    );
+    )
   }
 }
