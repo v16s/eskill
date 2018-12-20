@@ -137,6 +137,10 @@ class Root extends React.Component {
   componentDidMount(props) {
     const { cookies } = this.props;
     const { categories } = this.state;
+    history.listen(function (location) {
+      window.ga('set', 'page', location.pathname + location.search);
+      window.ga('send', 'pageview');
+  });
     this.updateWindowDimensions();
     window.addEventListener("resize", this.updateWindowDimensions);
     socket.on("connect", () => {
