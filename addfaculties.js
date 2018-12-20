@@ -20,68 +20,21 @@ mongoose.connect(
 
 let db = mongoose.connection;
 
-let Users = mongoose.model(
-  "Users",
-  new Schema({
-    _id: String,
-    email: String,
-    password: String,
-    type: String,
-    level: Number
-  }),
-  "Users"
-);
-let Label = mongoose.model(
-  "Label",
-  new Schema({
-    _id: String,
-    name: String
-  })
-);
-let Tags = mongoose.model(
-  "Tags",
-  new Schema({
-    group: String,
-    name: String
-  }),
-  "Tags"
-);
-let Questions = mongoose.model(
-  "Questions",
-  new Schema({
-    category: Object,
-    label: Array,
-    topic: Object,
-    answer: String,
-    options: Object,
-    qname: String,
-    qdef: String,
-    hints: String,
-    number: Number
-  }),
-  "Questions"
-);
 let UserDetails = mongoose.model(
   "UserDetails",
   new Schema({
     _id: String,
+    level: Number,
+    notifications: Array,
     details: {
       name: String,
       regNo: String,
-      mothersName: String,
-      fathersName: String,
       dob: Date,
       gender: String,
-      dateOfAdmission: Date,
-      aadhar: String,
-      passport: String,
-      religion: String,
-      lang: String,
-      deg: String,
       department: String,
-      courseDuration: String,
-      currentYear: String,
-      academicYear: String
+      students: Array,
+      problems: Array,
+      branch: String
     }
   }),
   "UserDetails"
