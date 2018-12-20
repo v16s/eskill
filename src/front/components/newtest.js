@@ -154,7 +154,7 @@ class NewTest extends React.Component {
     }
     return (
       <div>
-        {qall[cat] != undefined ? (
+        {qa != undefined ? (
           <Segment basic>
             {q != undefined ? (
               <Segment inverted={this.props.dark}>
