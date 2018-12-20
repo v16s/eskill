@@ -863,11 +863,15 @@ io.on("connection", socket => {
     });
     app.post(fid, (req, res) => {
       Users.findOne({ email: email }, (err, resetacc) => {
-        bcrypt.hash(req.body.p, 10, function(err, hash) {
-          resetacc.password = hash;
-          resetArray = resetArray.filter(k => k != fid);
-          resetacc.save();
-        });
+        if (resetacc != null) {
+          try {
+            bcrypt.hash(req.body.p, 10, function(err, hash) {
+              resetacc.password = hash;
+              resetArray = resetArray.filter(k => k != fid);
+              resetacc.save();
+            });
+          } catch (e) {}
+        }
       });
     });
   });
