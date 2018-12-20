@@ -6,7 +6,8 @@ const path = require("path");
 const debug = process.env.NODE_ENV !== "production";
 const io = require("socket.io")(server, {
   path: "/eskill/socket.io",
-  transports: ["polling", "xhr-polling"]
+  transports: ["polling", "xhr-polling"],
+  pingTimeout: 360000
 });
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");

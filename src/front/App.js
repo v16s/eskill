@@ -18,7 +18,12 @@ import ChangeQuestion from "./components/ChangeQuestion";
 import { socket as socUrl } from "./enpoint";
 let socket = io.connect(
   "http://care.srmuniv.ac.in",
-  { path: "/eskill/socket.io/", transports: ["polling", "xhr-polling"] }
+  {
+    path: "/eskill/socket.io/",
+    transports: ["polling", "xhr-polling"],
+    rejectUnauthorized: false,
+    reconnect: true
+  }
 );
 console.log(window.location.origin + "/eskill");
 import {
@@ -682,30 +687,30 @@ class Root extends React.Component {
                                 addError={this.state.addError}
                               />
                             ) : (
-                              <StudentDashboard
-                                md={this.state.details.details}
-                                level={this.state.level}
-                                dark={this.state.dark}
-                                emit={this.emit}
-                                faculties={this.state.details.faculties}
-                                categories={this.state.categories}
-                                history={this.props.history}
-                                logout={this.logout}
-                                details={this.state.details}
-                                catError={this.state.catError}
-                                topError={this.state.topError}
-                                topics={this.state.topics}
-                                catSuccess={this.state.catSuccess}
-                                setLoading={this.setLoading}
-                                topSuccess={this.state.topSuccess}
-                                tags={this.state.tags}
-                                grouped={this.state.grouped}
-                                tagError={this.state.tagError}
-                                tagSuccess={this.state.tagSuccess}
-                                qs={this.state.qstate}
-                                stateSet={this.stateSet}
-                              />
-                            )
+                                    <StudentDashboard
+                                      md={this.state.details.details}
+                                      level={this.state.level}
+                                      dark={this.state.dark}
+                                      emit={this.emit}
+                                      faculties={this.state.details.faculties}
+                                      categories={this.state.categories}
+                                      history={this.props.history}
+                                      logout={this.logout}
+                                      details={this.state.details}
+                                      catError={this.state.catError}
+                                      topError={this.state.topError}
+                                      topics={this.state.topics}
+                                      catSuccess={this.state.catSuccess}
+                                      setLoading={this.setLoading}
+                                      topSuccess={this.state.topSuccess}
+                                      tags={this.state.tags}
+                                      grouped={this.state.grouped}
+                                      tagError={this.state.tagError}
+                                      tagSuccess={this.state.tagSuccess}
+                                      qs={this.state.qstate}
+                                      stateSet={this.stateSet}
+                                    />
+                                  )
                           }
                         />
                       </div>
@@ -729,39 +734,39 @@ class Root extends React.Component {
             </Sidebar.Pushable>
           </div>
         ) : (
-          <Switch>
-            {this.state.canReg ? (
+            <Switch>
+              {this.state.canReg ? (
+                <Route
+                  path="/eskill/register"
+                  render={() => (
+                    <RegisterPage
+                      dark={this.state.dark}
+                      mode={this.state.mode}
+                      emit={this.emit}
+                    />
+                  )}
+                />
+              ) : null}
               <Route
-                path="/eskill/register"
+                path="/eskill/forgot"
                 render={() => (
-                  <RegisterPage
+                  <ForgotPage dark={this.state.dark} emit={this.emit} />
+                )}
+              />
+              <Route
+                path="/eskill/"
+                render={() => (
+                  <Login
                     dark={this.state.dark}
-                    mode={this.state.mode}
-                    emit={this.emit}
+                    fail={this.state.fail}
+                    success={this.state.success}
+                    emit={this.mainEmit}
+                    canReg={this.state.canReg}
                   />
                 )}
               />
-            ) : null}
-            <Route
-              path="/eskill/forgot"
-              render={() => (
-                <ForgotPage dark={this.state.dark} emit={this.emit} />
-              )}
-            />
-            <Route
-              path="/eskill/"
-              render={() => (
-                <Login
-                  dark={this.state.dark}
-                  fail={this.state.fail}
-                  success={this.state.success}
-                  emit={this.mainEmit}
-                  canReg={this.state.canReg}
-                />
-              )}
-            />
-          </Switch>
-        )}
+            </Switch>
+          )}
       </Router>
     );
   }
