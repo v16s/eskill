@@ -65,7 +65,7 @@ db.on('open', () => {
             } else {
               newdef = newdef.split('.  ')
             }
-
+            console.log(newdef)
             newdef.shift()
             let obj = {
               category: {
