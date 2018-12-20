@@ -46,7 +46,7 @@ class Root extends React.Component {
     this.state = {
       isLoggedIn: cookies.get("isLoggedIn") || false,
       err: cookies.get("err") || null,
-      details: cookies.get("details") || {},
+      details: {},
       email: cookies.get("email") || null,
       documents: cookies.get("documents") || null,
       categories: cookies.get("categories") || [],
@@ -98,7 +98,6 @@ class Root extends React.Component {
     const { cookies } = this.props;
     cookies.remove("err");
     cookies.remove("isLoggedIn");
-    cookies.remove("details");
     cookies.remove("documents");
     cookies.remove("categories");
     cookies.remove("email");
@@ -176,7 +175,6 @@ class Root extends React.Component {
     socket.on("validateLogin", content => {
       cookies.set("err", content.condition);
       cookies.set("isLoggedIn", content.validate);
-      cookies.set("details", content.details);
       cookies.set("level", content.level);
       if (content.details.notifications.filter(k => k.unread).length > 0) {
         this.setState({ notified: false });
@@ -190,7 +188,6 @@ class Root extends React.Component {
       });
     });
     socket.on("changeDetails", ({ details }) => {
-      cookies.set("details", details);
       if (details.notifications.filter(k => k.unread).length > 0) {
         this.setState({ notified: false });
       }
@@ -200,7 +197,6 @@ class Root extends React.Component {
       this.setState({ fail: reason });
     });
     socket.on("details", content => {
-      cookies.set("details", content);
       if (content.notifications.filter(k => k.unread).length > 0) {
         this.setState({ notified: false });
       }
