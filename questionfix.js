@@ -70,28 +70,12 @@ let Users = mongoose.model(
 db.on('open', () => {
   console.log('connected to database')
 
-  Questions.find((err, questions) => {
-    questions.map(question => {
-      question.topic.name = question.topic.name.replace(/_/g, ' ')
-      question.category.name = question.category.name.replace(/_/g, ' ')
-      question.markModified('topic')
-      question.markModified('category')
-      question.save()
+  Questions.find({ 'topic._id': '602' }, (err, questions) => {
+    questions.map((qu, i) => {
+      console.log(i)
+      qu.topic.name = 'Artificial Intelligence'
+      qu.markModified('topic')
+      qu.save()
     })
-    console.log('done fixing')
   })
-  Questions.remove({ 'topic._id': '615' }, err => {
-    console.log('removed')
-  })
-  Questions.find(
-    { 'category._id': 7, 'category.name': { $ne: 'EEE, ECE & EIE' } },
-    (err, questions) => {
-      questions.map((qu, i) => {
-        console.log(i)
-        qu.category.name = 'EEE, ECE & EIE'
-        qu.markModified('category')
-        qu.save()
-      })
-    }
-  )
 })
