@@ -1,10 +1,9 @@
 const express = require("express");
 const app = express();
 const http = require("http");
-const server = http.Server(app);
 const path = require("path");
 const debug = process.env.NODE_ENV !== "production";
-const io = require("socket.io")(server, {
+const io = require("socket.io")(app, {
   path: "/eskill/socket.io",
   transports: ["polling", "xhr-polling"]
 });
@@ -951,7 +950,7 @@ app.get("*", (req, res, next) => {
     res.sendFile(path.resolve(__dirname, "dist", "index.html"));
   }
 });
-server.listen(5000, () => {
+app.listen(5000, () => {
   console.log("Listening on 5000");
   setInterval(() => {
     console.log("Current User Count:", concurrentUsers);
