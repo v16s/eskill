@@ -111,40 +111,7 @@ let colleges = {
 };
 db.on("open", () => {
   console.log("connected to database");
-  Object.keys(colleges).map(college => {
-    let branchcount = 6;
-    if (college == "SRM Amaravathi") {
-      branchcount = 4;
-    }
-    branches.map((b, i) => {
-      if (i < branchcount) {
-        bcrypt.hash("samplepassword", 10, function(err, hash) {
-          user = new Users({
-            _id: `${colleges[college].id}${i + 1}`,
-            email: `sampleemail${colleges[college]}${i + 1}@gmail.com`,
-            password: hash,
-            type: "Faculty",
-            level: 4
-          });
-          details = new UserDetails({
-            _id: `${colleges[college].id}${i + 1}`,
-            level: 4,
-            details: {
-              name: `SRM ${colleges[college].a} ${abbr[i]} FACULTY eSkill`,
-              regNo: `${colleges[college].id}${i + 1}`,
-              department: `${b}`,
-              branch: `${college}`,
-              students: []
-            }
-          });
-          details.save();
-          user.save(err => {
-            console.log(
-              `Adding SRM ${colleges[college].a} ${abbr[i]} FACULTY eSkill`
-            );
-          });
-        });
-      }
-    });
+  UserDetails.find({ "details.branch": { $exists: false } }, (err, users) => {
+    console.log(users);
   });
 });
