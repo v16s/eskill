@@ -126,7 +126,7 @@ db.on("open", () => {
       }
       user.markModified("details");
       user.save(err => {
-        console.log(user._id);
+        console.log(user._id.slice(0, 1));
       });
     });
   });
