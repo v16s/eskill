@@ -78,5 +78,9 @@ db.on('open', () => {
       question.markModified('category')
       question.save()
     })
+    console.log('done fixing')
+  })
+  Questions.remove({ 'topic._id': 615 }, err => {
+    console.log('removed')
   })
 })

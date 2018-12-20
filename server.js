@@ -481,7 +481,7 @@ io.on("connection", socket => {
                   cat: cat,
                   topic: topic,
                   _id: sid,
-                  a: false,
+                  a: true,
                   name: details.details.name
                 });
                 fac.markModified("details");
@@ -494,17 +494,35 @@ io.on("connection", socket => {
                     acc.questions[cat] = {};
                   }
                   acc.questions[cat][topic] = {
-                    a: false,
+                    a: true,
                     q: [],
                     cat: cat,
                     pid: fac._id,
                     topic: topic
                   };
-                  acc.markModified("questions");
+                  let q = [],
+                  count = 0;
+                Questions.countDocuments(
+                  { "category.name": cat, "topic.name": topic },
+                  (err, c) => {
+                    count = c;
+                    if (count > 100) {
+                      while (q.length < 100) {
+                        var r = Math.floor(Math.random() * count);
+                        if (q.indexOf(r) === -1) q.push(r);
+                      }
+                    }
+
+                    acc.questions[cat][topic].q = q.map(k => {
+                      return { n: k, a: 0 };
+                    })
+                    acc.markModified("questions");
                   acc.save(err => {
                     socket.emit("q", acc.questions);
                     dbCheck.emit("change", [sid, pid]);
                   });
+                  })
+                  
                 });
               }
             });
