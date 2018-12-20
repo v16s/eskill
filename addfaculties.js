@@ -112,6 +112,22 @@ let colleges = {
 db.on("open", () => {
   console.log("connected to database");
   UserDetails.find({ "details.branch": { $exists: false } }, (err, users) => {
-    console.log(users);
+    users.map(user => {
+      switch (user._id.slice(0, 1)) {
+        case "4":
+          user.details.branch = "SRM Ramapuram";
+          break;
+        case "5":
+          user.details.branch = "SRM NCR";
+          break;
+        case "6":
+          user.details.branch = "SRM Amaravathi";
+          break;
+      }
+      user.markModified("details");
+      user.save(err => {
+        console.log(user._id);
+      });
+    });
   });
 });
