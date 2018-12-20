@@ -80,7 +80,7 @@ db.on('open', () => {
     })
     console.log('done fixing')
   })
-  Questions.remove({ 'topic._id': 615 }, err => {
+  Questions.remove({ 'topic._id': '615' }, err => {
     console.log('removed')
   })
   Questions.find({ 'category._id': 7 }, (err, questions) => {
