@@ -83,12 +83,15 @@ db.on('open', () => {
   Questions.remove({ 'topic._id': '615' }, err => {
     console.log('removed')
   })
-  Questions.find({ 'category._id': 7 }, (err, questions) => {
-    questions.map((qu, i) => {
-      console.log(i)
-      qu.category.name = 'EEE, ECE & EIE'
-      qu.markModified('category')
-      qu.save()
-    })
-  })
+  Questions.find(
+    { 'category._id': 7, 'category.name': { $ne: 'EEE, ECE & EIE' } },
+    (err, questions) => {
+      questions.map((qu, i) => {
+        console.log(i)
+        qu.category.name = 'EEE, ECE & EIE'
+        qu.markModified('category')
+        qu.save()
+      })
+    }
+  )
 })
