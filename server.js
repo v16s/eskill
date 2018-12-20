@@ -1,9 +1,10 @@
 const express = require("express");
 const app = express();
 const http = require("http");
+const server = http.createServer(app);
 const path = require("path");
 const debug = process.env.NODE_ENV !== "production";
-const io = require("socket.io")(app, {
+const io = require("socket.io")(server, {
   path: "/eskill/socket.io",
   transports: ["polling", "xhr-polling"]
 });
@@ -862,15 +863,11 @@ io.on("connection", socket => {
     });
     app.post(fid, (req, res) => {
       Users.findOne({ email: email }, (err, resetacc) => {
-        if (resetacc != null) {
-          try {
-            bcrypt.hash(req.body.p, 10, function(err, hash) {
-              resetacc.password = hash;
-              resetArray = resetArray.filter(k => k != fid);
-              resetacc.save();
-            });
-          } catch (e) {}
-        }
+        bcrypt.hash(req.body.p, 10, function(err, hash) {
+          resetacc.password = hash;
+          resetArray = resetArray.filter(k => k != fid);
+          resetacc.save();
+        });
       });
     });
   });
@@ -950,7 +947,7 @@ app.get("*", (req, res, next) => {
     res.sendFile(path.resolve(__dirname, "dist", "index.html"));
   }
 });
-app.listen(5000, () => {
+server.listen(5000, () => {
   console.log("Listening on 5000");
   setInterval(() => {
     console.log("Current User Count:", concurrentUsers);
