@@ -62,7 +62,7 @@ class Root extends React.Component {
       topics: [],
       chError: "",
       chSuccess: "",
-      qstate: cookies.get("qstate") || [],
+      qstate: {},
       mode: false,
       canReg: false,
       selcatname: cookies.get("selcat") || "",
@@ -105,7 +105,6 @@ class Root extends React.Component {
     cookies.remove("pass");
     cookies.remove("level");
     cookies.remove("tags");
-    cookies.remove("qstate");
     this.emit("logout");
     this.setState = {
       isLoggedIn: false,
@@ -114,7 +113,7 @@ class Root extends React.Component {
       tags: [],
       email: null,
       topics: [],
-      qstate: []
+      qstate: {}
     };
   }
 
@@ -219,7 +218,6 @@ class Root extends React.Component {
       }
     });
     socket.on("q", q => {
-      cookies.set("qstate", q);
       this.setState({ qstate: q });
     });
     socket.on("catError", error => {
