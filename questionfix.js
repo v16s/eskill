@@ -84,7 +84,8 @@ db.on('open', () => {
     console.log('removed')
   })
   Questions.find({ 'category._id': 7 }, (err, questions) => {
-    questions.map(qu => {
+    questions.map((qu, i) => {
+      console.log(i)
       qu.category.name = 'EEE, ECE & EIE'
       qu.markModified('category')
       qu.save()
