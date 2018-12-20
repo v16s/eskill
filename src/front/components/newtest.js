@@ -148,7 +148,7 @@ class NewTest extends React.Component {
 
     let ac = cat.replace(/ /g, "+"),
       top = topic.replace(/ /g, "+");
-    let qa = qall[ac];
+    let qa = qall[cat];
     if (qa != undefined && q == undefined) {
       this.fetchQuestion();
     }
