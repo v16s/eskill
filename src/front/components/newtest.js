@@ -146,8 +146,8 @@ class NewTest extends React.Component {
     let { topics, value, check, question: q } = this.state;
     let { categories, i, q: qall, cat, cid, topic } = this.props;
 
-    let ac = cat.replace(" ", "+"),
-      top = topic.replace(" ", "+");
+    let ac = cat.replace(/ /g, "+"),
+      top = topic.replace(/ /g, "+");
     let qa = qall[ac];
     if (qa != undefined && q == undefined) {
       this.fetchQuestion();

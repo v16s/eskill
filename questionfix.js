@@ -72,8 +72,8 @@ db.on('open', () => {
 
   Questions.find((err, questions) => {
     questions.map(question => {
-      question.topic.name = question.topic.name.replace('_', ' ')
-      question.category.name = question.category.name.replace('_', ' ')
+      question.topic.name = question.topic.name.replace(/_/g, ' ')
+      question.category.name = question.category.name.replace(/_/g, ' ')
       question.markModified('topic')
       question.markModified('category')
       question.save()

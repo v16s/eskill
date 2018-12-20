@@ -90,8 +90,8 @@ class QuestionPage extends React.Component {
     } = this.props
     let data = []
     let allcomplete = false
-    let actualcat = cat.replace('+', ' ')
-    let actualtop = topic.replace('+', ' ')
+    let actualcat = cat.replace(/[+]/g, ' ')
+    let actualtop = topic.replace(/[+]/g, ' ')
     if (qs[actualcat] != undefined) {
       data = qs[actualcat][actualtop].q.map((k, i) => {
         return {

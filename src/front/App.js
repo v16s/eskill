@@ -546,11 +546,11 @@ class Root extends React.Component {
                                 sname={this.state.details.details.name}
                                 i={props.match.params.id}
                                 cat={props.match.params.category.replace(
-                                  "+",
+                                  /[+]/g,
                                   " "
                                 )}
                                 topic={props.match.params.topic.replace(
-                                  "+",
+                                  /[+]/g,
                                   " "
                                 )}
                               />

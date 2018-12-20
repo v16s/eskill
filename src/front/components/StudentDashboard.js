@@ -146,9 +146,9 @@ class StudentDashboard extends React.Component {
                               if (qd.a === true) {
                                 history.push(
                                   `/eskill/question/${qd.cat.replace(
-                                    " ",
+                                    / /g,
                                     "+"
-                                  )}/${qd.topic.replace(" ", "+")}`
+                                  )}/${qd.topic.replace(/ /g, "+")}`
                                 );
                                 this.props.stateSet("selcatname", qu);
                               }
