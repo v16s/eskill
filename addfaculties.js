@@ -113,16 +113,12 @@ db.on("open", () => {
   console.log("connected to database");
   UserDetails.find({ "details.branch": { $exists: false } }, (err, users) => {
     users.map(user => {
-      switch (user._id.slice(0, 1)) {
-        case 4:
-          user.details.branch = "SRM Ramapuram";
-          break;
-        case 5:
-          user.details.branch = "SRM NCR";
-          break;
-        case 6:
-          user.details.branch = "SRM Amaravathi";
-          break;
+      if (user._id.slice(0, 1) == "4") {
+        user.details.branch = "SRM Ramapuram";
+      } else if (user._id.slice(0, 1) == "5") {
+        user.details.branch = "SRM NCR";
+      } else if (user._id.slice(0, 1) == "6") {
+        user.details.branch = "SRM Amaravathi";
       }
       user.markModified("details");
       user.save(err => {
