@@ -16,7 +16,7 @@ export default class StudentTable extends React.Component {
 
     details.details.students = _.reject(
       details.details.students.map((st, i) => {
-        if (st.topic == s.topic && st.cat == s.cat) {
+        if (st.topic == s.topic && st.cat == s.cat && s._id == st._id) {
           return { ...st, a: action || "rejected", loading: true };
         }
         return st;
