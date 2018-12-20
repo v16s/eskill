@@ -114,13 +114,13 @@ db.on("open", () => {
   UserDetails.find({ "details.branch": { $exists: false } }, (err, users) => {
     users.map(user => {
       switch (user._id.slice(0, 1)) {
-        case "4":
+        case 4:
           user.details.branch = "SRM Ramapuram";
           break;
-        case "5":
+        case 5:
           user.details.branch = "SRM NCR";
           break;
-        case "6":
+        case 6:
           user.details.branch = "SRM Amaravathi";
           break;
       }
