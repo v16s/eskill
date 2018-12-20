@@ -63,10 +63,10 @@ db.on('open', () => {
             if (que == null) {
               newdef = newdef.split('. ')
             } else {
-              newdef = newdef.split('.  ')
+              newdef = newdef.split('\t')
             }
-            console.log(newdef)
             newdef.shift()
+            console.log(newdef, que)
             let obj = {
               category: {
                 _id: cid,
