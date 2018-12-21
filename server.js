@@ -759,46 +759,46 @@ io.on("connection", socket => {
       loginCheck.on("canRegister", () => {
         let user, details;
         bcrypt.hash(r.password, 10, function(err, hash) {
-          if (!mode) {
-            user = new Users({
-              _id: r.regNo,
-              email: r.email,
-              password: hash,
-              type: "Student",
-              questions: {},
-              level: 0
-            });
-            details = new UserDetails({
-              _id: r.regNo,
-              level: 0,
-              details: {
-                name: r.name,
-                regNo: r.regNo,
-                department: r.branch,
-                branch: r.cbranch
-              }
-            });
-          } else {
-            user = new Users({
-              _id: r.regNo,
-              email: r.email,
-              password: hash,
-              type: "Faculty",
-              level: 4
-            });
-            details = new UserDetails({
-              _id: r.regNo,
-              level: 4,
-              details: {
-                name: r.name,
-                regNo: r.regNo,
-                department: r.branch,
-                branch: r.cbranch,
-                students: []
-              }
-            });
-          }
           try {
+            if (!mode) {
+              user = new Users({
+                _id: r.regNo,
+                email: r.email,
+                password: hash,
+                type: "Student",
+                questions: {},
+                level: 0
+              });
+              details = new UserDetails({
+                _id: r.regNo,
+                level: 0,
+                details: {
+                  name: r.name,
+                  regNo: r.regNo,
+                  department: r.branch,
+                  branch: r.cbranch
+                }
+              });
+            } else {
+              user = new Users({
+                _id: r.regNo,
+                email: r.email,
+                password: hash,
+                type: "Faculty",
+                level: 4
+              });
+              details = new UserDetails({
+                _id: r.regNo,
+                level: 4,
+                details: {
+                  name: r.name,
+                  regNo: r.regNo,
+                  department: r.branch,
+                  branch: r.cbranch,
+                  students: []
+                }
+              });
+            }
             details.save();
             user.save(err => {
               socket.emit("registerResponse", {
