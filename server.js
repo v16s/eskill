@@ -73,7 +73,6 @@ app.use((req, res, next) => {
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
   );
-  res.append("worker: " + cluster.worker.id);
   next();
 });
 app.use("/eskill", express.static(path.resolve(__dirname, "dist")));
