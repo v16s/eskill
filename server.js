@@ -6,11 +6,7 @@ server.setTimeout(180000);
 server.setMaxListeners(0);
 const path = require("path");
 const debug = process.env.NODE_ENV !== "production";
-const io = require("socket.io")(server, {
-  path: "/eskill/socket.io",
-  transports: ["polling", "xhr-polling"],
-  pingTimeout: 360000
-});
+
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
@@ -20,7 +16,6 @@ const nodemailer = require("nodemailer");
 var redis = require("socket.io-redis");
 var cluster = require("cluster");
 let sticky = require("sticky-session");
-io.sockets.setMaxListeners(0);
 
 class Event extends EventEmitter {}
 let mode = false;
@@ -167,6 +162,12 @@ if (!sticky.listen(server, port)) {
 
 // --------------- WORKER CODE -------------------------
 else {
+  const io = require("socket.io")(server, {
+    path: "/eskill/socket.io",
+    transports: ["polling", "xhr-polling"],
+    pingTimeout: 360000
+  });
+  io.sockets.setMaxListeners(0);
   let config = require("./config.json");
   let { dburl, email: emailid, password, reset: resetURL, stagingurl } = config;
 
