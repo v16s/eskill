@@ -737,10 +737,10 @@ io.on("connection", socket => {
 
   socket.on("reg", r => {
     if (canReg) {
-      Users.findOne({ email: r.email }, (err, acc) => {
-        if (acc == null || acc == undefined) {
-          Users.findById(r.email, (err, accid) => {
-            if (accid == null || accid == undefined) {
+      Users.find({ email: r.email }, (err, acc) => {
+        if (acc.length == 0) {
+          Users.find(r.email, (err, accid) => {
+            if (accid.length == 0) {
               loginCheck.emit("canRegister");
             } else {
               socket.emit("registerResponse", {
