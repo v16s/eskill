@@ -138,7 +138,7 @@ export default class StudentTable extends React.Component {
                 onPageChange={this.handlePaginationChange}
                 siblingRange={1}
                 totalPages={
-                  details.students != undefiend
+                  details.students != undefined
                     ? details.students.length / 20
                     : 0
                 }
