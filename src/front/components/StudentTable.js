@@ -67,7 +67,8 @@ export default class StudentTable extends React.Component {
                   return a.match(reg);
                 }
               }) != undefined &&
-              index < this.state.activePage * 20
+              index < this.state.activePage * 10 &&
+              index > this.state.activePage * 10 - 10
             ) {
               return (
                 <Table.Row key={s.name + s.cat + s.topic}>
@@ -139,7 +140,7 @@ export default class StudentTable extends React.Component {
                 siblingRange={1}
                 totalPages={
                   details.students != undefined
-                    ? details.students.length / 20
+                    ? parseInt(details.students.length / 10) + 1
                     : 0
                 }
                 ellipsisItem={true}
