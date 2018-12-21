@@ -134,7 +134,11 @@ export default class StudentTable extends React.Component {
           <Table.Row>
             <Table.Cell
               colSpan={5}
-              style={{ display: "flex", justifyContent: "center" }}
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                width: "100%"
+              }}
             >
               <Pagination
                 activePage={this.state.activePage}

@@ -53,9 +53,9 @@ export default class CompletionTable extends React.Component {
           </Table.Header>
         ) : null}
         <Table.Body>
-          {[...studentDetails].reverse().map(s => {
+          {[...studentDetails].reverse().map((s, index) => {
             if (
-              Object.values(s).find((a, index) => {
+              Object.values(s).find(a => {
                 if (typeof a === "string") {
                   let reg = new RegExp(searchvalue, "gi");
                   return a.match(reg);
@@ -91,7 +91,11 @@ export default class CompletionTable extends React.Component {
           <Table.Row>
             <Table.Cell
               colSpan={6}
-              style={{ display: "flex", justifyContent: "center" }}
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                width: "100%"
+              }}
             >
               <Pagination
                 activePage={this.state.activePage}
