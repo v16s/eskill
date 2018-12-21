@@ -141,6 +141,7 @@ export default class StudentTable extends React.Component {
                 }}
               >
                 <Pagination
+                  inverted={this.props.dark}
                   activePage={this.state.activePage}
                   boundaryRange={1}
                   onPageChange={this.handlePaginationChange}

@@ -5,13 +5,21 @@ import ChangeQuestion from "./ChangeQuestion";
 export default class CoordinatorProblems extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { searchValue: "", visible: false, cat: "", n: "", topic: "" };
+    this.state = {
+      searchValue: "",
+      visible: false,
+      cat: "",
+      n: "",
+      topic: "",
+      activePage: 1
+    };
     this.resolve = this.resolve.bind(this);
   }
   componentDidMount() {}
   updateSearch(e) {
     this.setState({ searchValue: e.value });
   }
+  handlePaginationChange = (e, { activePage }) => this.setState({ activePage });
   setProblem(p) {
     this.setState({ problem: p }, () => {
       this.resolve(false);
@@ -63,14 +71,16 @@ export default class CoordinatorProblems extends React.Component {
           </Table.Header>
         ) : null}
         <Table.Body>
-          {[...problems].reverse().map(s => {
+          {[...problems].reverse().map((s, index) => {
             if (
               Object.values(s).find(a => {
                 if (typeof a === "string") {
                   let reg = new RegExp(this.state.searchValue, "gi");
                   return a.match(reg);
                 }
-              }) != undefined
+              }) != undefined &&
+              index < this.state.activePage * 10 &&
+              index > this.state.activePage * 10 - 10
             ) {
               return (
                 <Table.Row key={s.name + "-problem-" + s.n + Math.random()}>
@@ -143,6 +153,34 @@ export default class CoordinatorProblems extends React.Component {
               );
             }
           })}
+          <Table.Row>
+            <Table.Cell colSpan={5}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  width: "100%"
+                }}
+              >
+                <Pagination
+                  inverted={this.props.dark}
+                  activePage={this.state.activePage}
+                  boundaryRange={1}
+                  onPageChange={this.handlePaginationChange}
+                  siblingRange={1}
+                  totalPages={
+                    problems != undefined
+                      ? parseInt(problems.length / 10) + 1
+                      : 0
+                  }
+                  ellipsisItem={true}
+                  prevItem={true}
+                  siblingRange={2}
+                  nextItem={true}
+                />
+              </div>
+            </Table.Cell>
+          </Table.Row>
         </Table.Body>
       </Table>
     );
