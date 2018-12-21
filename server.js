@@ -28,6 +28,7 @@ var redis = require("redis-eventemitter");
 var pubsub = redis({
   url: "redis://redis@localhost:6379/"
 });
+pubsub.setMaxListeners(0);
 let concurrentUsers = 0;
 const dbCheck = new Event();
 dbCheck.setMaxListeners(8000000);
