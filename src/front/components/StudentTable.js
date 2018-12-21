@@ -132,29 +132,30 @@ export default class StudentTable extends React.Component {
             }
           })}
           <Table.Row>
-            <Table.Cell
-              colSpan={5}
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                width: "100%"
-              }}
-            >
-              <Pagination
-                activePage={this.state.activePage}
-                boundaryRange={1}
-                onPageChange={this.handlePaginationChange}
-                siblingRange={1}
-                totalPages={
-                  details.students != undefined
-                    ? parseInt(details.students.length / 10) + 1
-                    : 0
-                }
-                ellipsisItem={true}
-                prevItem={true}
-                siblingRange={2}
-                nextItem={true}
-              />
+            <Table.Cell colSpan={5}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  width: "100%"
+                }}
+              >
+                <Pagination
+                  activePage={this.state.activePage}
+                  boundaryRange={1}
+                  onPageChange={this.handlePaginationChange}
+                  siblingRange={1}
+                  totalPages={
+                    details.students != undefined
+                      ? parseInt(details.students.length / 10) + 1
+                      : 0
+                  }
+                  ellipsisItem={true}
+                  prevItem={true}
+                  siblingRange={2}
+                  nextItem={true}
+                />
+              </div>
             </Table.Cell>
           </Table.Row>
         </Table.Body>
