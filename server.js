@@ -19,7 +19,7 @@ let sticky = require("sticky-session");
 
 // --------------------- STICKY LISTEN STARTS -------------------------
 
-if (!sticky.listen(server, port)) {
+if (!sticky.listen(server, 5000)) {
   server.once("listening", function() {
     console.log("server started on 5000 port");
   });
