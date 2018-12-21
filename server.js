@@ -738,11 +738,11 @@ io.on("connection", socket => {
   socket.on("reg", r => {
     if (canReg) {
       Users.find({ $or: [{ id: r.regNo }, { email: r.email }] }, (err, acc) => {
-        if (acc.length == 0) {
+        if (acc == undefined || acc.length == 0) {
           UsersDetails.find(
             { $or: [{ id: r.regNo }, { email: r.email }] },
             (err, accid) => {
-              if (accid.length == 0) {
+              if (accid == undefined || accid.length == 0) {
                 loginCheck.emit("canRegister");
               } else {
                 socket.emit("registerResponse", {
