@@ -992,8 +992,9 @@ app.get("*", (req, res, next) => {
     res.sendFile(path.resolve(__dirname, "dist", "index.html"));
   }
 });
-sticky.listen(server, 5000, () => {
-  console.log("Listening on 5000");
+const port = process.argv[2] || 5000;
+sticky.listen(server, port, () => {
+  console.log("Listening on " + port);
   setInterval(() => {
     console.log("Current User Count:", concurrentUsers);
   }, 5000);
