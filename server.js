@@ -879,27 +879,31 @@ io.on("connection", socket => {
     let fid = "/eskill/reset/" + makeid();
     resetArray.push(fid);
     let email = details.email;
-    transporter.sendMail({
-      from: emailid,
-      to: email,
-      subject: "eSkill Password Reset",
-      html: `<p>In Order to reset the password, please click the link below: </p><p><a href="${resetURL}${fid}">Reset Password</a></p>`
-    });
-    setTimeout(() => {
-      resetArray = resetArray.filter(k => k != fid);
-    }, 1800000);
-
-    app.get(fid, (req, res) => {
-      res.sendFile(path.resolve(__dirname, "forgot", "index.html"));
-    });
-    app.post(fid, (req, res) => {
-      Users.findOne({ email: email }, (err, resetacc) => {
-        bcrypt.hash(req.body.p, 10, function(err, hash) {
-          resetacc.password = hash;
-          resetArray = resetArray.filter(k => k != fid);
-          resetacc.save();
+    Users.find({ email: email }, (err, user) => {
+      if (user.length > 0) {
+        transporter.sendMail({
+          from: emailid,
+          to: email,
+          subject: "eSkill Password Reset",
+          html: `<p>In Order to reset the password, please click the link below: </p><p><a href="${resetURL}${fid}">Reset Password</a></p><p>This link is valid for 30 minutes from the time of generation</p>`
         });
-      });
+        setTimeout(() => {
+          resetArray = resetArray.filter(k => k != fid);
+        }, 1800000);
+
+        app.get(fid, (req, res) => {
+          res.sendFile(path.resolve(__dirname, "forgot", "index.html"));
+        });
+        app.post(fid, (req, res) => {
+          Users.findOne({ email: email }, (err, resetacc) => {
+            bcrypt.hash(req.body.p, 10, function(err, hash) {
+              resetacc.password = hash;
+              resetArray = resetArray.filter(k => k != fid);
+              resetacc.save();
+            });
+          });
+        });
+      }
     });
   });
 });
