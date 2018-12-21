@@ -293,7 +293,7 @@ io.on("connection", socket => {
       io.on("count", () => {
         Users.countDocuments({ level: 0 }, (err, c) => {
           Users.countDocuments({ level: 4 }, (err, c2) => {
-            socket.emit("count", [c, c2]);
+            socket.emit("countClient", [c, c2]);
           });
         });
       });
