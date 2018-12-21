@@ -273,6 +273,7 @@ io.on("connection", socket => {
   concurrentUsers++;
   const loginCheck = new Event();
   loginCheck.setMaxListeners(8000000);
+  socket.setMaxListeners(0);
   socket.on("det", content => {
     if (validateEmail(content.email)) {
       Users.findOne({ email: content.email }, (err, acc) => {
@@ -789,14 +790,21 @@ io.on("connection", socket => {
               }
             });
           }
-          details.save();
-          user.save(err => {
-            socket.emit("registerResponse", {
-              fail: false,
-              message: "Registration Successful"
+          try {
+            details.save();
+            user.save(err => {
+              socket.emit("registerResponse", {
+                fail: false,
+                message: "Registration Successful"
+              });
+              dbCheck.emit("count");
             });
-            dbCheck.emit("count");
-          });
+          } catch (e) {
+            socket.emit("registerResponse", {
+              fail: true,
+              message: "Registration Failed"
+            });
+          }
         });
       });
     }
