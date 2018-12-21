@@ -739,7 +739,7 @@ io.on("connection", socket => {
     if (canReg) {
       Users.find({ $or: [{ id: r.regNo }, { email: r.email }] }, (err, acc) => {
         if (acc == undefined || acc.length == 0) {
-          UsersDetails.find(
+          UserDetails.find(
             { $or: [{ id: r.regNo }, { email: r.email }] },
             (err, accid) => {
               if (accid == undefined || accid.length == 0) {
