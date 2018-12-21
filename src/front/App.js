@@ -17,7 +17,7 @@ import QuestionPage from "./components/QuestionPage";
 import ChangeQuestion from "./components/ChangeQuestion";
 import { socket as socUrl } from "./enpoint";
 let socket = io.connect(
-  "http://care.srmuniv.ac.in",
+  window.location.origin,
   {
     path: "/eskill/socket.io/",
     transports: ["polling", "xhr-polling"],
