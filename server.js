@@ -26,7 +26,7 @@ class Event extends EventEmitter {}
 let mode = false;
 var redis = require("redis-eventemitter");
 var pubsub = redis({
-  url: "redis://redis:redis@localhost:6379/"
+  url: "redis://redis@localhost:6379/"
 });
 let concurrentUsers = 0;
 const dbCheck = new Event();
