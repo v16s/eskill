@@ -16,6 +16,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const EventEmitter = require("events");
 const nodemailer = require("nodemailer");
+var sticky = require("sticky-session");
 
 const Schema = mongoose.Schema;
 const _ = require("lodash");
@@ -984,7 +985,7 @@ app.get("*", (req, res, next) => {
     res.sendFile(path.resolve(__dirname, "dist", "index.html"));
   }
 });
-server.listen(5000, () => {
+sitcky.listen(server, 5000, () => {
   console.log("Listening on 5000");
   setInterval(() => {
     console.log("Current User Count:", concurrentUsers);
