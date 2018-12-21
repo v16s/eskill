@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const http = require("http");
 const server = http.createServer(app);
+server.setTimeout(180000);
+server.setMaxListeners(0);
 const path = require("path");
 const debug = process.env.NODE_ENV !== "production";
 const io = require("socket.io")(server, {
