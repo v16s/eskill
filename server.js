@@ -9,7 +9,6 @@ const io = require("socket.io")(server, {
   transports: ["polling", "xhr-polling"],
   pingTimeout: 360000
 });
-io.adapter(redis({ host: "localhost", port: 6379 }));
 
 io.sockets.setMaxListeners(0);
 const bcrypt = require("bcrypt");
@@ -20,7 +19,7 @@ const EventEmitter = require("events");
 const nodemailer = require("nodemailer");
 var redis = require("socket.io-redis");
 let sticky = require("sticky-session");
-
+io.adapter(redis({ host: "localhost", port: 6379 }));
 const Schema = mongoose.Schema;
 const _ = require("lodash");
 class Event extends EventEmitter {}
