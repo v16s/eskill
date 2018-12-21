@@ -992,7 +992,7 @@ app.get("*", (req, res, next) => {
     res.sendFile(path.resolve(__dirname, "dist", "index.html"));
   }
 });
-const port = process.argv[2] || 5000;
+const port = 5000;
 sticky.listen(server, port, () => {
   console.log("Listening on " + port);
   setInterval(() => {
