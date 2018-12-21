@@ -275,7 +275,9 @@ io.on("connection", socket => {
           Users.findById(account._id, (err, newacc) => {
             try {
               socket.emit("q", newacc.questions);
-            } catch (e) {}
+            } catch (e) {
+              console.log(newacc);
+            }
           });
         }
       });
