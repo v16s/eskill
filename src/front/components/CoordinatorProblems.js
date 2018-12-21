@@ -1,4 +1,12 @@
-import { Table, Grid, Button, Modal, Segment, Input } from "semantic-ui-react";
+import {
+  Table,
+  Grid,
+  Button,
+  Modal,
+  Segment,
+  Input,
+  Pagination
+} from "semantic-ui-react";
 import { Progress } from "react-sweet-progress";
 import React from "react";
 import ChangeQuestion from "./ChangeQuestion";
