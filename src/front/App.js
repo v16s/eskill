@@ -137,10 +137,10 @@ class Root extends React.Component {
   componentDidMount(props) {
     const { cookies } = this.props;
     const { categories } = this.state;
-    history.listen(function (location) {
-      window.ga('set', 'page', location.pathname + location.search);
-      window.ga('send', 'pageview');
-  });
+    history.listen(function(location) {
+      window.ga("set", "page", location.pathname + location.search);
+      window.ga("send", "pageview");
+    });
     this.updateWindowDimensions();
     window.addEventListener("resize", this.updateWindowDimensions);
     socket.on("connect", () => {
@@ -174,7 +174,7 @@ class Root extends React.Component {
       this.setState({ qnumber: c });
     });
     socket.on("count", car => {
-      this.setState({ studentCount: car[0], facultyCount: car[1] });
+      console.log(car);
     });
     socket.on("validateLogin", content => {
       cookies.set("err", content.condition);
@@ -685,30 +685,30 @@ class Root extends React.Component {
                                 addError={this.state.addError}
                               />
                             ) : (
-                                    <StudentDashboard
-                                      md={this.state.details.details}
-                                      level={this.state.level}
-                                      dark={this.state.dark}
-                                      emit={this.emit}
-                                      faculties={this.state.details.faculties}
-                                      categories={this.state.categories}
-                                      history={this.props.history}
-                                      logout={this.logout}
-                                      details={this.state.details}
-                                      catError={this.state.catError}
-                                      topError={this.state.topError}
-                                      topics={this.state.topics}
-                                      catSuccess={this.state.catSuccess}
-                                      setLoading={this.setLoading}
-                                      topSuccess={this.state.topSuccess}
-                                      tags={this.state.tags}
-                                      grouped={this.state.grouped}
-                                      tagError={this.state.tagError}
-                                      tagSuccess={this.state.tagSuccess}
-                                      qs={this.state.qstate}
-                                      stateSet={this.stateSet}
-                                    />
-                                  )
+                              <StudentDashboard
+                                md={this.state.details.details}
+                                level={this.state.level}
+                                dark={this.state.dark}
+                                emit={this.emit}
+                                faculties={this.state.details.faculties}
+                                categories={this.state.categories}
+                                history={this.props.history}
+                                logout={this.logout}
+                                details={this.state.details}
+                                catError={this.state.catError}
+                                topError={this.state.topError}
+                                topics={this.state.topics}
+                                catSuccess={this.state.catSuccess}
+                                setLoading={this.setLoading}
+                                topSuccess={this.state.topSuccess}
+                                tags={this.state.tags}
+                                grouped={this.state.grouped}
+                                tagError={this.state.tagError}
+                                tagSuccess={this.state.tagSuccess}
+                                qs={this.state.qstate}
+                                stateSet={this.stateSet}
+                              />
+                            )
                           }
                         />
                       </div>
@@ -732,39 +732,39 @@ class Root extends React.Component {
             </Sidebar.Pushable>
           </div>
         ) : (
-            <Switch>
-              {this.state.canReg ? (
-                <Route
-                  path="/eskill/register"
-                  render={() => (
-                    <RegisterPage
-                      dark={this.state.dark}
-                      mode={this.state.mode}
-                      emit={this.emit}
-                    />
-                  )}
-                />
-              ) : null}
+          <Switch>
+            {this.state.canReg ? (
               <Route
-                path="/eskill/forgot"
+                path="/eskill/register"
                 render={() => (
-                  <ForgotPage dark={this.state.dark} emit={this.emit} />
-                )}
-              />
-              <Route
-                path="/eskill/"
-                render={() => (
-                  <Login
+                  <RegisterPage
                     dark={this.state.dark}
-                    fail={this.state.fail}
-                    success={this.state.success}
-                    emit={this.mainEmit}
-                    canReg={this.state.canReg}
+                    mode={this.state.mode}
+                    emit={this.emit}
                   />
                 )}
               />
-            </Switch>
-          )}
+            ) : null}
+            <Route
+              path="/eskill/forgot"
+              render={() => (
+                <ForgotPage dark={this.state.dark} emit={this.emit} />
+              )}
+            />
+            <Route
+              path="/eskill/"
+              render={() => (
+                <Login
+                  dark={this.state.dark}
+                  fail={this.state.fail}
+                  success={this.state.success}
+                  emit={this.mainEmit}
+                  canReg={this.state.canReg}
+                />
+              )}
+            />
+          </Switch>
+        )}
       </Router>
     );
   }
