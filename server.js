@@ -1006,7 +1006,7 @@ app.get("*", (req, res, next) => {
   }
 });
 const port = 5000;
-sticky.listen(server, port, () => {
+server.listen(port, () => {
   console.log("Listening on " + port);
   setInterval(() => {
     console.log("Current User Count:", concurrentUsers);
