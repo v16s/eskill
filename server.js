@@ -25,61 +25,7 @@ var pubsub = redis({
 });
 pubsub.setMaxListeners(0);
 let concurrentUsers = 0;
-const dbCheck = new Event();
-dbCheck.setMaxListeners(8000000);
-function makeid() {
-  var text = "";
-  var possible =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-  for (var i = 0; i < 16; i++)
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-  return text;
-}
-let validateEmail = email => {
-  var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(email);
-};
-let getAcademicYear = () => {
-  let academicYear;
-  if (new Date().getMonth + 1 < 7) {
-    academicYear = `${new Date().getFullYear() -
-      1} - ${new Date().getFullYear()}`;
-  } else {
-    academicYear = `${new Date().getFullYear()} - ${new Date().getFullYear() +
-      1}`;
-  }
-  return academicYear;
-};
-let notifications = [];
-let dbconnect = false;
-academicYear = getAcademicYear();
-app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use((req, res, next) => {
-  res.append("Access-Control-Allow-Origin", ["*"]);
-  res.append("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
-  res.append(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  res.end("worker: " + cluster.worker.id);
-  next();
-});
-app.use("/eskill", express.static(path.resolve(__dirname, "dist")));
-io.adapter(redis({ host: "localhost", port: 6379 }));
-const Schema = mongoose.Schema;
-const _ = require("lodash");
-const port = 5000;
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: emailid,
-    pass: password
-  }
-});
 let Users = mongoose.model(
   "Users",
   new Schema({
@@ -162,6 +108,61 @@ if (!sticky.listen(server, port)) {
 
 // --------------- WORKER CODE -------------------------
 else {
+  const dbCheck = new Event();
+  dbCheck.setMaxListeners(8000000);
+  function makeid() {
+    var text = "";
+    var possible =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for (var i = 0; i < 16; i++)
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+  }
+  let validateEmail = email => {
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+  };
+  let getAcademicYear = () => {
+    let academicYear;
+    if (new Date().getMonth + 1 < 7) {
+      academicYear = `${new Date().getFullYear() -
+        1} - ${new Date().getFullYear()}`;
+    } else {
+      academicYear = `${new Date().getFullYear()} - ${new Date().getFullYear() +
+        1}`;
+    }
+    return academicYear;
+  };
+  let notifications = [];
+  let dbconnect = false;
+  academicYear = getAcademicYear();
+  app.use(cookieParser());
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.json());
+  app.use((req, res, next) => {
+    res.append("Access-Control-Allow-Origin", ["*"]);
+    res.append("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
+    res.append(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept"
+    );
+    res.end("worker: " + cluster.worker.id);
+    next();
+  });
+  app.use("/eskill", express.static(path.resolve(__dirname, "dist")));
+  io.adapter(redis({ host: "localhost", port: 6379 }));
+  const Schema = mongoose.Schema;
+  const _ = require("lodash");
+  const port = 5000;
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: emailid,
+      pass: password
+    }
+  });
   const io = require("socket.io")(server, {
     path: "/eskill/socket.io",
     transports: ["polling", "xhr-polling"],
