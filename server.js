@@ -33,6 +33,13 @@ else {
   var pubsub = redis({
     url: "redis://redis@localhost:6379/"
   });
+
+  const io = require("socket.io")(server, {
+    path: "/eskill/socket.io",
+    transports: ["polling", "xhr-polling"],
+    pingTimeout: 360000
+  });
+  io.sockets.setMaxListeners(0);
   pubsub.setMaxListeners(0);
   let concurrentUsers = 0;
   const dbCheck = new Event();
@@ -161,12 +168,6 @@ else {
       pass: password
     }
   });
-  const io = require("socket.io")(server, {
-    path: "/eskill/socket.io",
-    transports: ["polling", "xhr-polling"],
-    pingTimeout: 360000
-  });
-  io.sockets.setMaxListeners(0);
   let config = require("./config.json");
   let { dburl, email: emailid, password, reset: resetURL, stagingurl } = config;
 
