@@ -1,4 +1,11 @@
-import { Table, Grid, Button, Segment, Input } from "semantic-ui-react";
+import {
+  Table,
+  Pagination,
+  Grid,
+  Button,
+  Segment,
+  Input
+} from "semantic-ui-react";
 import { Progress } from "react-sweet-progress";
 import React from "react";
 export default class RequestProblem extends React.Component {
