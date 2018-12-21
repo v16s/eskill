@@ -185,7 +185,7 @@ dbCheck.on("notify", name => {
           account.markModified("notifications");
           account.save(err => {
             if (!err) {
-              io.emit("change", [account._id]);
+              pubsub.emit("change", [account._id]);
             }
           });
         }
@@ -208,7 +208,7 @@ dbCheck.on("singlenotify", ({ name, id: sid }) => {
       account.markModified("notifications");
       account.save(err => {
         if (!err) {
-          io.emit("change", [account._id]);
+          pubsub.emit("change", [account._id]);
         }
       });
     });
@@ -473,7 +473,7 @@ io.on("connection", socket => {
                 acc.save(err => {
                   if (err) {
                   } else {
-                    io.emit("change", [acc._id]);
+                    pubsub.emit("change", [acc._id]);
                   }
                 });
               }
@@ -534,7 +534,7 @@ io.on("connection", socket => {
                         acc.markModified("questions");
                         acc.save(err => {
                           socket.emit("q", acc.questions);
-                          io.emit("change", [sid, pid]);
+                          pubsub.emit("change", [sid, pid]);
                         });
                       }
                     );
@@ -550,7 +550,7 @@ io.on("connection", socket => {
             acc.save(err => {
               if (!err) {
                 socket.emit("q", acc.questions);
-                io.emit("change", [acc.questions[cat][topic].pid]);
+                pubsub.emit("change", [acc.questions[cat][topic].pid]);
               }
             });
           });
@@ -565,7 +565,7 @@ io.on("connection", socket => {
               fac.markModified("details");
               fac.save(err => {
                 if (!err) {
-                  io.emit("change", [pid]);
+                  pubsub.emit("change", [pid]);
                   UserDetails.findOne({ level: 1 }, (err, coord) => {
                     if (coord.details.problems == undefined) {
                       coord.details.problems = [];
@@ -574,7 +574,7 @@ io.on("connection", socket => {
                     coord.markModified("details");
                     coord.save(err => {
                       if (!err) {
-                        io.emit("change", [coord._id]);
+                        pubsub.emit("change", [coord._id]);
                       }
                     });
                   });
@@ -605,7 +605,7 @@ io.on("connection", socket => {
                         } has been ${action ? "Resolved" : "Rejected"}`,
                         id: problem.sid
                       });
-                      io.emit("change", [problem.pid, acc._id]);
+                      pubsub.emit("change", [problem.pid, acc._id]);
                     });
                   }
                 });
@@ -706,7 +706,7 @@ io.on("connection", socket => {
                       } else {
                         details.markModified("details");
                         details.save(err2 => {
-                          io.emit("change", [student._id, acc._id]);
+                          pubsub.emit("change", [student._id, acc._id]);
                         });
                       }
                     });
@@ -722,7 +722,7 @@ io.on("connection", socket => {
                       console.log("rejected and deleted");
                       details.markModified("details");
                       details.save(err2 => {
-                        io.emit("change", [student._id, acc._id]);
+                        pubsub.emit("change", [student._id, acc._id]);
                       });
                     }
                   });
