@@ -173,7 +173,7 @@ class Root extends React.Component {
     socket.on("questionnumber", c => {
       this.setState({ qnumber: c });
     });
-    socket.on("countClient", car => {
+    socket.on("count", car => {
       console.log(car);
       this.setState({ studentCount: car[0], facultyCount: car[1] });
     });

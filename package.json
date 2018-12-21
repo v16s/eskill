@@ -25,6 +25,7 @@
     "mongoose": "^5.2.5",
     "nodemailer": "^4.7.0",
     "path": "^0.12.7",
+    "redis-eventemitter": "^2.0.1",
     "socket.io": "^2.1.1",
     "socket.io-redis": "^5.2.0",
     "sticky-session": "^1.1.2"

@@ -24,6 +24,10 @@ const Schema = mongoose.Schema;
 const _ = require("lodash");
 class Event extends EventEmitter {}
 let mode = false;
+var redis = require("redis-eventemitter");
+var pubsub = redis({
+  url: "redis://redis:redis@localhost:6379/"
+});
 let concurrentUsers = 0;
 const dbCheck = new Event();
 dbCheck.setMaxListeners(8000000);
@@ -257,7 +261,7 @@ io.on("connection", socket => {
     level = 0;
     account = { _id: "" };
   });
-  io.on("change", idlist => {
+  pubsub.on("change", idlist => {
     if (idlist.includes(account._id)) {
       UserDetails.findById(account._id, (err, details) => {
         socket.emit("changeDetails", {
@@ -289,11 +293,11 @@ io.on("connection", socket => {
     }
     loginCheck.on("success", acc => {
       account = acc;
-      io.emit("count");
-      io.on("count", () => {
+      pubsub.emit("count");
+      pubsub.on("count", () => {
         Users.countDocuments({ level: 0 }, (err, c) => {
           Users.countDocuments({ level: 4 }, (err, c2) => {
-            socket.emit("countClient", [c, c2]);
+            socket.emit("count", [c, c2]);
           });
         });
       });
@@ -311,7 +315,7 @@ io.on("connection", socket => {
           socket.emit("questionnumber", c);
         });
         if (level == 2) {
-          io.emit("count");
+          pubsub.emit("count");
           socket.on("toggleReg", () => {
             canReg = !canReg;
             socket.emit("canReg", canReg);
@@ -428,7 +432,7 @@ io.on("connection", socket => {
             details.notifications = det.notifications;
             details.markModified("notifications");
             details.save(err => {
-              io.emit("change", acc._id);
+              pubsub.emit("change", acc._id);
             });
           });
           socket.on("reset", ({ topic, cat }) => {
@@ -576,7 +580,7 @@ io.on("connection", socket => {
           });
         }
         if (level == 1) {
-          io.emit("count");
+          pubsub.emit("count");
           socket.on("resolve", ({ problem, action }) => {
             let ind = _.findIndex(details.details.problems, problem);
             if (ind != -1) {
@@ -800,7 +804,7 @@ io.on("connection", socket => {
                 fail: false,
                 message: "Registration Successful"
               });
-              io.emit("count");
+              pubsub.emit("count");
             });
           } catch (e) {
             socket.emit("registerResponse", {
