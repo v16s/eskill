@@ -17,87 +17,6 @@ var redis = require("socket.io-redis");
 var cluster = require("cluster");
 let sticky = require("sticky-session");
 
-class Event extends EventEmitter {}
-let mode = false;
-var redis = require("redis-eventemitter");
-var pubsub = redis({
-  url: "redis://redis@localhost:6379/"
-});
-pubsub.setMaxListeners(0);
-let concurrentUsers = 0;
-
-let Users = mongoose.model(
-  "Users",
-  new Schema({
-    _id: String,
-    email: String,
-    password: String,
-    type: String,
-    level: Number,
-    questions: Object
-  }),
-  "Users"
-);
-let Label = mongoose.model(
-  "Label",
-  new Schema({
-    _id: String,
-    name: String
-  })
-);
-let Tags = mongoose.model(
-  "Tags",
-  new Schema({
-    group: String,
-    name: String
-  }),
-  "Tags"
-);
-let Questions = mongoose.model(
-  "Questions",
-  new Schema({
-    category: Object,
-    label: Array,
-    topic: Object,
-    answer: String,
-    options: Object,
-    qname: String,
-    qdef: String,
-    hints: String,
-    number: Number
-  }),
-  "Questions"
-);
-let UserDetails = mongoose.model(
-  "UserDetails",
-  new Schema({
-    _id: String,
-    level: Number,
-    notifications: Array,
-    details: {
-      name: String,
-      regNo: String,
-      dob: Date,
-      gender: String,
-      department: String,
-      students: Array,
-      problems: Array,
-      branch: String
-    }
-  }),
-  "UserDetails"
-);
-let Category = mongoose.model(
-  "Category",
-  new Schema({
-    _id: Number,
-    name: String,
-    topics: Array,
-    notified: Boolean
-  }),
-  "Category"
-);
-
 // --------------------- STICKY LISTEN STARTS -------------------------
 
 if (!sticky.listen(server, port)) {
@@ -108,6 +27,14 @@ if (!sticky.listen(server, port)) {
 
 // --------------- WORKER CODE -------------------------
 else {
+  class Event extends EventEmitter {}
+  let mode = false;
+  var redis = require("redis-eventemitter");
+  var pubsub = redis({
+    url: "redis://redis@localhost:6379/"
+  });
+  pubsub.setMaxListeners(0);
+  let concurrentUsers = 0;
   const dbCheck = new Event();
   dbCheck.setMaxListeners(8000000);
   function makeid() {
@@ -154,6 +81,77 @@ else {
   app.use("/eskill", express.static(path.resolve(__dirname, "dist")));
   io.adapter(redis({ host: "localhost", port: 6379 }));
   const Schema = mongoose.Schema;
+  let Users = mongoose.model(
+    "Users",
+    new Schema({
+      _id: String,
+      email: String,
+      password: String,
+      type: String,
+      level: Number,
+      questions: Object
+    }),
+    "Users"
+  );
+  let Label = mongoose.model(
+    "Label",
+    new Schema({
+      _id: String,
+      name: String
+    })
+  );
+  let Tags = mongoose.model(
+    "Tags",
+    new Schema({
+      group: String,
+      name: String
+    }),
+    "Tags"
+  );
+  let Questions = mongoose.model(
+    "Questions",
+    new Schema({
+      category: Object,
+      label: Array,
+      topic: Object,
+      answer: String,
+      options: Object,
+      qname: String,
+      qdef: String,
+      hints: String,
+      number: Number
+    }),
+    "Questions"
+  );
+  let UserDetails = mongoose.model(
+    "UserDetails",
+    new Schema({
+      _id: String,
+      level: Number,
+      notifications: Array,
+      details: {
+        name: String,
+        regNo: String,
+        dob: Date,
+        gender: String,
+        department: String,
+        students: Array,
+        problems: Array,
+        branch: String
+      }
+    }),
+    "UserDetails"
+  );
+  let Category = mongoose.model(
+    "Category",
+    new Schema({
+      _id: Number,
+      name: String,
+      topics: Array,
+      notified: Boolean
+    }),
+    "Category"
+  );
   const _ = require("lodash");
   const port = 5000;
   const transporter = nodemailer.createTransport({
