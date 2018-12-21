@@ -273,7 +273,9 @@ io.on("connection", socket => {
         });
         if (level == 0) {
           Users.findById(account._id, (err, newacc) => {
-            socket.emit("q", newacc.questions);
+            try {
+              socket.emit("q", newacc.questions);
+            } catch (e) {}
           });
         }
       });
