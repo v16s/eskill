@@ -11,7 +11,7 @@ const io = require("socket.io")(server, {
   transports: ["polling", "xhr-polling"],
   pingTimeout: 360000
 });
-
+const os = require("os");
 io.sockets.setMaxListeners(0);
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
@@ -1017,6 +1017,9 @@ if (!sticky.listen(server, port)) {
   });
   if (cluster.isMaster) {
     console.log("Master server started on port", port);
+    for (var i = 0; i < 16; i++) {
+      cluster.fork();
+    }
   }
 } else {
   console.log("child started on port", port, " worker id:", cluster.worker.id);
