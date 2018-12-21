@@ -889,6 +889,7 @@ io.on("connection", socket => {
   });
   socket.on("disconnect", () => {
     concurrentUsers--;
+    console.log("user disconnected");
   });
 
   socket.on("forgot", details => {

@@ -300,7 +300,7 @@ class Root extends React.Component {
     });
     window.onbeforeunload = () => {
       cookies.set("selcat", this.state.selcatname);
-      socket.emit("disconnect");
+      socket.disconnect();
     };
   }
   handleHomeClick() {
