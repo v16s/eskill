@@ -730,9 +730,9 @@ io.on("connection", socket => {
   socket.on("reg", r => {
     if (canReg) {
       Users.findOne({ email: r.email }, (err, acc) => {
-        if (acc == null) {
+        if (acc == null || acc == undefined) {
           Users.findById(r.email, (err, accid) => {
-            if (accid == null) {
+            if (accid == null || accid == undefined) {
               loginCheck.emit("canRegister");
             } else {
               socket.emit("registerResponse", {
@@ -903,6 +903,8 @@ io.on("connection", socket => {
             });
           });
         });
+      } else {
+        console.log(user);
       }
     });
   });
