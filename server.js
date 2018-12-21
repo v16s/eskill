@@ -9,6 +9,8 @@ const io = require("socket.io")(server, {
   transports: ["polling", "xhr-polling"],
   pingTimeout: 360000
 });
+io.adapter(redis({ host: "localhost", port: 6379 }));
+
 io.sockets.setMaxListeners(0);
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
@@ -16,6 +18,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const EventEmitter = require("events");
 const nodemailer = require("nodemailer");
+var redis = require("socket.io-redis");
 let sticky = require("sticky-session");
 
 const Schema = mongoose.Schema;
@@ -175,7 +178,7 @@ dbCheck.on("notify", name => {
           account.markModified("notifications");
           account.save(err => {
             if (!err) {
-              dbCheck.emit("change", [account._id]);
+              io.emit("change", [account._id]);
             }
           });
         }
@@ -198,7 +201,7 @@ dbCheck.on("singlenotify", ({ name, id: sid }) => {
       account.markModified("notifications");
       account.save(err => {
         if (!err) {
-          dbCheck.emit("change", [account._id]);
+          io.emit("change", [account._id]);
         }
       });
     });
@@ -255,7 +258,7 @@ io.on("connection", socket => {
     level = 0;
     account = { _id: "" };
   });
-  dbCheck.on("change", idlist => {
+  io.on("change", idlist => {
     if (idlist.includes(account._id)) {
       UserDetails.findById(account._id, (err, details) => {
         socket.emit("changeDetails", {
@@ -287,8 +290,8 @@ io.on("connection", socket => {
     }
     loginCheck.on("success", acc => {
       account = acc;
-      dbCheck.emit("count");
-      dbCheck.on("count", () => {
+      io.emit("count");
+      io.on("count", () => {
         Users.countDocuments({ level: 0 }, (err, c) => {
           Users.countDocuments({ level: 4 }, (err, c2) => {
             socket.emit("count", [c, c2]);
@@ -309,7 +312,7 @@ io.on("connection", socket => {
           socket.emit("questionnumber", c);
         });
         if (level == 2) {
-          dbCheck.emit("count");
+          io.emit("count");
           socket.on("toggleReg", () => {
             canReg = !canReg;
             socket.emit("canReg", canReg);
@@ -426,7 +429,7 @@ io.on("connection", socket => {
             details.notifications = det.notifications;
             details.markModified("notifications");
             details.save(err => {
-              dbCheck.emit("change", acc._id);
+              io.emit("change", acc._id);
             });
           });
           socket.on("reset", ({ topic, cat }) => {
@@ -463,7 +466,7 @@ io.on("connection", socket => {
                 acc.save(err => {
                   if (err) {
                   } else {
-                    dbCheck.emit("change", [acc._id]);
+                    io.emit("change", [acc._id]);
                   }
                 });
               }
@@ -524,7 +527,7 @@ io.on("connection", socket => {
                         acc.markModified("questions");
                         acc.save(err => {
                           socket.emit("q", acc.questions);
-                          dbCheck.emit("change", [sid, pid]);
+                          io.emit("change", [sid, pid]);
                         });
                       }
                     );
@@ -540,7 +543,7 @@ io.on("connection", socket => {
             acc.save(err => {
               if (!err) {
                 socket.emit("q", acc.questions);
-                dbCheck.emit("change", [acc.questions[cat][topic].pid]);
+                io.emit("change", [acc.questions[cat][topic].pid]);
               }
             });
           });
@@ -555,7 +558,7 @@ io.on("connection", socket => {
               fac.markModified("details");
               fac.save(err => {
                 if (!err) {
-                  dbCheck.emit("change", [pid]);
+                  io.emit("change", [pid]);
                   UserDetails.findOne({ level: 1 }, (err, coord) => {
                     if (coord.details.problems == undefined) {
                       coord.details.problems = [];
@@ -564,7 +567,7 @@ io.on("connection", socket => {
                     coord.markModified("details");
                     coord.save(err => {
                       if (!err) {
-                        dbCheck.emit("change", [coord._id]);
+                        io.emit("change", [coord._id]);
                       }
                     });
                   });
@@ -574,7 +577,7 @@ io.on("connection", socket => {
           });
         }
         if (level == 1) {
-          dbCheck.emit("count");
+          io.emit("count");
           socket.on("resolve", ({ problem, action }) => {
             let ind = _.findIndex(details.details.problems, problem);
             if (ind != -1) {
@@ -595,7 +598,7 @@ io.on("connection", socket => {
                         } has been ${action ? "Resolved" : "Rejected"}`,
                         id: problem.sid
                       });
-                      dbCheck.emit("change", [problem.pid, acc._id]);
+                      io.emit("change", [problem.pid, acc._id]);
                     });
                   }
                 });
@@ -696,7 +699,7 @@ io.on("connection", socket => {
                       } else {
                         details.markModified("details");
                         details.save(err2 => {
-                          dbCheck.emit("change", [student._id, acc._id]);
+                          io.emit("change", [student._id, acc._id]);
                         });
                       }
                     });
@@ -712,7 +715,7 @@ io.on("connection", socket => {
                       console.log("rejected and deleted");
                       details.markModified("details");
                       details.save(err2 => {
-                        dbCheck.emit("change", [student._id, acc._id]);
+                        io.emit("change", [student._id, acc._id]);
                       });
                     }
                   });
@@ -798,7 +801,7 @@ io.on("connection", socket => {
                 fail: false,
                 message: "Registration Successful"
               });
-              dbCheck.emit("count");
+              io.emit("count");
             });
           } catch (e) {
             socket.emit("registerResponse", {
