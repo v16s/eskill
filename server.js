@@ -9,6 +9,7 @@ const io = require("socket.io")(server, {
   transports: ["polling", "xhr-polling"],
   pingTimeout: 360000
 });
+io.sockets.setMaxListeners(0);
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
@@ -470,7 +471,7 @@ io.on("connection", socket => {
           socket.on("requestCourse", det => {
             let { cat, faculty: pid, student: sid, cid, topic } = det;
             Users.findById(acc._id, (err, stacc) => {
-              acc.questions = stacc.questions
+              acc.questions = stacc.questions;
               UserDetails.findOne({ _id: pid }, (err, fac) => {
                 if (
                   _.find(fac.details.students, {
@@ -503,33 +504,32 @@ io.on("connection", socket => {
                       topic: topic
                     };
                     let q = [],
-                    count = 0;
-                  Questions.countDocuments(
-                    { "category.name": cat, "topic.name": topic },
-                    (err, c) => {
-                      count = c;
-                      if (count > 100) {
-                        while (q.length < 100) {
-                          var r = Math.floor(Math.random() * count);
-                          if (q.indexOf(r) === -1) q.push(r);
+                      count = 0;
+                    Questions.countDocuments(
+                      { "category.name": cat, "topic.name": topic },
+                      (err, c) => {
+                        count = c;
+                        if (count > 100) {
+                          while (q.length < 100) {
+                            var r = Math.floor(Math.random() * count);
+                            if (q.indexOf(r) === -1) q.push(r);
+                          }
                         }
+
+                        acc.questions[cat][topic].q = q.map(k => {
+                          return { n: k, a: 0 };
+                        });
+                        acc.markModified("questions");
+                        acc.save(err => {
+                          socket.emit("q", acc.questions);
+                          dbCheck.emit("change", [sid, pid]);
+                        });
                       }
-  
-                      acc.questions[cat][topic].q = q.map(k => {
-                        return { n: k, a: 0 };
-                      })
-                      acc.markModified("questions");
-                    acc.save(err => {
-                      socket.emit("q", acc.questions);
-                      dbCheck.emit("change", [sid, pid]);
-                    });
-                    })
-                    
+                    );
                   });
                 }
-              })
-            })
-            
+              });
+            });
           });
           socket.on("changeQuestion", opts => {
             let [q, cat, topic] = opts;
