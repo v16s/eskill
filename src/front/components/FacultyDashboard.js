@@ -138,7 +138,13 @@ class FacultyDashboard extends React.Component {
                       menuItem: "Approval List",
                       render: () => (
                         <Tab.Pane inverted={this.props.dark} attached={false}>
-                          <StudentTable {...this.props} />
+                          <StudentTable
+                            stateSet={this.props.stateSet}
+                            emit={this.props.emit}
+                            details={this.props.details}
+                            width={this.props.width}
+                            dark={this.props.dark}
+                          />
                         </Tab.Pane>
                       )
                     },
@@ -147,7 +153,11 @@ class FacultyDashboard extends React.Component {
                       render: () => (
                         <Tab.Pane inverted={this.props.dark} attached={false}>
                           <CompletionTable
-                            {...this.props}
+                            stateSet={this.props.stateSet}
+                            emit={this.props.emit}
+                            details={this.props.details}
+                            width={this.props.width}
+                            dark={this.props.dark}
                             studentDetails={studentDetails}
                           />
                         </Tab.Pane>
@@ -158,7 +168,9 @@ class FacultyDashboard extends React.Component {
                       render: () => (
                         <Tab.Pane inverted={this.props.dark} attached={false}>
                           <ReportProblem
-                            {...this.props}
+                            details={this.props.details}
+                            width={this.props.width}
+                            dark={this.props.dark}
                             studentDetails={studentDetails}
                           />
                         </Tab.Pane>
