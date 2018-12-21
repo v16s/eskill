@@ -132,7 +132,10 @@ export default class StudentTable extends React.Component {
             }
           })}
           <Table.Row>
-            <Table.Cell colSpan={5}>
+            <Table.Cell
+              colSpan={5}
+              style={{ display: "flex", justifyContent: "center" }}
+            >
               <Pagination
                 activePage={this.state.activePage}
                 boundaryRange={1}
@@ -145,6 +148,7 @@ export default class StudentTable extends React.Component {
                 }
                 ellipsisItem={true}
                 prevItem={true}
+                siblingRange={2}
                 nextItem={true}
               />
             </Table.Cell>

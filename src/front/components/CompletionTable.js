@@ -1,42 +1,43 @@
-import { Table, Grid, Button, Segment, Input } from 'semantic-ui-react'
-import { Progress } from 'react-sweet-progress'
-import React from 'react'
+import { Table, Grid, Button, Segment, Input } from "semantic-ui-react";
+import { Progress } from "react-sweet-progress";
+import React from "react";
 export default class CompletionTable extends React.Component {
-  constructor (props) {
-    super(props)
-    this.state = { searchvalue: '' }
-    this.accept = this.accept.bind(this)
+  constructor(props) {
+    super(props);
+    this.state = { searchvalue: "", activePage: 1 };
+    this.accept = this.accept.bind(this);
   }
-  updateSearch (e) {
-    this.setState({ searchvalue: e.value })
+  updateSearch(e) {
+    this.setState({ searchvalue: e.value });
   }
-  componentDidMount () {}
-  accept (s, action) {
-    let { details, stateSet, emit } = this.props
+  componentDidMount() {}
+  accept(s, action) {
+    let { details, stateSet, emit } = this.props;
 
     details.details.students = details.details.students.map(st => {
       if (st == s) {
-        return { ...st, a: action || 'rejected' }
+        return { ...st, a: action || "rejected" };
       }
-      return st
-    })
+      return st;
+    });
 
-    stateSet('details', details)
-    emit('acceptCourse', [s._id, s.cat, action, details])
+    stateSet("details", details);
+    emit("acceptCourse", [s._id, s.cat, action, details]);
   }
-  render () {
-    let { width, studentDetails } = this.props
-    let { searchvalue } = this.state
-    let { details } = this.props.details
+  handlePaginationChange = (e, { activePage }) => this.setState({ activePage });
+  render() {
+    let { width, studentDetails } = this.props;
+    let { searchvalue } = this.state;
+    let { details } = this.props.details;
     return (
       <Table inverted={this.props.dark}>
         {width > 768 ? (
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell colSpan='6'>
+              <Table.HeaderCell colSpan="6">
                 <Input
                   fluid
-                  placeholder='Search'
+                  placeholder="Search"
                   onChange={(e, syn) => this.updateSearch(syn)}
                 />
               </Table.HeaderCell>
@@ -54,12 +55,14 @@ export default class CompletionTable extends React.Component {
         <Table.Body>
           {[...studentDetails].reverse().map(s => {
             if (
-              Object.values(s).find(a => {
-                if (typeof a === 'string') {
-                  let reg = new RegExp(searchvalue, 'gi')
-                  return a.match(reg)
+              Object.values(s).find((a, index) => {
+                if (typeof a === "string") {
+                  let reg = new RegExp(searchvalue, "gi");
+                  return a.match(reg);
                 }
-              }) != undefined
+              }) != undefined &&
+              index < this.state.activePage * 10 &&
+              index > this.state.activePage * 10 - 10
             ) {
               return (
                 <Table.Row key={s.name + s.cat + s.topic}>
@@ -70,23 +73,45 @@ export default class CompletionTable extends React.Component {
                   <Table.Cell>
                     <Progress
                       percent={parseInt(s.c)}
-                      status='success'
+                      status="success"
                       theme={{
                         success: {
-                          color: '#3281ff',
-                          symbol: s.c + '%',
-                          trailColor: this.props.dark ? '#fff' : '#efefef'
+                          color: "#3281ff",
+                          symbol: s.c + "%",
+                          trailColor: this.props.dark ? "#fff" : "#efefef"
                         }
                       }}
                     />
                   </Table.Cell>
-                  <Table.Cell textAlign='center'>{s.cor}</Table.Cell>
+                  <Table.Cell textAlign="center">{s.cor}</Table.Cell>
                 </Table.Row>
-              )
+              );
             }
           })}
+          <Table.Row>
+            <Table.Cell
+              colSpan={6}
+              style={{ display: "flex", justifyContent: "center" }}
+            >
+              <Pagination
+                activePage={this.state.activePage}
+                boundaryRange={1}
+                onPageChange={this.handlePaginationChange}
+                siblingRange={1}
+                totalPages={
+                  details.students != undefined
+                    ? parseInt(details.students.length / 10) + 1
+                    : 0
+                }
+                ellipsisItem={true}
+                prevItem={true}
+                siblingRange={2}
+                nextItem={true}
+              />
+            </Table.Cell>
+          </Table.Row>
         </Table.Body>
       </Table>
-    )
+    );
   }
 }
