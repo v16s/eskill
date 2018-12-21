@@ -162,7 +162,7 @@ export default class CoordinatorProblems extends React.Component {
             }
           })}
           <Table.Row>
-            <Table.Cell colSpan={5}>
+            <Table.Cell colSpan={7}>
               <div
                 style={{
                   display: "flex",
