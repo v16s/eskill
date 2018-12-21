@@ -737,28 +737,31 @@ io.on("connection", socket => {
 
   socket.on("reg", r => {
     if (canReg) {
-      Users.find({ $or: [{ id: r.regNo }, { email: r.email }] }, (err, acc) => {
-        if (acc == undefined || acc.length == 0) {
-          UserDetails.find(
-            { $or: [{ id: r.regNo }, { email: r.email }] },
-            (err, accid) => {
-              if (accid == undefined || accid.length == 0) {
-                loginCheck.emit("canRegister");
-              } else {
-                socket.emit("registerResponse", {
-                  fail: true,
-                  message: "Registration Failed"
-                });
+      Users.find(
+        { $or: [{ _id: r.regNo }, { email: r.email }] },
+        (err, acc) => {
+          if (acc == undefined || acc.length == 0) {
+            UserDetails.find(
+              { $or: [{ _id: r.regNo }, { email: r.email }] },
+              (err, accid) => {
+                if (accid == undefined || accid.length == 0) {
+                  loginCheck.emit("canRegister");
+                } else {
+                  socket.emit("registerResponse", {
+                    fail: true,
+                    message: "Registration Failed"
+                  });
+                }
               }
-            }
-          );
-        } else {
-          socket.emit("registerResponse", {
-            fail: true,
-            message: "Registration Failed"
-          });
+            );
+          } else {
+            socket.emit("registerResponse", {
+              fail: true,
+              message: "Registration Failed"
+            });
+          }
         }
-      });
+      );
       loginCheck.on("canRegister", () => {
         let user, details;
         bcrypt.hash(r.password, 10, function(err, hash) {
