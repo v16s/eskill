@@ -4,8 +4,6 @@ require("sticky-cluster")(
     const app = express();
     const http = require("http");
     const server = http.createServer(app);
-    server.setTimeout(180000);
-    server.setMaxListeners(0);
     const path = require("path");
     const io = require("socket.io")(server, {
       path: "/eskill/socket.io",
@@ -1017,7 +1015,6 @@ require("sticky-cluster")(
         res.sendFile(path.resolve(__dirname, "dist", "index.html"));
       }
     });
-    const port = process.env.PORT || 5000;
   },
   {
     concurrency: 16,
