@@ -15,6 +15,7 @@ import CoordinatorDashboard from "./components/CoordinatorDashboard";
 import FacultyDashboard from "./components/FacultyDashboard";
 import QuestionPage from "./components/QuestionPage";
 import ChangeQuestion from "./components/ChangeQuestion";
+import ChangeModal from "./components/ChangeModal";
 import { pubpath } from "./enpoint";
 let socket = io.connect(
   window.location.origin,
@@ -73,7 +74,12 @@ class Root extends React.Component {
       addError: "",
       studentCount: 0,
       facultyCount: 0,
-      dark: cookies.get("dark") == "true" ? true : false
+      dark: cookies.get("dark") == "true" ? true : false,
+      cpn: "",
+      cpcat: "",
+      cptopic: "",
+      cpvisible: false,
+      cpproblem: {}
     };
     this.emit = this.emit.bind(this);
     this.logout = this.logout.bind(this);
@@ -461,7 +467,19 @@ class Root extends React.Component {
                 </Menu.Menu>
               </Menu>
             </Segment>
-
+            {this.state.cpvisible ? (
+              <ChangeModal
+                visible={this.state.cpvisible}
+                n={this.state.cpn}
+                dark={this.state.dark}
+                cat={this.state.cpcat}
+                chError={this.state.chError}
+                chSuccess={this.state.chSuccess}
+                topic={this.state.cptopic}
+                stateSet={this.stateSet}
+                emit={this.emit}
+              />
+            ) : null}
             <Sidebar.Pushable>
               <Sidebar
                 as={Menu}

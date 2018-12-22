@@ -34,20 +34,7 @@ export default class CoordinatorProblems extends React.Component {
       this.resolve(false);
     });
   }
-  handleClick(e, n, cat, p, topic) {
-    this.setState({
-      n: n || "",
-      cat: cat || "",
-      topic: topic || "",
-      visible: !this.state.visible,
-      problem: p
-    });
-  }
-  resolve(action) {
-    let { emit } = this.props;
-    emit("resolve", { problem: this.state.problem, action: action });
-    this.setState({ visible: false });
-  }
+
   render() {
     let { details } = this.props.details;
     let { width } = this.props;
@@ -100,18 +87,6 @@ export default class CoordinatorProblems extends React.Component {
                   <Table.Cell>{s.n}</Table.Cell>
                   <Table.Cell>{s.desc}</Table.Cell>
                   <Table.Cell>
-                    {this.state.visible ? (
-                      <ChangeModal
-                        visible={this.state.visible}
-                        n={this.state.n}
-                        dark={this.props.dark}
-                        cat={this.state.cat}
-                        chError={this.props.chError}
-                        chSuccess={this.props.chSuccess}
-                        topic={this.state.topic}
-                        resolve={this.resolve}
-                      />
-                    ) : null}
                     {s.resolution === false ? (
                       <Grid padded={false} columns={2} stackable>
                         <Grid.Column style={{ padding: "5px" }}>

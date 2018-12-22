@@ -11,13 +11,31 @@ import {
 
 import ChangeQuestion from "./ChangeQuestion";
 export default class ChangeModal extends React.Component {
+  constructor(props) {
+    super(props);
+    this.resolve = this.resolve.bind(this);
+  }
+  handleClick(e, n, cat, p, topic) {
+    this.props.stateSet({
+      cpn: n || "",
+      cpcat: cat || "",
+      cptopic: topic || "",
+      cpvisible: !this.props.visible,
+      cpproblem: p
+    });
+  }
+  resolve(action) {
+    let { emit } = this.props;
+    emit("resolve", { problem: this.state.problem, action: action });
+    stateSet({ cpvisible: false });
+  }
   render() {
     return (
       <Modal
         closeOnDimmerClick
         open={this.props.visible}
         size="large"
-        onClose={() => this.props.handleClick()}
+        onClose={() => this.handleClick()}
       >
         <Modal.Content
           style={{
@@ -25,6 +43,7 @@ export default class ChangeModal extends React.Component {
           }}
         >
           <ChangeQuestion
+            {...this.props}
             n={this.props.n}
             modal
             dark={this.props.dark}
