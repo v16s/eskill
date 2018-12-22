@@ -21,6 +21,16 @@ export default class CoordinatorProblems extends React.Component {
       topic: "",
       activePage: 1
     };
+    this.handleClick = this.handleClick.bind(this);
+  }
+  handleClick(e, n, cat, p, topic) {
+    this.props.stateSet({
+      cpn: n || "",
+      cpcat: cat || "",
+      cptopic: topic || "",
+      cpvisible: !this.props.visible,
+      cpproblem: p
+    });
   }
   componentDidMount() {}
   updateSearch(e) {
