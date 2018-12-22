@@ -700,9 +700,8 @@ require("sticky-cluster")(
                     prof.markModified("details");
                     prof.save(err => {
                       dbCheck.emit("singlenotify", {
-                        name: `Your reported problem with ${
-                          problem.sqname
-                        } in ${problem.topic.name} has been ${
+                        name: `Your reported problem with ${problem.sqname ||
+                          "a Question"} in ${problem.topic.name} has been ${
                           action ? "Resolved" : "Rejected"
                         }`,
                         id: problem.sid
