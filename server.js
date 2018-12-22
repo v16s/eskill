@@ -527,7 +527,7 @@ require("sticky-cluster")(
 
       socket.on("reset", ({ topic, cat }) => {
         if (loggedIn && level == 0) {
-          Users.findById(acc._id, (err, acc) => {
+          Users.findById(account._id, (err, acc) => {
             if (acc.questions[cat][topic].qo == undefined) {
               acc.questions[cat][topic].qo = [];
             }
