@@ -855,7 +855,7 @@ require("sticky-cluster")(
                   { $or: [{ _id: r.regNo }, { email: r.email }] },
                   (err, accid) => {
                     if (accid == undefined || accid.length == 0) {
-                      loginCheck.emit("canRegister");
+                      loginCheck.emit("canRegister", r);
                     } else {
                       socket.emit("registerResponse", {
                         fail: true,
@@ -874,7 +874,7 @@ require("sticky-cluster")(
           );
         }
       });
-      loginCheck.on("canRegister", () => {
+      loginCheck.on("canRegister", r => {
         let user, details;
         bcrypt.hash(r.password, 10, function(err, hash) {
           try {
