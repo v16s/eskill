@@ -25,7 +25,7 @@ export default class ChangeModal extends React.Component {
     });
   }
   resolve(action) {
-    let { emit } = this.props;
+    let { emit, stateSet } = this.props;
     emit("resolve", { problem: this.state.problem, action: action });
     stateSet({ cpvisible: false });
   }

@@ -681,6 +681,7 @@ class Root extends React.Component {
                                 faculties={this.state.details.faculties}
                                 categories={this.state.categories}
                                 history={this.props.history}
+                                stateSet={this.stateSet}
                                 logout={this.logout}
                                 details={this.state.details}
                                 catError={this.state.catError}
