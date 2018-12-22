@@ -1,3 +1,4 @@
+const os = require("os");
 require("sticky-cluster")(
   callback => {
     const express = require("express");
@@ -1020,7 +1021,7 @@ require("sticky-cluster")(
     callback(server);
   },
   {
-    concurrency: 10,
+    concurrency: os.cpus().length,
     port: 5000,
     debug: true,
     env: function(index) {
