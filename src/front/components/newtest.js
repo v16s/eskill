@@ -22,6 +22,7 @@ import History from "./history";
 import endpoint from "../enpoint";
 import _ from "lodash";
 import Preview from "./Preview";
+import { pubpath } from "../enpoint";
 class NewTest extends React.Component {
   constructor(props) {
     super(props);
@@ -357,7 +358,7 @@ class NewTest extends React.Component {
                       onClick={e => {
                         if (i > 0) {
                           history.push(
-                            `/eskill/question/${ac}/${top}/${i - 1}`
+                            `${pubpath}/question/${ac}/${top}/${i - 1}`
                           );
                           this.reset();
                         }
@@ -372,7 +373,7 @@ class NewTest extends React.Component {
                       primary
                       fluid
                       onClick={e => {
-                        history.push(`/eskill/question/${ac}/${top}`);
+                        history.push(`${pubpath}/question/${ac}/${top}`);
                       }}
                     >
                       Back
@@ -386,7 +387,8 @@ class NewTest extends React.Component {
                         if (i < 99) {
                           this.reset();
                           history.push(
-                            `/eskill/question/${ac}/${top}/${parseInt(i) + 1}`
+                            `${pubpath}/question/${ac}/${top}/${parseInt(i) +
+                              1}`
                           );
                         }
                       }}

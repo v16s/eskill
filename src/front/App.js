@@ -15,17 +15,16 @@ import CoordinatorDashboard from "./components/CoordinatorDashboard";
 import FacultyDashboard from "./components/FacultyDashboard";
 import QuestionPage from "./components/QuestionPage";
 import ChangeQuestion from "./components/ChangeQuestion";
-import { socket as socUrl } from "./enpoint";
+import { pubpath } from "./enpoint";
 let socket = io.connect(
   window.location.origin,
   {
-    path: "/eskill/socket.io/",
+    path: `${pubpath}/socket.io/`,
     transports: ["polling", "xhr-polling"],
     rejectUnauthorized: false,
     reconnect: true
   }
 );
-console.log(window.location.origin + "/eskill");
 import {
   Sidebar,
   Segment,
@@ -304,7 +303,7 @@ class Root extends React.Component {
     };
   }
   handleHomeClick() {
-    history.push("/eskill/");
+    history.push(`${pubpath}`);
     this.setState({ visible: false });
   }
   notificationSeen() {
@@ -367,7 +366,7 @@ class Root extends React.Component {
                 ) : null}
                 <Menu.Item
                   onClick={e => {
-                    history.push("/eskill/");
+                    history.push(`${pubpath}`);
                   }}
                   className="brand-menu"
                 >
@@ -381,7 +380,7 @@ class Root extends React.Component {
                     <Menu.Item
                       onClick={e => {
                         e.preventDefault();
-                        history.push("/eskill/");
+                        history.push(`${pubpath}`);
                       }}
                     >
                       <Icon name="home" size="large" />
@@ -455,7 +454,7 @@ class Root extends React.Component {
                       onClick={e => {
                         e.preventDefault();
                         this.logout();
-                        window.location.href = "/eskill";
+                        window.location.href = pubpath;
                       }}
                     >
                       <Icon name="sign out" size="large" />
@@ -494,7 +493,7 @@ class Root extends React.Component {
                   onClick={e => {
                     e.preventDefault();
                     this.logout();
-                    window.location.href = "/eskill";
+                    window.location.href = pubpath;
                   }}
                 >
                   <Icon name="sign out" />
@@ -516,7 +515,7 @@ class Root extends React.Component {
                       <div>
                         {this.state.level == 1 ? (
                           <Route
-                            path="/eskill/change/:category/:topic/:number"
+                            path={`${pubpath}/change/:category/:topic/:number`}
                             exact
                             render={props => (
                               <ChangeQuestion
@@ -534,7 +533,7 @@ class Root extends React.Component {
                         ) : null}
                         {this.state.level == 0 ? (
                           <Route
-                            path="/eskill/question/:category/:topic/:id"
+                            path={`${pubpath}/question/:category/:topic/:id`}
                             exact
                             render={props => (
                               <NewTest
@@ -563,7 +562,7 @@ class Root extends React.Component {
                         ) : null}
                         {this.state.level == 0 || this.state.level == 1 ? (
                           <Route
-                            path="/eskill/request"
+                            path={`${pubpath}/request`}
                             render={props => (
                               <RequestCourse
                                 stateSet={this.stateSet}
@@ -581,7 +580,7 @@ class Root extends React.Component {
                         {this.state.level == 0 ? (
                           <Route
                             exact
-                            path="/eskill/question/:category/:topic"
+                            path={`${pubpath}/question/:category/:topic`}
                             render={props => (
                               <QuestionPage
                                 dark={this.state.dark}
@@ -613,7 +612,7 @@ class Root extends React.Component {
                           />
                         ) : null}
                         <Route
-                          path="/eskill/"
+                          path={`${pubpath}`}
                           exact
                           render={() =>
                             this.state.level == 2 ? (
@@ -736,7 +735,7 @@ class Root extends React.Component {
           <Switch>
             {this.state.canReg ? (
               <Route
-                path="/eskill/register"
+                path={`${pubpath}/register`}
                 render={() => (
                   <RegisterPage
                     dark={this.state.dark}
@@ -747,13 +746,13 @@ class Root extends React.Component {
               />
             ) : null}
             <Route
-              path="/eskill/forgot"
+              path={`${pubpath}/forgot`}
               render={() => (
                 <ForgotPage dark={this.state.dark} emit={this.emit} />
               )}
             />
             <Route
-              path="/eskill/"
+              path={`${pubpath}`}
               render={() => (
                 <Login
                   dark={this.state.dark}

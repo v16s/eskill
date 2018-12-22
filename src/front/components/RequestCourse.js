@@ -21,7 +21,7 @@ import "react-circular-progressbar/dist/styles.css";
 import CircularProgressbar from "react-circular-progressbar";
 import Select from "react-select";
 import _ from "lodash";
-
+import { pubpath } from "../enpoint";
 class RequestCourse extends React.Component {
   constructor(props) {
     super(props);
@@ -95,7 +95,7 @@ class RequestCourse extends React.Component {
         cid: selcat.value,
         topic: seltop.label
       });
-      history.push("/eskill/");
+      history.push(pubpath);
     }
   }
   render() {
@@ -167,7 +167,7 @@ class RequestCourse extends React.Component {
                       type="cancel"
                       onClick={e => {
                         e.preventDefault();
-                        history.push("/eskill/");
+                        history.push(pubpath);
                       }}
                     >
                       Cancel

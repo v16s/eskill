@@ -10,6 +10,7 @@ import _ from "lodash";
 import { localPoint } from "@vx/event";
 import { scaleLinear } from "@vx/scale";
 import { RectClipPath } from "@vx/clip-path";
+import { pubpath } from "../enpoint";
 import { voronoi, VoronoiPolygon } from "@vx/voronoi";
 import {
   GradientOrangeRed,
@@ -228,7 +229,7 @@ class StudentDashboard extends React.Component {
                   key={`polygon-${ind}`}
                   onClick={e => {
                     e.preventDefault();
-                    history.push(`/eskill/question/${polygon.data.ind}`);
+                    history.push(`${pubpath}/question/${polygon.data.ind}`);
                   }}
                 >
                   <VoronoiPolygon

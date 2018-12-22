@@ -10,7 +10,7 @@ import {
 } from "semantic-ui-react";
 import history from "./history";
 import { Link } from "react-router-dom";
-
+import { pubpath } from "../enpoint";
 class ForgotPage extends React.Component {
   constructor(props) {
     super(props);
@@ -52,7 +52,7 @@ class ForgotPage extends React.Component {
             </div>
             <Form.Input label="Email" placeholder="joe@schmoe.com" />
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <Link to="/eskill/">
+              <Link to={pubpath}>
                 <Button type="cancel">Cancel</Button>
               </Link>
               <Button
@@ -61,7 +61,7 @@ class ForgotPage extends React.Component {
                 onClick={e => {
                   e.preventDefault();
                   this.sendToServer(e);
-                  history.push("/eskill/");
+                  history.push(pubpath);
                 }}
               >
                 Submit

@@ -15,7 +15,8 @@ import {
   Header
 } from "semantic-ui-react";
 import history from "./history";
-import _ from 'lodash'
+import _ from "lodash";
+import { pubpath } from "../enpoint";
 class RegisterPage extends Component {
   constructor(props) {
     super(props);
@@ -84,7 +85,7 @@ class RegisterPage extends Component {
     };
     if (obj.password == obj.confirm) {
       this.props.emit("reg", obj);
-      history.push("/eskill/");
+      history.push(pubpath);
     } else {
       this.setState({ passError: "Passwords don't match! " });
     }
@@ -195,10 +196,13 @@ class RegisterPage extends Component {
       { key: "srmvdp", text: "SRM Vadapalani", value: "srmvdp" },
       { key: "srmamr", text: "SRM Amaravathi", value: "srmamr" },
       { key: "srmncr", text: "SRM NCR", value: "srmncr" },
-      { key: "valengc", text: "Valliammai Engineering College", value: "valengc" },
+      {
+        key: "valengc",
+        text: "Valliammai Engineering College",
+        value: "valengc"
+      },
       { key: "trp", text: "TRP Engineering College", value: "trp" },
-      { key: "easw", text: "Easwari Engineering College", value: "easw" },
-      
+      { key: "easw", text: "Easwari Engineering College", value: "easw" }
     ];
     return (
       <Grid
@@ -250,25 +254,22 @@ class RegisterPage extends Component {
                   />
                 </Form.Field>
                 <Form.Group widths="equal">
-
-                <Form.Field
-
-                  control={Select}
-                  required
-                  label="College"
-                  options={collegebranches}
-                  placeholder="College"
-                  id="collegebranch"
-                />
-                <Form.Field
-
-                  control={Select}
-                  required
-                  label="Field"
-                  options={_.orderBy(branches, ['text'], ['asc'])}
-                  placeholder="Field"
-                  id="branch"
-                />
+                  <Form.Field
+                    control={Select}
+                    required
+                    label="College"
+                    options={collegebranches}
+                    placeholder="College"
+                    id="collegebranch"
+                  />
+                  <Form.Field
+                    control={Select}
+                    required
+                    label="Field"
+                    options={_.orderBy(branches, ["text"], ["asc"])}
+                    placeholder="Field"
+                    id="branch"
+                  />
                 </Form.Group>
                 <Form.Group widths="equal">
                   <Form.Input
@@ -300,7 +301,7 @@ class RegisterPage extends Component {
                   type="cancel"
                   onClick={e => {
                     e.preventDefault();
-                    history.push("/eskill/");
+                    history.push(pubpath);
                   }}
                 >
                   Cancel

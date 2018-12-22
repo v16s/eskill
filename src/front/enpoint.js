@@ -1,3 +1,4 @@
-export default '/eskill'
-let socket = '/eskill'
-export { socket }
+export default "/testeskill";
+let socket = "/testekill";
+let pubpath = "/testeskill";
+export { socket, pubpath };
