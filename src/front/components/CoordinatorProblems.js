@@ -51,7 +51,9 @@ export default class CoordinatorProblems extends React.Component {
   }
   shouldComponentUpdate(nextProps, nextState) {
     if (
-      this.props.details.details.problems != nextProps.details.details.problems
+      this.props.details.details.problems !=
+        nextProps.details.details.problems ||
+      this.state != nextState
     ) {
       return true;
     }
