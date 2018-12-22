@@ -93,6 +93,8 @@
           if (p != c) {
             document.querySelector(".error").innerHTML =
               "Passwords don't Match";
+          } else if (p == undefined || p == "" || p == null) {
+            document.querySelector(".error").innerHTML = "Password is empty";
           } else {
             document.querySelector(".error").innerHTML = "";
             fetch(window.location.href, {
