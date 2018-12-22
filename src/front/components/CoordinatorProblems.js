@@ -22,15 +22,22 @@ export default class CoordinatorProblems extends React.Component {
       activePage: 1
     };
     this.handleClick = this.handleClick.bind(this);
+    this.resolve = this.resolve.bind(this);
+    this.setProblem = this.setProblem.bind(this);
   }
   handleClick(e, n, cat, p, topic) {
     this.props.stateSet({
       cpn: n || "",
       cpcat: cat || "",
       cptopic: topic || "",
-      cpvisible: !this.props.visible,
+      cpvisible: true,
       cpproblem: p
     });
+  }
+  resolve(action) {
+    let { emit, stateSet } = this.props;
+    emit("resolve", { problem: this.state.problem, action: action });
+    stateSet({ cpvisible: false });
   }
   componentDidMount() {}
   updateSearch(e) {
@@ -38,7 +45,7 @@ export default class CoordinatorProblems extends React.Component {
   }
   handlePaginationChange = (e, { activePage }) => this.setState({ activePage });
   setProblem(p) {
-    this.setState({ problem: p }, () => {
+    this.props.stateSet({ problem: p }, () => {
       this.resolve(false);
     });
   }

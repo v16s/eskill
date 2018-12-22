@@ -24,6 +24,9 @@ export default class ChangeModal extends React.Component {
       cpproblem: p
     });
   }
+  handleClose(e) {
+    this.props.stateSet({ cpvisible: false });
+  }
   resolve(action) {
     let { emit, stateSet } = this.props;
     emit("resolve", { problem: this.state.problem, action: action });
@@ -35,7 +38,7 @@ export default class ChangeModal extends React.Component {
         closeOnDimmerClick
         open={this.props.visible}
         size="large"
-        onClose={() => this.handleClick()}
+        onClose={() => this.handleClose()}
       >
         <Modal.Content
           style={{
