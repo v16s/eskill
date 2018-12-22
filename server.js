@@ -258,13 +258,13 @@ require("sticky-cluster")(
       });
 
       let loggedIn = false,
-        level = 0,
+        level = -1,
         account = { _id: "" };
       socket.emit("mode", mode);
       socket.emit("canReg", canReg);
       socket.on("logout", () => {
         loggedIn = false;
-        level = 0;
+        level = -1;
         account = { _id: "" };
       });
       pubsub.on("change", idlist => {
@@ -569,7 +569,6 @@ require("sticky-cluster")(
         }
       });
       socket.on("requestCourse", det => {
-        console.log("course requested", det, loggedIn, level);
         if (loggedIn && level == 0) {
           let { cat, faculty: pid, student: sid, cid, topic } = det;
           Users.findById(account._id, (err, stacc) => {
@@ -624,7 +623,7 @@ require("sticky-cluster")(
                         stacc.markModified("questions");
                         stacc.save(err => {
                           socket.emit("q", account.questions);
-                          pubsub.emit("change", [sid, pid]);
+                          pubsub.emit("change", [stacc._id, pid]);
                         });
                       }
                     );
