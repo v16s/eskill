@@ -1,7 +1,7 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import History from "./history";
-import Stats from "./stats";
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+import History from './history'
+import Stats from './stats'
 import {
   Sidebar,
   Segment,
@@ -19,43 +19,43 @@ import {
   Tab,
   Modal,
   GridRow
-} from "semantic-ui-react";
-import CoordinatorProblems from "./CoordinatorProblems";
-import ChangeSearch from "./ChangeSearch";
-import AddQuestion from "./AddQuestion";
-import _ from "lodash";
+} from 'semantic-ui-react'
+import CoordinatorProblems from './CoordinatorProblems'
+import ChangeSearch from './ChangeSearch'
+import AddQuestion from './AddQuestion'
+import _ from 'lodash'
 
 class CoordinatorDashboard extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
       visible: false,
       modalVisible: false,
       filter: props.categories
-    };
-    this.logout = this.logout.bind(this);
-    this.emit = this.emit.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    }
+    this.logout = this.logout.bind(this)
+    this.emit = this.emit.bind(this)
+    this.handleClick = this.handleClick.bind(this)
   }
-  handleClick() {
-    this.setState({ visible: !this.state.visible });
+  handleClick () {
+    this.setState({ visible: !this.state.visible })
   }
 
-  logout() {
-    this.props.logout();
+  logout () {
+    this.props.logout()
   }
-  componentDidMount() {}
-  emit(name, obj) {
-    this.props.emit(name, obj);
+  componentDidMount () {}
+  emit (name, obj) {
+    this.props.emit(name, obj)
   }
-  render() {
-    let { md: det, topics, categories } = this.props;
-    let tl = _.toArray(topics).length;
+  render () {
+    let { md: det, topics, categories } = this.props
+    let tl = _.toArray(topics).length
 
-    let cl = _.toArray(categories).length;
+    let cl = _.toArray(categories).length
     return (
       <div>
-        <Grid padded stackable relaxed centered doubling divided="vertically">
+        <Grid padded stackable relaxed centered doubling divided='vertically'>
           <Grid.Row>
             <Stats
               categories={cl}
@@ -67,7 +67,7 @@ class CoordinatorDashboard extends React.Component {
             />
           </Grid.Row>
           <Grid.Row>
-            <Grid.Column width={15}>
+            <Grid.Column computer={15}>
               <Tab
                 menu={{
                   pointing: this.props.width > 768,
@@ -76,7 +76,7 @@ class CoordinatorDashboard extends React.Component {
                 }}
                 panes={[
                   {
-                    menuItem: "Problem Reports",
+                    menuItem: 'Problem Reports',
                     render: () => (
                       <Tab.Pane inverted={this.props.dark} attached={false}>
                         <CoordinatorProblems
@@ -92,7 +92,7 @@ class CoordinatorDashboard extends React.Component {
                     )
                   },
                   {
-                    menuItem: "Add Question",
+                    menuItem: 'Add Question',
                     render: () => (
                       <Tab.Pane inverted={this.props.dark} attached={false}>
                         <AddQuestion
@@ -109,7 +109,7 @@ class CoordinatorDashboard extends React.Component {
                     )
                   },
                   {
-                    menuItem: "Change Question",
+                    menuItem: 'Change Question',
                     render: () => (
                       <Tab.Pane inverted={this.props.dark} attached={false}>
                         <ChangeSearch
@@ -127,8 +127,8 @@ class CoordinatorDashboard extends React.Component {
           </Grid.Row>
         </Grid>
       </div>
-    );
+    )
   }
 }
 
-export default CoordinatorDashboard;
+export default CoordinatorDashboard
