@@ -21,23 +21,8 @@ export default class CoordinatorProblems extends React.Component {
       topic: "",
       activePage: 1
     };
-    this.handleClick = this.handleClick.bind(this);
     this.resolve = this.resolve.bind(this);
-    this.setProblem = this.setProblem.bind(this);
-  }
-  handleClick(e, n, cat, p, topic) {
-    this.props.stateSet({
-      cpn: n || "",
-      cpcat: cat || "",
-      cptopic: topic || "",
-      cpvisible: true,
-      cpproblem: p
-    });
-  }
-  resolve(action) {
-    let { emit, stateSet } = this.props;
-    emit("resolve", { problem: this.state.problem, action: action });
-    stateSet({ cpvisible: false });
+    this.handleClick = this.handleClick.bind(this);
   }
   componentDidMount() {}
   updateSearch(e) {
@@ -45,15 +30,29 @@ export default class CoordinatorProblems extends React.Component {
   }
   handlePaginationChange = (e, { activePage }) => this.setState({ activePage });
   setProblem(p) {
-    this.props.stateSet({ problem: p }, () => {
+    this.setState({ problem: p }, () => {
       this.resolve(false);
     });
+  }
+  handleClick(e, n, cat, p, topic) {
+    this.setState({
+      n: n || "",
+      cat: cat || "",
+      topic: topic || "",
+      visible: !this.state.visible,
+      problem: p
+    });
+  }
+  resolve(action) {
+    let { emit } = this.props;
+    emit("resolve", { problem: this.state.problem, action: action });
+    this.setState({ visible: false });
   }
   shouldComponentUpdate(nextProps, nextState) {
     if (
       this.props.details.details.problems !=
         nextProps.details.details.problems ||
-      this.state != nextState
+      nextState != this.state
     ) {
       return true;
     }
@@ -111,6 +110,20 @@ export default class CoordinatorProblems extends React.Component {
                   <Table.Cell>{s.n}</Table.Cell>
                   <Table.Cell>{s.desc}</Table.Cell>
                   <Table.Cell>
+                    {this.state.visible ? (
+                      <ChangeModal
+                        visible={this.state.visible}
+                        n={this.state.n}
+                        dark={this.props.dark}
+                        cat={this.state.cat}
+                        handleClick={this.handleClick}
+                        chError={this.props.chError}
+                        chSuccess={this.props.chSuccess}
+                        topic={this.state.topic}
+                        resolve={this.resolve}
+                        emit={this.props.emit}
+                      />
+                    ) : null}
                     {s.resolution === false ? (
                       <Grid padded={false} columns={2} stackable>
                         <Grid.Column style={{ padding: "5px" }}>
