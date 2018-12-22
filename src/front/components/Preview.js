@@ -22,6 +22,7 @@ class Preview extends Component {
       pid: pid,
       sid: sid,
       name: name,
+      sqname: `Question ${parseFloat(this.props.i) + 1}`,
       topic: q.topic,
       desc: document.getElementById("problem-desc").value
     };
