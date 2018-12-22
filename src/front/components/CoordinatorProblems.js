@@ -21,8 +21,6 @@ export default class CoordinatorProblems extends React.Component {
       topic: "",
       activePage: 1
     };
-    this.resolve = this.resolve.bind(this);
-    this.handleClick = this.handleClick.bind(this);
   }
   componentDidMount() {}
   updateSearch(e) {
