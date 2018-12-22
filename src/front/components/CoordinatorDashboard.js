@@ -85,6 +85,8 @@ class CoordinatorDashboard extends React.Component {
                           width={this.props.width}
                           details={this.props.details}
                           dark={this.props.dark}
+                          chSuccess={this.props.chError}
+                          chError={this.props.chSuccess}
                         />
                       </Tab.Pane>
                     )

@@ -440,7 +440,7 @@ class ChangeQuestion extends React.Component {
                   fontSize: "1rem"
                 }}
               >
-                Error adding Question
+                Error changing Question
               </div>
             </Segment>
           ) : null}
@@ -455,7 +455,7 @@ class ChangeQuestion extends React.Component {
                   fontSize: "1rem"
                 }}
               >
-                Question successfully added
+                Question successfully changed
               </div>
             </Segment>
           ) : null}
