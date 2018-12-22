@@ -302,11 +302,13 @@ require("sticky-cluster")(
         }
       });
       pubsub.on("count", () => {
-        Users.countDocuments({ level: 0 }, (err, c) => {
-          Users.countDocuments({ level: 4 }, (err, c2) => {
-            socket.emit("count", [c, c2]);
+        if (loggedIn && [1, 2].includes(level)) {
+          Users.countDocuments({ level: 0 }, (err, c) => {
+            Users.countDocuments({ level: 4 }, (err, c2) => {
+              socket.emit("count", [c, c2]);
+            });
           });
-        });
+        }
       });
       loginCheck.on("success", acc => {
         account = acc;
@@ -567,6 +569,7 @@ require("sticky-cluster")(
         }
       });
       socket.on("requestCourse", det => {
+        console.log("course requested", det, loggedIn, level);
         if (loggedIn && level == 0) {
           let { cat, faculty: pid, student: sid, cid, topic } = det;
           Users.findById(account._id, (err, stacc) => {
