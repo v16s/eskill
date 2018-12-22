@@ -267,7 +267,13 @@ require("sticky-cluster")(
         level = -1;
         account = { _id: "" };
       });
+
+      console.log("user connected");
+      concurrentUsers++;
+      const loginCheck = new Event();
+      socket.setMaxListeners(0);
       pubsub.on("change", idlist => {
+        console.log(account, idlist, loggedIn);
         if (idlist.includes(account._id)) {
           UserDetails.findById(account._id, (err, details) => {
             socket.emit("changeDetails", {
@@ -285,11 +291,6 @@ require("sticky-cluster")(
           });
         }
       });
-
-      console.log("user connected");
-      concurrentUsers++;
-      const loginCheck = new Event();
-      socket.setMaxListeners(0);
       socket.on("det", content => {
         if (validateEmail(content.email)) {
           Users.findOne({ email: content.email }, (err, acc) => {
@@ -311,7 +312,7 @@ require("sticky-cluster")(
         }
       });
       loginCheck.on("success", acc => {
-        account = acc;
+        account._id = acc._id;
         pubsub.emit("count");
         loggedIn = true;
         level = acc.level;
