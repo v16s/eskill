@@ -705,7 +705,7 @@ require("sticky-cluster")(
                         } has been ${action ? "Resolved" : "Rejected"}`,
                         id: problem.sid
                       });
-                      pubsub.emit("change", [problem.pid, acc._id]);
+                      pubsub.emit("change", [problem.pid, account._id]);
                     });
                   }
                 });
@@ -936,10 +936,12 @@ require("sticky-cluster")(
 
       socket.on("updateNoti", det => {
         if (loggedIn && [4, 0].includes(level)) {
-          details.notifications = det.notifications;
-          details.markModified("notifications");
-          details.save(err => {
-            pubsub.emit("change", acc._id);
+          UserDetails.findById(account._id, (err, details) => {
+            details.notifications = det.notifications;
+            details.markModified("notifications");
+            details.save(err => {
+              pubsub.emit("change", account._id);
+            });
           });
         }
       });
