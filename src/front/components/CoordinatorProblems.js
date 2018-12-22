@@ -49,7 +49,14 @@ export default class CoordinatorProblems extends React.Component {
       this.resolve(false);
     });
   }
-
+  shouldComponentUpdate(nextProps, nextState) {
+    if (
+      this.props.details.details.problems != nextProps.details.details.problems
+    ) {
+      return true;
+    }
+    return false;
+  }
   render() {
     let { details } = this.props.details;
     let { width } = this.props;

@@ -79,7 +79,13 @@ class CoordinatorDashboard extends React.Component {
                     menuItem: "Problem Reports",
                     render: () => (
                       <Tab.Pane inverted={this.props.dark} attached={false}>
-                        <CoordinatorProblems {...this.props} />
+                        <CoordinatorProblems
+                          stateSet={this.props.stateSet}
+                          emit={this.props.emit}
+                          width={this.props.width}
+                          details={this.props.details}
+                          dark={this.props.dark}
+                        />
                       </Tab.Pane>
                     )
                   },
