@@ -9,7 +9,7 @@ import {
 } from "semantic-ui-react";
 import { Progress } from "react-sweet-progress";
 import React from "react";
-import ChangeQuestion from "./ChangeQuestion";
+import ChangeModal from "./ChangeModal";
 export default class CoordinatorProblems extends React.Component {
   constructor(props) {
     super(props);
@@ -22,6 +22,7 @@ export default class CoordinatorProblems extends React.Component {
       activePage: 1
     };
     this.resolve = this.resolve.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
   componentDidMount() {}
   updateSearch(e) {
@@ -100,29 +101,16 @@ export default class CoordinatorProblems extends React.Component {
                   <Table.Cell>{s.desc}</Table.Cell>
                   <Table.Cell>
                     {this.state.visible ? (
-                      <Modal
-                        closeOnDimmerClick
-                        open={this.state.visible}
-                        size="large"
-                        onClose={() => this.handleClick()}
-                      >
-                        <Modal.Content
-                          style={{
-                            backgroundColor: this.props.dark ? "#222" : "#fff"
-                          }}
-                        >
-                          <ChangeQuestion
-                            n={this.state.n}
-                            modal
-                            dark={this.props.dark}
-                            category={this.state.cat}
-                            error={this.props.chError}
-                            success={this.props.chSuccess}
-                            topic={this.state.topic}
-                            afterEmit={this.resolve}
-                          />
-                        </Modal.Content>
-                      </Modal>
+                      <ChangeModal
+                        visible={this.state.visible}
+                        n={this.state.n}
+                        dark={this.props.dark}
+                        cat={this.state.cat}
+                        chError={this.props.chError}
+                        chSuccess={this.props.chSuccess}
+                        topic={this.state.topic}
+                        resolve={this.resolve}
+                      />
                     ) : null}
                     {s.resolution === false ? (
                       <Grid padded={false} columns={2} stackable>
