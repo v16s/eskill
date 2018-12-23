@@ -19,7 +19,18 @@ mongoose.connect(
 );
 
 let db = mongoose.connection;
-
+let Users = mongoose.model(
+  "Users",
+  new Schema({
+    _id: String,
+    email: String,
+    password: String,
+    type: String,
+    level: Number,
+    questions: Object
+  }),
+  "Users"
+);
 let UserDetails = mongoose.model(
   "UserDetails",
   new Schema({
@@ -64,19 +75,24 @@ let colleges = {
 };
 db.on("open", () => {
   console.log("connected to database");
-  UserDetails.find({ "details.branch": { $exists: false } }, (err, users) => {
-    users.map(user => {
-      if (user._id.slice(0, 1) == "4") {
-        user.details.branch = "SRM Ramapuram";
-      } else if (user._id.slice(0, 1) == "5") {
-        user.details.branch = "SRM NCR";
-      } else if (user._id.slice(0, 1) == "6") {
-        user.details.branch = "SRM Amaravathi";
-      }
-      user.markModified("details");
-      user.save(err => {
-        console.log(user._id.slice(0, 1), user.details.branch);
-      });
-    });
+  user = new Users({
+    _id: "200021",
+    email: r.email,
+    password: hash,
+    type: "Faculty",
+    level: 4
   });
+  details = new UserDetails({
+    _id: "200021",
+    level: 4,
+    details: {
+      name: "SRM KTR Engish Faculty",
+      regNo: "200021",
+      department: "English",
+      branch: "SRM Katankkulathur",
+      students: []
+    }
+  });
+  user.save();
+  details.save();
 });
