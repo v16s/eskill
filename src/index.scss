@@ -42,6 +42,21 @@ html,
 .ui.segment.navbar {
   border-radius: 0 !important;
 }
+.ui.active.tab.segment {
+  overflow-x: auto;
+}
+@media only screen and (max-width: 767px) {
+  .ui.table:not(.unstackable) {
+    width: 100% !important;
+    display: flex !important;
+  }
+  .ui.table:not(.unstackable) tbody,
+  .ui.table:not(.unstackable) tr,
+  .ui.table:not(.unstackable) tr > td,
+  .ui.table:not(.unstackable) tr > th {
+    width: 100% !important;
+  }
+}
 .ui.header.login-heading {
   letter-spacing: 1.5px;
   font-size: 22px;
