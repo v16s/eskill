@@ -75,24 +75,26 @@ let colleges = {
 };
 db.on("open", () => {
   console.log("connected to database");
-  user = new Users({
-    _id: "200021",
-    email: r.email,
-    password: hash,
-    type: "Faculty",
-    level: 4
+  bcrypt.hash("eskilleskill", 10, function(err, hash) {
+    user = new Users({
+      _id: "200021",
+      email: "englishfaculty1@care.srumuniv.ac.in",
+      password: hash,
+      type: "Faculty",
+      level: 4
+    });
+    details = new UserDetails({
+      _id: "200021",
+      level: 4,
+      details: {
+        name: "SRM KTR Engish Faculty",
+        regNo: "200021",
+        department: "English",
+        branch: "SRM Katankkulathur",
+        students: []
+      }
+    });
+    user.save();
+    details.save();
   });
-  details = new UserDetails({
-    _id: "200021",
-    level: 4,
-    details: {
-      name: "SRM KTR Engish Faculty",
-      regNo: "200021",
-      department: "English",
-      branch: "SRM Katankkulathur",
-      students: []
-    }
-  });
-  user.save();
-  details.save();
 });
