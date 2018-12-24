@@ -70,5 +70,5 @@ let Users = mongoose.model(
 db.on("open", () => {
   console.log("connected to database");
 
-  Questions.remove({ "topic._id": "1102" });
+  Questions.deleteMany({ "topic._id": "1102" });
 });
