@@ -1,27 +1,27 @@
-const express = require('express')
-const app = express()
-const http = require('http')
-const server = http.Server(app)
-const path = require('path')
-const debug = process.env.NODE_ENV !== 'production'
-const io = require('socket.io')(server)
-const bcrypt = require('bcryptjs')
-const cookieParser = require('cookie-parser')
-const mongoose = require('mongoose')
-const EventEmitter = require('events')
-const Schema = mongoose.Schema
-const _ = require('lodash')
-const dburl = require('./config.json').dburl
-const csv = require('csvtojson')
+const express = require("express");
+const app = express();
+const http = require("http");
+const server = http.Server(app);
+const path = require("path");
+const debug = process.env.NODE_ENV !== "production";
+const io = require("socket.io")(server);
+const bcrypt = require("bcryptjs");
+const cookieParser = require("cookie-parser");
+const mongoose = require("mongoose");
+const EventEmitter = require("events");
+const Schema = mongoose.Schema;
+const _ = require("lodash");
+const dburl = require("./config.json").dburl;
+const csv = require("csvtojson");
 mongoose.connect(
   dburl,
   { useNewUrlParser: true }
-)
+);
 
-let db = mongoose.connection
+let db = mongoose.connection;
 
 let Questions = mongoose.model(
-  'Questions',
+  "Questions",
   new Schema({
     category: Object,
     label: Array,
@@ -33,40 +33,40 @@ let Questions = mongoose.model(
     hints: String,
     number: Number
   }),
-  'Questions'
-)
-const fs = require('fs')
+  "Questions"
+);
+const fs = require("fs");
 
-db.on('open', () => {
-  console.log('connected to database')
-  fs.readdir('./questions', (err, files) => {
+db.on("open", () => {
+  console.log("connected to database");
+  fs.readdir("./upload", (err, files) => {
     files.map(file => {
-      let filename = file
-      let name = file.replace(/_/g, ' ').split('+')
-      let cid = parseInt(name[1].slice(0, 1))
+      let filename = file;
+      let name = file.replace(/_/g, " ").split("+");
+      let cid = parseInt(name[1].slice(0, 1));
 
-      let cname = name[0]
+      let cname = name[0];
 
-      let tid = name[1]
+      let tid = name[1];
 
-      let tname = name[2].split('.').shift()
-      console.log(cid, cname, tid, tname)
+      let tname = name[2].split(".").shift();
+      console.log(cid, cname, tid, tname);
       csv()
-        .fromFile('./questions/' + filename)
+        .fromFile("./upload/" + filename)
         .then(jsonObj => {
           jsonObj.map((k, i) => {
-            console.log(i)
-            let que = k.Question
-            que = que.split('. ')
-            que.shift()
-            let newdef = k.Question
+            console.log(i);
+            let que = k.Question;
+            que = que.split(". ");
+            que.shift();
+            let newdef = k.Question;
             if (que.length > 0) {
-              newdef = newdef.split('. ')
+              newdef = newdef.split(". ");
             } else {
-              newdef = newdef.split('\t')
+              newdef = newdef.split("\t");
             }
-            newdef.shift()
-            console.log(newdef, que)
+            newdef.shift();
+            console.log(newdef, que);
             let obj = {
               category: {
                 _id: cid,
@@ -80,25 +80,25 @@ db.on('open', () => {
               number: i,
               answer: k.Answer,
               options: {
-                a: k['Option A'],
-                b: k['Option B'],
-                c: k['Option C'],
-                d: k['Option D']
+                a: "a) " + k["Option A"],
+                b: "b) " + k["Option B"],
+                c: "c) " + k["Option C"],
+                d: "d) " + k["Option D"]
               },
               qname: `Question ${i}`,
-              qdef: newdef.join(''),
-              hints: k['Explanation']
-            }
-            let q = new Questions(obj)
-            q.save()
-          })
+              qdef: newdef.join(""),
+              hints: k["Explanation"]
+            };
+            let q = new Questions(obj);
+            q.save();
+          });
           /**
            * [
            * 	{a:"1", b:"2", c:"3"},
            * 	{a:"4", b:"5". c:"6"}
            * ]
            */
-        })
-    })
-  })
-})
+        });
+    });
+  });
+});
