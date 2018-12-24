@@ -78,7 +78,7 @@ db.on("open", () => {
                 name: tname
               },
               number: i,
-              answer: k.Answer.toLowerCare(),
+              answer: k.Answer.toLowerCase(),
               options: {
                 a: "a) " + k["Option A"],
                 b: "b) " + k["Option B"],
