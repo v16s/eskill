@@ -273,7 +273,6 @@ require("sticky-cluster")(
       const loginCheck = new Event();
       socket.setMaxListeners(0);
       pubsub.on("change", (channel, idlist) => {
-        console.log(account, idlist, loggedIn);
         if (idlist.includes(account._id)) {
           UserDetails.findById(account._id, (err, details) => {
             socket.emit("changeDetails", {
