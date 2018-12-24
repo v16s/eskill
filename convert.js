@@ -60,13 +60,13 @@ db.on("open", () => {
             que = que.split(". ");
             que.shift();
             let newdef = k.Question;
-            if (que.length > 0) {
-              newdef = newdef.split(". ");
-            } else {
-              newdef = newdef.split("\t");
-            }
-            newdef.shift();
-            console.log(newdef, que);
+            // if (que.length > 0) {
+            //   newdef = newdef.split(". ");
+            // } else {
+            //   newdef = newdef.split("\t");
+            // }
+            // newdef.shift();
+            // console.log(newdef, que);
             let obj = {
               category: {
                 _id: cid,
