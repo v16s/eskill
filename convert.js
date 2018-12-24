@@ -86,7 +86,7 @@ db.on("open", () => {
                 d: "d) " + k["Option D"]
               },
               qname: `Question ${i}`,
-              qdef: newdef.join(""),
+              qdef: newdef,
               hints: k["Explanation"]
             };
             let q = new Questions(obj);
