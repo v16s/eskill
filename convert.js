@@ -43,7 +43,7 @@ db.on("open", () => {
     files.map(file => {
       let filename = file;
       let name = file.replace(/_/g, " ").split("+");
-      let cid = parseInt(name[1].slice(0, 1));
+      let cid = parseInt(name[1].slice(0, 2));
 
       let cname = name[0];
 
