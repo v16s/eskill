@@ -70,12 +70,5 @@ let Users = mongoose.model(
 db.on("open", () => {
   console.log("connected to database");
 
-  Questions.find({ "topic._id": "1101" }, (err, questions) => {
-    questions.map((qu, i) => {
-      console.log(i);
-      qu.category._id = 11;
-      qu.markModified("category");
-      qu.save();
-    });
-  });
+  Questions.remove({ "topic._id": "1102" });
 });
