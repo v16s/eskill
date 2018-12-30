@@ -62,8 +62,8 @@ class StudentDashboard extends React.Component {
             ...questions.map(x => {
               return Object.keys(qstate[x]).map(key => {
                 if (
-                  x.match(new RegExp(this.state.searchContent, "gi")) ||
-                  key.match(new RegExp(this.state.searchContent, "gi"))
+                  x.match(new RegExp(`[${this.state.searchContent}]`, "gi")) ||
+                  key.match(new RegExp(`[${this.state.searchContent}]`, "gi"))
                 ) {
                   return {
                     ...qstate[x][key]

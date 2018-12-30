@@ -96,7 +96,7 @@ export default class CoordinatorProblems extends React.Component {
               return (
                 Object.values(s).find(a => {
                   if (typeof a === "string") {
-                    let reg = new RegExp(this.state.searchValue, "gi");
+                    let reg = new RegExp(`[${this.state.searchValue}]`, "gi");
                     return a.match(reg);
                   }
                 }) != undefined
