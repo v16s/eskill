@@ -56,7 +56,7 @@ export default class RequestProblem extends React.Component {
               return (
                 Object.values(s).find(a => {
                   if (typeof a === "string") {
-                    let reg = new RegExp(searchvalue, "gi");
+                    let reg = new RegExp(this.state.searchValue, "gi");
                     return a.match(reg);
                   }
                 }) != undefined
