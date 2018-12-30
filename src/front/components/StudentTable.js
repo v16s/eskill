@@ -65,7 +65,7 @@ export default class StudentTable extends React.Component {
               return (
                 Object.values(s).find(a => {
                   if (typeof a === "string") {
-                    let reg = new RegExp(`[${this.state.searchvalue}]`, "gi");
+                    let reg = new RegExp(this.state.searchvalue, "gi");
                     return a.match(reg);
                   }
                 }) != undefined
