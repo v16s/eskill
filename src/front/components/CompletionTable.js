@@ -60,41 +60,47 @@ export default class CompletionTable extends React.Component {
           </Table.Header>
         ) : null}
         <Table.Body>
-          {[...studentDetails].reverse().map((s, index) => {
-            if (
-              Object.values(s).find(a => {
-                if (typeof a === "string") {
-                  let reg = new RegExp(searchvalue, "gi");
-                  return a.match(reg);
-                }
-              }) != undefined &&
-              index < this.state.activePage * 10 &&
-              index > this.state.activePage * 10 - 10
-            ) {
+          {[...studentDetails]
+            .reverse()
+            .filter(s => {
               return (
-                <Table.Row key={s.name + s.cat + s.topic}>
-                  <Table.Cell>{s._id}</Table.Cell>
-                  <Table.Cell>{s.name}</Table.Cell>
-                  <Table.Cell>{s.cat}</Table.Cell>
-                  <Table.Cell>{s.topic}</Table.Cell>
-                  <Table.Cell>
-                    <Progress
-                      percent={parseInt(s.c)}
-                      status="success"
-                      theme={{
-                        success: {
-                          color: "#3281ff",
-                          symbol: s.c + "%",
-                          trailColor: this.props.dark ? "#fff" : "#efefef"
-                        }
-                      }}
-                    />
-                  </Table.Cell>
-                  <Table.Cell textAlign="center">{s.cor}</Table.Cell>
-                </Table.Row>
+                Object.values(s).find(a => {
+                  if (typeof a === "string") {
+                    let reg = new RegExp(searchvalue, "gi");
+                    return a.match(reg);
+                  }
+                }) != undefined
               );
-            }
-          })}
+            })
+            .map((s, index) => {
+              if (
+                index < this.state.activePage * 10 &&
+                index > this.state.activePage * 10 - 10
+              ) {
+                return (
+                  <Table.Row key={s.name + s.cat + s.topic}>
+                    <Table.Cell>{s._id}</Table.Cell>
+                    <Table.Cell>{s.name}</Table.Cell>
+                    <Table.Cell>{s.cat}</Table.Cell>
+                    <Table.Cell>{s.topic}</Table.Cell>
+                    <Table.Cell>
+                      <Progress
+                        percent={parseInt(s.c)}
+                        status="success"
+                        theme={{
+                          success: {
+                            color: "#3281ff",
+                            symbol: s.c + "%",
+                            trailColor: this.props.dark ? "#fff" : "#efefef"
+                          }
+                        }}
+                      />
+                    </Table.Cell>
+                    <Table.Cell textAlign="center">{s.cor}</Table.Cell>
+                  </Table.Row>
+                );
+              }
+            })}
           <Table.Row>
             <Table.Cell colSpan={6}>
               <div

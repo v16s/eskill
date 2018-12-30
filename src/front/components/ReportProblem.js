@@ -50,37 +50,43 @@ export default class RequestProblem extends React.Component {
           </Table.Header>
         ) : null}
         <Table.Body>
-          {[...problems].reverse().map((s, index) => {
-            if (
-              Object.values(s).find(a => {
-                if (typeof a === "string") {
-                  let reg = new RegExp(this.state.searchValue, "gi");
-                  return a.match(reg);
-                }
-              }) != undefined &&
-              index < this.state.activePage * 10 &&
-              index > this.state.activePage * 10 - 10
-            ) {
+          {[...problems]
+            .reverse()
+            .filter(s => {
               return (
-                <Table.Row key={s.name + "-problem-" + s.n}>
-                  <Table.Cell>{s.sid}</Table.Cell>
-                  <Table.Cell>{s.name}</Table.Cell>
-                  <Table.Cell>{s.cat.name}</Table.Cell>
-                  <Table.Cell>{s.topic.name}</Table.Cell>
-                  <Table.Cell>{s.n}</Table.Cell>
-                  <Table.Cell>{s.desc}</Table.Cell>
-
-                  <Table.Cell>
-                    {s.resolution === false
-                      ? "Pending Resolution"
-                      : s.resolution === true
-                      ? "Resolved"
-                      : "Rejected"}
-                  </Table.Cell>
-                </Table.Row>
+                Object.values(s).find(a => {
+                  if (typeof a === "string") {
+                    let reg = new RegExp(searchvalue, "gi");
+                    return a.match(reg);
+                  }
+                }) != undefined
               );
-            }
-          })}
+            })
+            .map((s, index) => {
+              if (
+                index < this.state.activePage * 10 &&
+                index > this.state.activePage * 10 - 10
+              ) {
+                return (
+                  <Table.Row key={s.name + "-problem-" + s.n}>
+                    <Table.Cell>{s.sid}</Table.Cell>
+                    <Table.Cell>{s.name}</Table.Cell>
+                    <Table.Cell>{s.cat.name}</Table.Cell>
+                    <Table.Cell>{s.topic.name}</Table.Cell>
+                    <Table.Cell>{s.n}</Table.Cell>
+                    <Table.Cell>{s.desc}</Table.Cell>
+
+                    <Table.Cell>
+                      {s.resolution === false
+                        ? "Pending Resolution"
+                        : s.resolution === true
+                        ? "Resolved"
+                        : "Rejected"}
+                    </Table.Cell>
+                  </Table.Row>
+                );
+              }
+            })}
           <Table.Row>
             <Table.Cell colSpan={6}>
               <div
