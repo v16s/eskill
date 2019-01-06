@@ -612,7 +612,7 @@ require("sticky-cluster")(
                       { "category.name": cat, "topic.name": topic },
                       (err, c) => {
                         count = c;
-                        if (count > 100) {
+                        if (count >= 100) {
                           while (q.length < 100) {
                             var r = Math.floor(Math.random() * count);
                             if (q.indexOf(r) === -1) q.push(r);
