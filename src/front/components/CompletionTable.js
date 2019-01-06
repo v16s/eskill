@@ -75,7 +75,7 @@ export default class CompletionTable extends React.Component {
             .map((s, index) => {
               if (
                 index < this.state.activePage * 10 &&
-                index > this.state.activePage * 10 - 9
+                index > this.state.activePage * 10 - 11
               ) {
                 return (
                   <Table.Row key={s.name + s.cat + s.topic}>
