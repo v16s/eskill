@@ -5,35 +5,35 @@ import {
   Button,
   Segment,
   Input
-} from "semantic-ui-react";
-import { Progress } from "react-sweet-progress";
-import React from "react";
+} from 'semantic-ui-react'
+import { Progress } from 'react-sweet-progress'
+import React from 'react'
 export default class RequestProblem extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { searchValue: "", activePage: 1 };
+  constructor (props) {
+    super(props)
+    this.state = { searchValue: '', activePage: 1 }
   }
-  componentDidMount() {}
-  updateSearch(e) {
-    this.setState({ searchValue: e.value });
+  componentDidMount () {}
+  updateSearch (e) {
+    this.setState({ searchValue: e.value })
   }
-  handlePaginationChange = (e, { activePage }) => this.setState({ activePage });
-  render() {
-    let { details } = this.props.details;
-    let { width } = this.props;
-    let problems = [];
+  handlePaginationChange = (e, { activePage }) => this.setState({ activePage })
+  render () {
+    let { details } = this.props.details
+    let { width } = this.props
+    let problems = []
     if (details.problems != undefined) {
-      problems = details.problems;
+      problems = details.problems
     }
     return (
       <Table inverted={this.props.dark}>
         {width > 768 ? (
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell colSpan="7">
+              <Table.HeaderCell colSpan='7'>
                 <Input
                   fluid
-                  placeholder="Search"
+                  placeholder='Search'
                   onChange={(e, syn) => this.updateSearch(syn)}
                 />
               </Table.HeaderCell>
@@ -55,20 +55,20 @@ export default class RequestProblem extends React.Component {
             .filter(s => {
               return (
                 Object.values(s).find(a => {
-                  if (typeof a === "string") {
-                    let reg = new RegExp(this.state.searchValue, "gi");
-                    return a.match(reg);
+                  if (typeof a === 'string') {
+                    let reg = new RegExp(this.state.searchValue, 'gi')
+                    return a.match(reg)
                   }
                 }) != undefined
-              );
+              )
             })
             .map((s, index) => {
               if (
                 index < this.state.activePage * 10 &&
-                index > this.state.activePage * 10 - 10
+                index > this.state.activePage * 10 - 9
               ) {
                 return (
-                  <Table.Row key={s.name + "-problem-" + s.n}>
+                  <Table.Row key={s.name + '-problem-' + s.n}>
                     <Table.Cell>{s.sid}</Table.Cell>
                     <Table.Cell>{s.name}</Table.Cell>
                     <Table.Cell>{s.cat.name}</Table.Cell>
@@ -78,22 +78,22 @@ export default class RequestProblem extends React.Component {
 
                     <Table.Cell>
                       {s.resolution === false
-                        ? "Pending Resolution"
+                        ? 'Pending Resolution'
                         : s.resolution === true
-                        ? "Resolved"
-                        : "Rejected"}
+                          ? 'Resolved'
+                          : 'Rejected'}
                     </Table.Cell>
                   </Table.Row>
-                );
+                )
               }
             })}
           <Table.Row>
             <Table.Cell colSpan={6}>
               <div
                 style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  width: "100%"
+                  display: 'flex',
+                  justifyContent: 'center',
+                  width: '100%'
                 }}
               >
                 <Pagination
@@ -107,16 +107,16 @@ export default class RequestProblem extends React.Component {
                       ? parseInt(problems.length / 10) + 1
                       : 0
                   }
-                  ellipsisItem={true}
-                  prevItem={true}
+                  ellipsisItem
+                  prevItem
                   siblingRange={2}
-                  nextItem={true}
+                  nextItem
                 />
               </div>
             </Table.Cell>
           </Table.Row>
         </Table.Body>
       </Table>
-    );
+    )
   }
 }
