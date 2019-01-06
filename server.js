@@ -617,6 +617,11 @@ require("sticky-cluster")(
                             var r = Math.floor(Math.random() * count);
                             if (q.indexOf(r) === -1) q.push(r);
                           }
+                        } else {
+                          while (q.length < count) {
+                            var r = Math.floor(Math.random() * count);
+                            if (q.indexOf(r) === -1) q.push(r);
+                          }
                         }
 
                         stacc.questions[cat][topic].q = q.map(k => {
