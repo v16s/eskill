@@ -20,6 +20,7 @@ let socket = io.connect(
   window.location.origin,
   {
     path: `${pubpath}/socket.io/`,
+    transports: ["polling", "xhr-polling"],
     rejectUnauthorized: false,
     reconnect: true
   }

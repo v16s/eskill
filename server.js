@@ -13,7 +13,8 @@ require("sticky-cluster")(
     const debug = process.env.NODE_ENV !== "production";
     const io = require("socket.io")(server, {
       path: pubpath + "/socket.io",
-      pingTimeout: 360000
+      pingTimeout: 360000,
+      transports: ['polling', 'xhr-polling']
     });
     const os = require("os");
     io.sockets.setMaxListeners(0);
