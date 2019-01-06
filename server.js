@@ -591,6 +591,7 @@ require("sticky-cluster")(
                   });
                   fac.markModified("details");
                   fac.save(err => {
+                    pubsub.emit('change', [pid])
                     if (stacc.questions == undefined) {
                       stacc.questions = {};
                       stacc.questions[cat] = {};
@@ -624,7 +625,7 @@ require("sticky-cluster")(
                         stacc.markModified("questions");
                         stacc.save(err => {
                           socket.emit("q", account.questions);
-                          pubsub.emit("change", [stacc._id, pid]);
+                          pubsub.emit("change", [stacc._id]);
                         });
                       }
                     );
