@@ -60,7 +60,7 @@
   },
   "scripts": {
     "start": "parcel ./public/index.html ",
-    "build": "parcel build ./public/index.html --public-url /easwarieskill",
+    "build": "parcel build ./public/index.html --public-url /trpeskill",
     "test": "nodemon -w server.js -x node server",
     "server": "node server"
   }
